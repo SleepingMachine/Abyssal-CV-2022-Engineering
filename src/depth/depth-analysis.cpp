@@ -37,22 +37,25 @@ void DepthSolution::DeepConversion() {
 
     float depth_scale2cm = 0.1;
 
-    cv::Mat mask_depth_filter(480, 640, CV_8UC3);
+    cv::Mat mask_depth_filter(480, 640, CV_8UC1);
 
-    mask_depth_filter = src_depth_.clone();
+    mask_depth_filter = src_depth_.clone()*1000;
     //mask_depth_filter.setTo(0);
     cv::imshow("Color", src_color_);
     cv::imshow("Depth", src_depth_);
     for (int y = 0; y < src_depth_.rows; ++y) {
         for (int x = 0; x < src_depth_.cols; ++x) {
             //std::cout << depth_scale * src_depth_.at<uint16_t>(y,x) << std::endl;
-            if (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < 5){
+            if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > functionConfig_.grip_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < functionConfig_.grip_mode_min_recognition_distance)){
                 mask_depth_filter.at<uint16_t>(y,x) = 0;
             }
+            else{
+                //mask_depth_filter.at<uint16_t>(y,x) = 200;
+            };
         }
     }
     std::cout << depth_scale2cm * src_depth_.at<uint16_t>(240, 320) << std::endl;
-    cv::imshow("1111", mask_depth_filter);
+    cv::imshow("DepthMask", mask_depth_filter);
     /*
     for(int y = 0; y < 480; y++){
         for(int x = 0; x < 640; x++){
