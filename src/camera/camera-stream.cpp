@@ -55,7 +55,7 @@ int CameraStream::StreamRetrieve(cv::Mat *pFrame_color, cv::Mat *pFrame_depth) t
 
         // Align to depth
         //rs2::align align_to_depth(RS2_STREAM_DEPTH);
-        //frames = align_to_depth.process(frames);
+        //frames_ = align_to_depth.process(frames_);
 
         // Align to color
         rs2::align align_to_color(RS2_STREAM_COLOR);
@@ -99,8 +99,8 @@ int CameraStream::StreamRetrieve(cv::Mat *pFrame_color, cv::Mat *pFrame_depth) t
         // Display in a GUI
         //namedWindow("Display Image", WINDOW_AUTOSIZE );
         //cvtColor(color, color_hsv, COLOR_BGR2HSV);
-        //imshow("Display Color", color);
-        //imshow("Display Depth", pic_depth);
+        //imshow("Display Color", frame_color);
+        //imshow("Display Depth", frame_depth*10);
         //imshow("Display Depth", pic_depth*20);
         waitKey(1);
         /*

@@ -32,14 +32,28 @@ void DepthSolution::DepthSolutionStream(cv::Mat *import_src_color, cv::Mat *impo
 }
 
 void DepthSolution::DeepConversion() {
-    //获取深度像素与现实单位比例（D435默认1毫米）
-    float depth_scale = 0.001;//DepthTool::get_depth_scale(profile_.get_device());
+    //获取深度像素与现实单位比例
+    float depth_scale2m = 0.001;//DepthTool::get_depth_scale(profile_.get_device());
+
+    float depth_scale2cm = 0.1;
 
     cv::Mat mask_depth_filter(480, 640, CV_8UC3);
 
-    //mask_depth_filter = src_depth_.clone();
-    mask_depth_filter.setTo(0);
-
+    mask_depth_filter = src_depth_.clone();
+    //mask_depth_filter.setTo(0);
+    cv::imshow("Color", src_color_);
+    cv::imshow("Depth", src_depth_);
+    for (int y = 0; y < src_depth_.rows; ++y) {
+        for (int x = 0; x < src_depth_.cols; ++x) {
+            //std::cout << depth_scale * src_depth_.at<uint16_t>(y,x) << std::endl;
+            if (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < 5){
+                mask_depth_filter.at<uint16_t>(y,x) = 0;
+            }
+        }
+    }
+    std::cout << depth_scale2cm * src_depth_.at<uint16_t>(240, 320) << std::endl;
+    cv::imshow("1111", mask_depth_filter);
+    /*
     for(int y = 0; y < 480; y++){
         for(int x = 0; x < 640; x++){
             //如果深度图下该点像素不为0，表示有距离信息
@@ -56,7 +70,7 @@ void DepthSolution::DeepConversion() {
             }
         }
     }
-    cv::imshow("1111", mask_depth_filter);
+    cv::imshow("1111", mask_depth_filter);*/
     //cv::threshold(mask_depth_filter_, mask_depth_filter_, 127, 255, cv::THRESH_BINARY);
     //cv::threshold(mask_depth_filter_, mask_depth_filter_, 125,255, cv::THRESH_BINARY_INV);
     //src_color_ = src_color_ & mask_depth_filter;
