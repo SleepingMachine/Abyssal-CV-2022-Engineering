@@ -4,30 +4,37 @@
 
 #include "depth-analysis.hpp"
 
-cv::Mat DepthSolution::src_color_         (480, 640, CV_8UC3);
-cv::Mat DepthSolution::src_depth_         (480, 640, CV_8UC3);
+cv::Mat DepthSolution::src_color_          (480, 640, CV_8UC3);
+cv::Mat DepthSolution::src_depth_          (480, 640, CV_8UC3);
+cv::Mat DepthSolution::dst_depth_analysis_ (480, 640, CV_8UC3);
 //cv::Mat DepthSolution::mask_depth_filter_ (480, 640, CV_8UC3);
 
-extern std::mutex mutex_depth_solution;;
+extern std::mutex mutex_camera;
+extern std::mutex mutex_depth_analysis;
 extern std::atomic_bool CameraisOpen;
 
 FunctionConfig DepthSolution::functionConfig_ = FunctionConfigFactory::getFunctionConfig();
 
-void DepthSolution::DepthSolutionStream(cv::Mat *import_src_color, cv::Mat *import_src_depth) {
+void DepthSolution::DepthSolutionStream(cv::Mat *import_src_color, cv::Mat *import_src_depth, cv::Mat* export_dst_color, cv::Mat* export_dst_depth) {
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
 
     while (CameraisOpen){
-        if (mutex_depth_solution.try_lock()) {
+        if (mutex_camera.try_lock()) {
             temp_src_color = *import_src_color;
             temp_src_depth = *import_src_depth;
-            mutex_depth_solution.unlock();
+            mutex_camera.unlock();
         }
         if (!temp_src_color.empty() && !temp_src_depth.empty()){
             temp_src_color.copyTo(src_color_);
             temp_src_depth.copyTo(src_depth_);
         }
         DeepConversion();
+        if (mutex_camera.try_lock()) {
+            dst_depth_analysis_.copyTo(*export_dst_color);
+            src_depth_.copyTo(*export_dst_depth);
+            mutex_camera.unlock();
+        }
     }
 }
 
@@ -39,23 +46,26 @@ void DepthSolution::DeepConversion() {
 
     cv::Mat mask_depth_filter(480, 640, CV_8UC1);
 
-    mask_depth_filter = src_depth_.clone()*1000;
-    //mask_depth_filter.setTo(0);
-    cv::imshow("Color", src_color_);
-    cv::imshow("Depth", src_depth_);
+    //mask_depth_filter = src_depth_.clone();
+    mask_depth_filter.setTo(255);
+    dst_depth_analysis_.setTo(0);
+
     for (int y = 0; y < src_depth_.rows; ++y) {
         for (int x = 0; x < src_depth_.cols; ++x) {
             //std::cout << depth_scale * src_depth_.at<uint16_t>(y,x) << std::endl;
             if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > functionConfig_.grip_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < functionConfig_.grip_mode_min_recognition_distance)){
-                mask_depth_filter.at<uint16_t>(y,x) = 0;
+                mask_depth_filter.at<uchar>(y, x) = 0;
             }
-            else{
-                //mask_depth_filter.at<uint16_t>(y,x) = 200;
-            };
         }
     }
-    std::cout << depth_scale2cm * src_depth_.at<uint16_t>(240, 320) << std::endl;
-    cv::imshow("DepthMask", mask_depth_filter);
+
+    src_color_.copyTo(dst_depth_analysis_, mask_depth_filter);
+    //dst_depth_analysis_ = src_color_ & mask_depth_filter;
+    if (functionConfig_._enable_debug_mode){
+        cv::imshow("Color", src_color_);
+        cv::imshow("Depth", src_depth_);
+        cv::imshow("Depth Mask", dst_depth_analysis_);
+    }
     /*
     for(int y = 0; y < 480; y++){
         for(int x = 0; x < 640; x++){

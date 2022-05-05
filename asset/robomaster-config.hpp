@@ -10,9 +10,11 @@ struct FunctionConfig
 {
     // Catch Mode => false
     // Grip Mode  => true
-    bool _mining_mode               = true;
+    bool _mining_mode                        = true;
     float grip_mode_min_recognition_distance = 60.0;
     float grip_mode_max_recognition_distance = 120.0;
+
+    bool _enable_debug_mode                  = false;
 /*
     // RED  => false
     // BLUE => true
@@ -28,7 +30,7 @@ struct FunctionConfig
     //std::string localVideoPath = "/home/sleepingmachine/视频/lbr_fan.mp4";
     std::string localVideoPath = "/home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022/asset/AutoSaveVideo/2022.03.26 14-57-45.avi";
 */
-    bool _enableDebugMode           = true;
+    //bool _enableDebugMode           = true;
 };
 
 class FunctionConfigFactory{

@@ -12,7 +12,7 @@ rs2::pipeline_profile CameraStream::profile_;
 
 std::atomic_bool CameraisOpen;
 
-extern std::mutex mutex_depth_solution;
+extern std::mutex mutex_camera;
 
 void CameraStream::InitCamera(){
     // judge whether devices is exist or not
@@ -91,10 +91,10 @@ int CameraStream::StreamRetrieve(cv::Mat *pFrame_color, cv::Mat *pFrame_depth) t
         //float depth_scale = DepthTool::get_depth_scale(profile_.get_device());
         //std:: cout << depth_scale << std::endl;
 
-        if (mutex_depth_solution.try_lock()) {
+        if (mutex_camera.try_lock()) {
             frame_color.copyTo(*pFrame_color);
             frame_depth.copyTo(*pFrame_depth);
-            mutex_depth_solution.unlock();
+            mutex_camera.unlock();
         }
         // Display in a GUI
         //namedWindow("Display Image", WINDOW_AUTOSIZE );

@@ -20,12 +20,13 @@ class DepthSolution{
 private:
     static cv::Mat src_color_;
     static cv::Mat src_depth_;
+    static cv::Mat dst_depth_analysis_;
     //static cv::Mat mask_depth_filter_;
     static rs2::pipeline_profile profile_;
     static void DeepConversion();
 public:
     static FunctionConfig functionConfig_;
-    static void DepthSolutionStream(cv::Mat* import_src_color, cv::Mat* import_src_depth);
+    static void DepthSolutionStream(cv::Mat* import_src_color, cv::Mat* import_src_depth, cv::Mat* export_dst_color, cv::Mat* export_dst_depth);
     DepthSolution();
     ~DepthSolution() {};
 

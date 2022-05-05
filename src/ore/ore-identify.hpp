@@ -53,6 +53,6 @@ public:
     IdentifyOre();
     ~IdentifyOre() {};
 
-    static void OreIdentifyStream(cv::Mat* import_src_color, int* sentData);
+    static void OreIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth, int* sentData);
 };
 #endif //ABYSSAL_CV_2022_ENGINEERING_ORE_IDENTIFY_HPP
