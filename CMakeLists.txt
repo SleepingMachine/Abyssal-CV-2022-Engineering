@@ -19,7 +19,7 @@ include_directories( include )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 include_directories( ${realsense2_INCLUDE_DIRS})
 
-add_executable(Abyssal_CV_2022_Engineering src/main.cpp include/example.hpp include/example-utils.hpp include/example-imgui.hpp src/camera/camera-stream.cpp src/camera/camera-stream.hpp src/ore/ore-identify.cpp src/ore/ore-identify.hpp src/ore/ore-tool.hpp asset/robomaster-config.hpp src/depth/depth-analysis.cpp src/depth/depth-analysis.hpp src/depth/depth-tool.hpp src/record/record-video.cpp src/record/record-video.hpp)
+add_executable(Abyssal_CV_2022_Engineering src/main.cpp include/example.hpp include/example-utils.hpp include/example-imgui.hpp src/camera/camera-stream.cpp src/camera/camera-stream.hpp src/ore/ore-identify.cpp src/ore/ore-identify.hpp src/ore/ore-tool.hpp asset/robomaster-config.hpp src/depth/depth-analysis.cpp src/depth/depth-analysis.hpp src/depth/depth-tool.hpp src/record/record-video.cpp src/record/record-video.hpp src/control/control-switch.cpp src/control/control-switch.hpp)
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} ${realsense2_LIBRARY})

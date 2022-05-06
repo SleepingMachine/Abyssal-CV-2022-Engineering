@@ -33,6 +33,8 @@ private:
     static int erode_;
     static int dilate_;
 
+    static int target_ore_index;
+
     static std::vector<std::vector<cv::Point2i>> all_contours_;
     static std::vector<std::vector<cv::Point2i>> suspected_ore_contours_;
 
@@ -49,13 +51,21 @@ private:
     static void ImagePreprocess(const cv::Mat &src);
     static void SearchOre(cv::Mat &preprocessed);
     static void DepthCalculation();
-    static void resourceRelease();
+    static void TargetSelection();
     static void DrawReferenceGraphics();
+    static void ResourceRelease();
 
 public:
+    struct OreStruct{
+        cv::RotatedRect ore_rect;
+        float ore_depth;
+    };
     IdentifyOre();
     ~IdentifyOre() {};
 
     static void OreIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth, int* sentData);
+
+private:
+    static std::vector<OreStruct> ore_structs_;
 };
 #endif //ABYSSAL_CV_2022_ENGINEERING_ORE_IDENTIFY_HPP

@@ -1,15 +1,14 @@
 # ninja log v5
-2	2467	1651838586042598791	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/ore/ore-identify.cpp.o	de4d2db0d96719dd
-2	3318	1651838498313661665	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/depth/depth-analysis.cpp.o	b5c909b4fd7ed82e
-0	35	1651840356644446048	build.ninja	68b167adcbd6d9e
-1	4642	1651838499637674755	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/main.cpp.o	e6e33b110329b72a
-1	3060	1651751917565804230	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/camera/camera-stream.cpp.o	a9b03d35810e3f2c
-2467	2686	1651838586258601264	Abyssal_CV_2022_Engineering	36335e1ce8404f32
-2	3704	1651842845459435474	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/camera/camera-stream.cpp.o	a9b03d35810e3f2c
-2	4000	1651842845755447066	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/ore/ore-identify.cpp.o	de4d2db0d96719dd
-2	4081	1651842845835450199	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/record/record-video.cpp.o	c76b898374d43dd6
-1	4148	1651842845903452862	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/main.cpp.o	e6e33b110329b72a
+1	2339	1651845295256257625	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/ore/ore-identify.cpp.o	de4d2db0d96719dd
+2	2852	1651844749150118470	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/record/record-video.cpp.o	c76b898374d43dd6
 2	4264	1651842846019457404	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/depth/depth-analysis.cpp.o	b5c909b4fd7ed82e
-4264	4672	1651842846427473366	Abyssal_CV_2022_Engineering	955c3ec14645e62f
-1	2658	1651843016477646630	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/main.cpp.o	e6e33b110329b72a
-2658	2948	1651843016765656358	Abyssal_CV_2022_Engineering	955c3ec14645e62f
+0	35	1651845876599511374	build.ninja	68b167adcbd6d9e
+1	3878	1651844750174136720	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/main.cpp.o	e6e33b110329b72a
+2	3704	1651842845459435474	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/camera/camera-stream.cpp.o	a9b03d35810e3f2c
+2339	2627	1651845295540263047	Abyssal_CV_2022_Engineering	955c3ec14645e62f
+2	11	1651846116100202064	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/control/control-switch.cpp.o	2c3ab1288b40c0ed
+1	2623	1651846118712253319	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/ore/ore-identify.cpp.o	de4d2db0d96719dd
+2	2677	1651846118768254417	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/record/record-video.cpp.o	c76b898374d43dd6
+2	2819	1651846118908257164	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/depth/depth-analysis.cpp.o	b5c909b4fd7ed82e
+1	2970	1651846119060260147	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/main.cpp.o	e6e33b110329b72a
+2970	3279	1651846119364266113	Abyssal_CV_2022_Engineering	5e0982953694b7d8
