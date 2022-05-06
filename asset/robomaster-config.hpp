@@ -78,7 +78,7 @@ typedef enum {
 //装甲板参数
 struct OrePara {
     EnemyColor enemyColor;
-    int min_ore_area_ = 600;
+    int min_ore_area_ = 800;
     float min_ore_length_width_ratio = 0.5;
     float max_ore_length_width_ratio = 2;
 

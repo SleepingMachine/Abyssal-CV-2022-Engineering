@@ -12,7 +12,7 @@ IdentifyOre::IdentifyOre() {}
 
 int IdentifyOre::hmin_0_ = 0;
 int IdentifyOre::hmax_0_ = 65;
-int IdentifyOre::smin_0_ = 245;
+int IdentifyOre::smin_0_ = 235;
 int IdentifyOre::smax_0_ = 255;
 int IdentifyOre::vmin_0_ = 115;
 int IdentifyOre::vmax_0_ = 255;
@@ -25,14 +25,15 @@ int IdentifyOre::vmin_1_ = 0;
 int IdentifyOre::vmax_1_ = 0;
 
 int IdentifyOre::open_   = 1;
-int IdentifyOre::close_  = 10;
-int IdentifyOre::erode_  = 3;
+int IdentifyOre::close_  = 13;
+int IdentifyOre::erode_  = 5;
 int IdentifyOre::dilate_ = 3;
 
-std::vector<std::vector<cv::Point2i>> IdentifyOre::allContours_;
+std::vector<std::vector<cv::Point2i>> IdentifyOre::all_contours_;
+std::vector<std::vector<cv::Point2i>> IdentifyOre::suspected_ore_contours_;
 std::vector<cv::Vec4i> IdentifyOre::hierarchy_;
 
-std::vector<cv::RotatedRect> IdentifyOre::suspected_ore_;
+std::vector<cv::RotatedRect> IdentifyOre::suspected_ore_rects_;
 
 cv::Mat IdentifyOre::src_color_     (480, 640, CV_8UC3);
 cv::Mat IdentifyOre::src_depth_     (480, 640, CV_8UC3);
@@ -64,6 +65,7 @@ void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_s
 
         ImagePreprocess(src_color_);
         SearchOre(dst_color_);
+        DepthCalculation();
         DrawReferenceGraphics();
         resourceRelease();
     }
@@ -84,10 +86,10 @@ void IdentifyOre::ImagePreprocess(const cv::Mat &src) {
 }
 
 void IdentifyOre::SearchOre(cv::Mat &preprocessed) {
-    cv::findContours(preprocessed, allContours_, hierarchy_, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-    for (int i = 0; i < allContours_.size(); ++i) {
+    cv::findContours(preprocessed, all_contours_, hierarchy_, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+    for (int i = 0; i < all_contours_.size(); ++i) {
         if (hierarchy_[i][3] == -1) {
-            cv::RotatedRect scanRect = cv::minAreaRect(allContours_[i]);                    //检测最小面积的矩形
+            cv::RotatedRect scanRect = cv::minAreaRect(all_contours_[i]);                    //检测最小面积的矩形
             cv::Point2f vertices[4];
             scanRect.points(vertices);
             if (scanRect.size.area() < orePara.min_ore_area_){
@@ -96,24 +98,42 @@ void IdentifyOre::SearchOre(cv::Mat &preprocessed) {
             if (OreTool::getRectLengthWidthRatio(scanRect) < orePara.min_ore_length_width_ratio || OreTool::getRectLengthWidthRatio(scanRect) > orePara.max_ore_length_width_ratio){
                 continue;
             }
-            suspected_ore_.push_back(scanRect);
+            suspected_ore_rects_.push_back(scanRect);
+            suspected_ore_contours_.push_back(all_contours_[i]);
         }
     }
 }
 
 void IdentifyOre::resourceRelease() {
-    allContours_  .clear();                                //轮廓
+    all_contours_  .clear();                                //轮廓
     hierarchy_    .clear();
-    suspected_ore_.clear();
+    suspected_ore_rects_.clear();
+    suspected_ore_contours_.clear();
 }
 
 void IdentifyOre::DrawReferenceGraphics() {
-    for (int i = 0; i < suspected_ore_.size(); ++i) {
-        OreTool::drawRotatedRect(src_color_, suspected_ore_[i], cv::Scalar(15, 198, 150), 4, 16);
+    for (int i = 0; i < suspected_ore_rects_.size(); ++i) {
+        OreTool::drawRotatedRect(src_color_, suspected_ore_rects_[i], cv::Scalar(15, 198, 150), 4, 16);
     }
     cv::imshow("Color", src_color_);
     //cv::imshow("Depth", src_depth_);
     cv::imshow("Mask",  dst_color_);
+}
+
+void IdentifyOre::DepthCalculation() {
+    float depth_scale2m = 0.001;//DepthTool::get_depth_scale(profile_.get_device());
+    float depth_scale2cm = 0.1;
+
+    if (!suspected_ore_rects_.empty() && !suspected_ore_contours_.empty()){
+        for (int i = 0; i < suspected_ore_contours_.size(); ++i) {
+            float estimated_depth = 0;
+            for (int j = 0; j < suspected_ore_contours_[i].size(); ++j) {
+                estimated_depth += depth_scale2cm * src_depth_.at<uint16_t>(suspected_ore_contours_[i][j].y,suspected_ore_contours_[i][j].x);
+            }
+            estimated_depth /= suspected_ore_contours_[i].size();
+            std::cout << estimated_depth << std::endl;
+        }
+    }
 }
 
 

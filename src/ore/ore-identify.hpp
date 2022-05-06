@@ -33,10 +33,12 @@ private:
     static int erode_;
     static int dilate_;
 
-    static std::vector<std::vector<cv::Point2i>> allContours_;
+    static std::vector<std::vector<cv::Point2i>> all_contours_;
+    static std::vector<std::vector<cv::Point2i>> suspected_ore_contours_;
+
     static std::vector<cv::Vec4i> hierarchy_;
 
-    static std::vector<cv::RotatedRect> suspected_ore_;
+    static std::vector<cv::RotatedRect> suspected_ore_rects_;
 
     static cv::Mat src_color_;
     static cv::Mat src_depth_;
@@ -46,6 +48,7 @@ private:
 
     static void ImagePreprocess(const cv::Mat &src);
     static void SearchOre(cv::Mat &preprocessed);
+    static void DepthCalculation();
     static void resourceRelease();
     static void DrawReferenceGraphics();
 
