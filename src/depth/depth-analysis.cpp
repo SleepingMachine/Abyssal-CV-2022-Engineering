@@ -11,7 +11,7 @@ cv::Mat DepthSolution::dst_depth_analysis_ (480, 640, CV_8UC3);
 
 extern std::mutex mutex_camera;
 extern std::mutex mutex_depth_analysis;
-extern std::atomic_bool CameraisOpen;
+extern std::atomic_bool camera_is_open;
 
 FunctionConfig DepthSolution::functionConfig_ = FunctionConfigFactory::getFunctionConfig();
 
@@ -19,7 +19,7 @@ void DepthSolution::DepthSolutionStream(cv::Mat *import_src_color, cv::Mat *impo
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
 
-    while (CameraisOpen){
+    while (camera_is_open){
         if (mutex_camera.try_lock()) {
             temp_src_color = *import_src_color;
             temp_src_depth = *import_src_depth;

@@ -14,6 +14,7 @@ struct FunctionConfig
     float grip_mode_min_recognition_distance = 60.0;
     float grip_mode_max_recognition_distance = 120.0;
 
+    bool _enableSaveVideo                    = true;
     bool _enable_debug_mode                  = false;
 /*
     // RED  => false

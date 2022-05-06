@@ -10,7 +10,7 @@ rs2::config CameraStream::cfg_;
 rs2::colorizer CameraStream::colorizer_;
 rs2::pipeline_profile CameraStream::profile_;
 
-std::atomic_bool CameraisOpen;
+std::atomic_bool camera_is_open;
 
 extern std::mutex mutex_camera;
 

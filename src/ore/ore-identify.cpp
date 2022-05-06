@@ -6,7 +6,7 @@
 
 //extern std::mutex mutex_color;
 extern std::mutex mutex_depth_analysis;
-extern std::atomic_bool CameraisOpen;
+extern std::atomic_bool camera_is_open;
 
 IdentifyOre::IdentifyOre() {}
 
@@ -52,7 +52,7 @@ void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_s
                               &open_,    &close_,    &erode_,   &dilate_);
 
 
-    while (CameraisOpen){
+    while (camera_is_open){
         if (mutex_depth_analysis.try_lock()) {
             temp_src_color = *import_src_color;
             temp_src_depth = *import_src_depth;

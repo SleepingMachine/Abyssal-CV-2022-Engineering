@@ -1,6 +1,7 @@
 #include "camera/camera-stream.hpp"
 #include "ore/ore-identify.hpp"
 #include "depth/depth-analysis.hpp"
+#include "record/record-video.hpp"
 #include <thread>
 
 std::mutex mutex_color;
@@ -8,7 +9,7 @@ std::mutex mutex_camera;
 std::mutex mutex_depth_analysis;
 
 static int sentPortData;
-extern std::atomic_bool CameraisOpen;
+extern std::atomic_bool camera_is_open;
 
 cv::Mat frame_depth                (Size(kCameraFrameWidth, kCameraFrameHeight), CV_8UC3);
 cv::Mat frame_color                (Size(kCameraFrameWidth, kCameraFrameHeight), CV_8UC3);
@@ -17,10 +18,11 @@ cv::Mat frame_depth_depth_analysis (Size(kCameraFrameWidth, kCameraFrameHeight),
 //rs2::pipeline_profile profile;
 
 int main(int argc, char** argv){
-    CameraisOpen = true;
-    std::thread camera_thread(CameraStream::StreamRetrieve, &frame_color, &frame_depth);
-    std::thread depth_thread (DepthSolution::DepthSolutionStream, &frame_color, &frame_depth, &frame_color_depth_analysis, &frame_depth_depth_analysis);
-    std::thread ore_thread(IdentifyOre::OreIdentifyStream, &frame_color_depth_analysis, &frame_depth_depth_analysis, &sentPortData);
+    camera_is_open = true;
+    std::thread camera_thread (CameraStream::StreamRetrieve, &frame_color, &frame_depth);
+    std::thread depth_thread  (DepthSolution::DepthSolutionStream, &frame_color, &frame_depth, &frame_color_depth_analysis, &frame_depth_depth_analysis);
+    std::thread ore_thread    (IdentifyOre::OreIdentifyStream, &frame_color_depth_analysis, &frame_depth_depth_analysis, &sentPortData);
+    std::thread record_thread (RecordVideo::SaveRunningVideo, &frame_color);
 
     camera_thread.join();
     depth_thread.join();
