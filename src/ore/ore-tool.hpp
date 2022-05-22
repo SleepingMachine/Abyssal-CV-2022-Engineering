@@ -70,6 +70,10 @@ public:
         return k;
     }
 
+    static inline float getTwoPointDistance(cv::Point2f point_1, cv::Point2f point_2) {
+        return sqrtf(pow((point_1.x - point_2.x), 2) + pow((point_1.y - point_2.y), 2));
+    }
+
 private:
 
 

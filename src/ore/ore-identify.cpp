@@ -41,7 +41,7 @@ std::vector<cv::Vec4i> IdentifyOre::hierarchy_;
 
 std::vector<cv::RotatedRect> IdentifyOre::suspected_ore_rects_;
 std::vector<IdentifyOre::OreStruct> IdentifyOre::ore_structs_;
-std::vector<IdentifyOre::TargetOreLocationStruct> IdentifyOre::target_ore_track_;
+std::vector<cv::Point2f> IdentifyOre::target_ore_track_;
 
 cv::Mat IdentifyOre::src_color_     (480, 640, CV_8UC3);
 cv::Mat IdentifyOre::src_depth_     (480, 640, CV_8UC3);
@@ -134,7 +134,7 @@ void IdentifyOre::DrawReferenceGraphics() {
         std::cout << "找到[" << ore_structs_.size() << "]个矿石, 目标矿石中心点的平面坐标为["
                   << ore_structs_[target_ore_index].ore_rect.center.x << "," << ore_structs_[target_ore_index].ore_rect.center.y
                   << "],深度为[" << ore_structs_[target_ore_index].ore_depth << "]，参考单位为[cm]" << "\n"
-                  << "当前保存的矿石轨迹座标点数为" << "[" << target_ore_track_.size() << "]"
+                  << "当前保存的矿石轨迹座标点数为[" << target_ore_track_.size() << "]"
                   << std::endl;
     }
 
@@ -159,7 +159,6 @@ void IdentifyOre::DepthCalculation() {
             temp_orestruct.ore_depth = estimated_depth;
             temp_orestruct.ore_rect  = cv::minAreaRect(suspected_ore_contours_[i]);
             ore_structs_.push_back(temp_orestruct);
-
             //std::cout << estimated_depth << std::endl;
         }
     }
@@ -188,34 +187,64 @@ void IdentifyOre::TargetSelection() {
 
 void IdentifyOre::DropDetection() {
     if (target_ore_index >= 0){
-        current_target_ore_location_.target_ore_location_x = ore_structs_[target_ore_index].ore_rect.center.x;
-        current_target_ore_location_.target_ore_location_y = ore_structs_[target_ore_index].ore_rect.center.y;
-        current_target_ore_location_.target_ore_location_z = ore_structs_[target_ore_index].ore_depth;
+        current_target_ore_location_.target_ore_center = cv::Point2f(ore_structs_[target_ore_index].ore_rect.center.x, ore_structs_[target_ore_index].ore_rect.center.y);
+        current_target_ore_location_.target_ore_depth = ore_structs_[target_ore_index].ore_depth;
         current_target_ore_location_.target_ore_radius = (ore_structs_[target_ore_index].ore_rect.size.height + ore_structs_[target_ore_index].ore_rect.size.height) / 2;
 
         if (target_ore_track_.empty()){
-            target_ore_track_.push_back(current_target_ore_location_);
+            target_ore_track_.push_back(current_target_ore_location_.target_ore_center);
         }
-        else if( abs(target_ore_track_.back().target_ore_location_x - current_target_ore_location_.target_ore_location_x) < current_target_ore_location_.target_ore_radius
-                && abs(target_ore_track_.back().target_ore_location_y - current_target_ore_location_.target_ore_location_y) < current_target_ore_location_.target_ore_radius
-                && abs(target_ore_track_.back().target_ore_location_z - current_target_ore_location_.target_ore_location_z) < current_target_ore_location_.target_ore_radius){
+
+        else if(OreTool::getTwoPointDistance(current_target_ore_location_.target_ore_center, target_ore_track_.back()) < current_target_ore_location_.target_ore_radius){
             if (target_ore_track_.size() >= DepthSolution::functionConfig_.ore_track_point_records_num){
-                std::vector<IdentifyOre::TargetOreLocationStruct>::iterator k = target_ore_track_.begin();
+                std::vector<cv::Point2f>::iterator k = target_ore_track_.begin();
                 target_ore_track_.erase(k);
             }
-            target_ore_track_.push_back(current_target_ore_location_);
+            target_ore_track_.push_back(current_target_ore_location_.target_ore_center);
         }
 
-        if(target_ore_track_.size() == DepthSolution::functionConfig_.ore_track_point_records_num){
-            std::vector<cv::Point2f> temp_points;
-            for (int i = 0; i < target_ore_track_.size(); ++i) {
-                temp_points.push_back(cv::Point2f(target_ore_track_[i].target_ore_location_x, target_ore_track_[i].target_ore_location_y));
-            }
-            float testdata = OreTool::trackLineFit(temp_points);
-            std::cout << "轨迹点拟合斜率为：" << testdata << std::endl;
-            cv::line(src_color_, cv::Point(320,240), cv::Point(320 + 50, 240 + 50 * testdata), cv::Scalar (0,0,255), 2);
+    }
+    else{
+        if (!target_ore_track_.empty()){
+            std::vector<cv::Point2f>::iterator k = target_ore_track_.begin();
+            target_ore_track_.erase(k);
         }
+    }
 
+    if(target_ore_track_.size() >= DepthSolution::functionConfig_.ore_track_point_records_num * 0.5){
+
+        float sum_x = 0;
+        for (int i = 0; i < target_ore_track_.size(); ++i) {
+            sum_x += target_ore_track_[i].x;
+        }
+        //float sum_x = std::accumulate(std::begin(target_ore_track_), std::end(target_ore_track_), 0.0);
+        float mean_x = sum_x / target_ore_track_.size();
+        float variance_x  = 0.0;
+        for (uint16_t i = 0 ; i < target_ore_track_.size() ; i++)
+        {
+            variance_x = variance_x + pow(target_ore_track_[i].x-mean_x,2);
+        }
+        variance_x /= target_ore_track_.size();
+
+        float sum_y = 0;
+        for (int i = 0; i < target_ore_track_.size(); ++i) {
+            sum_y += target_ore_track_[i].y;
+        }
+        //float sum_x = std::accumulate(std::begin(target_ore_track_), std::end(target_ore_track_), 0.0);
+        float mean_y = sum_y / target_ore_track_.size();
+        float variance_y  = 0.0;
+        for (uint16_t i = 0 ; i < target_ore_track_.size() ; i++)
+        {
+            variance_y = variance_y + pow(target_ore_track_[i].y-mean_y,2);
+        }
+        variance_y /= target_ore_track_.size();
+
+        //float fit_line_slope = OreTool::trackLineFit(target_ore_track_);
+        //std::cout << "轨迹点拟合斜率为[" << fit_line_slope  << "]" << std::endl;
+        if (/*abs(fit_line_slope) >= 20 &&*/ variance_y > 100 * variance_x){
+            cv::circle(src_color_, current_target_ore_location_.target_ore_center, 15, cv::Scalar(0,0,255), 10);
+        }
+        //cv::line(src_color_, cv::Point(320,240), cv::Point(320 + 50, 240 + 50 * fit_line_slope), cv::Scalar (0,0,255), 2);
     }
 
 }

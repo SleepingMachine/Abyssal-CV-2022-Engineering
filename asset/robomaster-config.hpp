@@ -15,7 +15,7 @@ typedef enum {
 struct FunctionConfig
 {
 
-    int _mining_mode                             = GRIP_MODE;
+    int _mining_mode                             = CATCH_MODE;
 
     float grip_mode_min_recognition_distance     = 60.0;
     float grip_mode_max_recognition_distance     = 120.0;

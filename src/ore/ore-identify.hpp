@@ -69,20 +69,18 @@ public:
     static void OreIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth, int* sentData);
 
     struct TargetOreLocationStruct {
-        float target_ore_location_x;
-        float target_ore_location_y;
-        float target_ore_location_z;
-        float target_ore_radius;
+        cv::Point2f target_ore_center;
+        float       target_ore_depth;
+        float       target_ore_radius;
         TargetOreLocationStruct(){
-            target_ore_location_x = 0;
-            target_ore_location_y = 0;
-            target_ore_location_z = 0;
-            target_ore_radius     = 0;
+            target_ore_center = cv::Point2f(0, 0);
+            target_ore_depth  = 0;
+            target_ore_radius = 0;
         }
     };
 private:
     static std::vector<OreStruct> ore_structs_;
-    static std::vector<TargetOreLocationStruct> target_ore_track_;
+    static std::vector<cv::Point2f> target_ore_track_;
     static TargetOreLocationStruct current_target_ore_location_;
 };
 #endif //ABYSSAL_CV_2022_ENGINEERING_ORE_IDENTIFY_HPP
