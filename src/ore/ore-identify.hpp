@@ -2,6 +2,7 @@
 // Created by sleepingmachine on 22-4-14.
 //
 #include "ore-tool.hpp"
+#include "../depth/depth-analysis.hpp"
 #include "../asset/robomaster-config.hpp"
 
 #include <opencv2/opencv.hpp>
@@ -37,6 +38,7 @@ private:
 
     static std::vector<std::vector<cv::Point2i>> all_contours_;
     static std::vector<std::vector<cv::Point2i>> suspected_ore_contours_;
+    //static std::vector<int> target_ore_location_;
 
     static std::vector<cv::Vec4i> hierarchy_;
 
@@ -52,6 +54,7 @@ private:
     static void SearchOre(cv::Mat &preprocessed);
     static void DepthCalculation();
     static void TargetSelection();
+    static void DropDetection();
     static void DrawReferenceGraphics();
     static void ResourceRelease();
 
@@ -65,7 +68,21 @@ public:
 
     static void OreIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth, int* sentData);
 
+    struct TargetOreLocationStruct {
+        float target_ore_location_x;
+        float target_ore_location_y;
+        float target_ore_location_z;
+        float target_ore_radius;
+        TargetOreLocationStruct(){
+            target_ore_location_x = 0;
+            target_ore_location_y = 0;
+            target_ore_location_z = 0;
+            target_ore_radius     = 0;
+        }
+    };
 private:
     static std::vector<OreStruct> ore_structs_;
+    static std::vector<TargetOreLocationStruct> target_ore_track_;
+    static TargetOreLocationStruct current_target_ore_location_;
 };
 #endif //ABYSSAL_CV_2022_ENGINEERING_ORE_IDENTIFY_HPP

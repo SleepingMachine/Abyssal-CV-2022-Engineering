@@ -10,6 +10,7 @@ extern std::atomic_bool camera_is_open;
 
 IdentifyOre::IdentifyOre() {}
 
+
 int IdentifyOre::hmin_0_ = 0;
 int IdentifyOre::hmax_0_ = 65;
 int IdentifyOre::smin_0_ = 235;
@@ -31,12 +32,16 @@ int IdentifyOre::dilate_ = 3;
 
 int IdentifyOre::target_ore_index = -1;
 
+IdentifyOre::TargetOreLocationStruct IdentifyOre::current_target_ore_location_;
+
 std::vector<std::vector<cv::Point2i>> IdentifyOre::all_contours_;
 std::vector<std::vector<cv::Point2i>> IdentifyOre::suspected_ore_contours_;
+
 std::vector<cv::Vec4i> IdentifyOre::hierarchy_;
 
 std::vector<cv::RotatedRect> IdentifyOre::suspected_ore_rects_;
 std::vector<IdentifyOre::OreStruct> IdentifyOre::ore_structs_;
+std::vector<IdentifyOre::TargetOreLocationStruct> IdentifyOre::target_ore_track_;
 
 cv::Mat IdentifyOre::src_color_     (480, 640, CV_8UC3);
 cv::Mat IdentifyOre::src_depth_     (480, 640, CV_8UC3);
@@ -69,6 +74,7 @@ void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_s
         SearchOre(dst_color_);
         DepthCalculation();
         TargetSelection();
+        DropDetection();
         DrawReferenceGraphics();
         ResourceRelease();
     }
@@ -114,6 +120,7 @@ void IdentifyOre::ResourceRelease() {
     suspected_ore_contours_.clear();
     ore_structs_.clear();
     target_ore_index = -1;
+    current_target_ore_location_ = IdentifyOre::TargetOreLocationStruct();
 }
 
 void IdentifyOre::DrawReferenceGraphics() {
@@ -123,9 +130,12 @@ void IdentifyOre::DrawReferenceGraphics() {
     }*/
     if (target_ore_index >= 0){
         OreTool::drawRotatedRect(src_color_, ore_structs_[target_ore_index].ore_rect, cv::Scalar(15, 198, 150), 4, 16);
+
         std::cout << "找到[" << ore_structs_.size() << "]个矿石, 目标矿石中心点的平面坐标为["
                   << ore_structs_[target_ore_index].ore_rect.center.x << "," << ore_structs_[target_ore_index].ore_rect.center.y
-                  << "],深度为[" << ore_structs_[target_ore_index].ore_depth << "]，参考单位为[cm]" << std::endl;
+                  << "],深度为[" << ore_structs_[target_ore_index].ore_depth << "]，参考单位为[cm]" << "\n"
+                  << "当前保存的矿石轨迹座标点数为" << "[" << target_ore_track_.size() << "]"
+                  << std::endl;
     }
 
     cv::imshow("Color", src_color_);
@@ -144,10 +154,12 @@ void IdentifyOre::DepthCalculation() {
                 estimated_depth += depth_scale2cm * src_depth_.at<uint16_t>(suspected_ore_contours_[i][j].y,suspected_ore_contours_[i][j].x);
             }
             estimated_depth /= suspected_ore_contours_[i].size();
+
             IdentifyOre::OreStruct temp_orestruct;
             temp_orestruct.ore_depth = estimated_depth;
             temp_orestruct.ore_rect  = cv::minAreaRect(suspected_ore_contours_[i]);
             ore_structs_.push_back(temp_orestruct);
+
             //std::cout << estimated_depth << std::endl;
         }
     }
@@ -170,6 +182,40 @@ void IdentifyOre::TargetSelection() {
                 max_ore_rect_area = ore_structs_[i].ore_rect.size.area();
             }
         }
+    }
+
+}
+
+void IdentifyOre::DropDetection() {
+    if (target_ore_index >= 0){
+        current_target_ore_location_.target_ore_location_x = ore_structs_[target_ore_index].ore_rect.center.x;
+        current_target_ore_location_.target_ore_location_y = ore_structs_[target_ore_index].ore_rect.center.y;
+        current_target_ore_location_.target_ore_location_z = ore_structs_[target_ore_index].ore_depth;
+        current_target_ore_location_.target_ore_radius = (ore_structs_[target_ore_index].ore_rect.size.height + ore_structs_[target_ore_index].ore_rect.size.height) / 2;
+
+        if (target_ore_track_.empty()){
+            target_ore_track_.push_back(current_target_ore_location_);
+        }
+        else if( abs(target_ore_track_.back().target_ore_location_x - current_target_ore_location_.target_ore_location_x) < current_target_ore_location_.target_ore_radius
+                && abs(target_ore_track_.back().target_ore_location_y - current_target_ore_location_.target_ore_location_y) < current_target_ore_location_.target_ore_radius
+                && abs(target_ore_track_.back().target_ore_location_z - current_target_ore_location_.target_ore_location_z) < current_target_ore_location_.target_ore_radius){
+            if (target_ore_track_.size() >= DepthSolution::functionConfig_.ore_track_point_records_num){
+                std::vector<IdentifyOre::TargetOreLocationStruct>::iterator k = target_ore_track_.begin();
+                target_ore_track_.erase(k);
+            }
+            target_ore_track_.push_back(current_target_ore_location_);
+        }
+
+        if(target_ore_track_.size() == DepthSolution::functionConfig_.ore_track_point_records_num){
+            std::vector<cv::Point2f> temp_points;
+            for (int i = 0; i < target_ore_track_.size(); ++i) {
+                temp_points.push_back(cv::Point2f(target_ore_track_[i].target_ore_location_x, target_ore_track_[i].target_ore_location_y));
+            }
+            float testdata = OreTool::trackLineFit(temp_points);
+            std::cout << "轨迹点拟合斜率为：" << testdata << std::endl;
+            cv::line(src_color_, cv::Point(320,240), cv::Point(320 + 50, 240 + 50 * testdata), cv::Scalar (0,0,255), 2);
+        }
+
     }
 
 }

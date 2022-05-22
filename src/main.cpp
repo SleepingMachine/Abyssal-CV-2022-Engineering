@@ -2,6 +2,7 @@
 #include "ore/ore-identify.hpp"
 #include "depth/depth-analysis.hpp"
 #include "record/record-video.hpp"
+#include "switch/switch-mode.hpp"
 #include <thread>
 
 std::mutex mutex_color;
@@ -21,11 +22,14 @@ int main(int argc, char** argv){
     camera_is_open = true;
     std::thread camera_thread (CameraStream::StreamRetrieve, &frame_color, &frame_depth);
     std::thread depth_thread  (DepthSolution::DepthSolutionStream, &frame_color, &frame_depth, &frame_color_depth_analysis, &frame_depth_depth_analysis);
+    //std::thread switch_thread (SwitchControl::SwitchMode);
     std::thread ore_thread    (IdentifyOre::OreIdentifyStream, &frame_color_depth_analysis, &frame_depth_depth_analysis, &sentPortData);
     std::thread record_thread (RecordVideo::SaveRunningVideo, &frame_color);
 
     camera_thread.join();
-    depth_thread.join();
+    depth_thread .join();
+    //switch_thread.join();
+    record_thread.join();
     //ore_thread.join();
     return 0;
 }

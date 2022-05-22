@@ -6,16 +6,30 @@
 #define ABYSSAL_CV_2022_ENGINEERING_ROBOMASTER_CONFIG_HPP
 #include <string>
 
+typedef enum {
+    GRIP_MODE  = 0,
+    CATCH_MODE,
+    EXCHANGE_MODE
+} MiningMode;
+
 struct FunctionConfig
 {
-    // Catch Mode => false
-    // Grip Mode  => true
-    bool _mining_mode                        = true;
-    float grip_mode_min_recognition_distance = 60.0;
-    float grip_mode_max_recognition_distance = 120.0;
 
-    bool _enableSaveVideo                    = false;
-    bool _enable_debug_mode                  = false;
+    int _mining_mode                             = GRIP_MODE;
+
+    float grip_mode_min_recognition_distance     = 60.0;
+    float grip_mode_max_recognition_distance     = 120.0;
+
+    float catch_mode_min_recognition_distance    = 75.0;
+    float catch_mode_max_recognition_distance    = 140.0;
+
+    float exchange_mode_min_recognition_distance = 70.0;
+    float exchange_mode_max_recognition_distance = 120.0;
+
+    int ore_track_point_records_num              = 100;
+
+    bool _enableSaveVideo                        = false;
+    bool _enable_debug_mode                      = false;
 /*
     // RED  => false
     // BLUE => true
@@ -104,4 +118,31 @@ public:
 public:
     OrePara orePara;
 };
+
+struct SerialConfig
+{
+    std::string readPortPath  = "/dev/ttyUSB0";
+    std::string writePortPath  = "/dev/ttyUSB1";
+    int baud_writePort = 460800;
+    int baud_readPort = 460800;
+};
+
+class SerialConfigFactory{
+private:
+    static SerialConfigFactory &instance() {
+        static SerialConfigFactory serialConfigFactory;
+        return serialConfigFactory;
+    }
+
+public:
+    SerialConfig serialConfig;
+    static SerialConfig getSerialConfig() {
+        return instance().serialConfig;
+    }
+
+    static void resetAllConfig() {
+        instance().serialConfig = SerialConfig();
+    }
+};
+
 #endif //ABYSSAL_CV_2022_ENGINEERING_ROBOMASTER_CONFIG_HPP

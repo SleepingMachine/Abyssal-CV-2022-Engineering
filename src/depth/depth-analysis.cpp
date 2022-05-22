@@ -53,9 +53,24 @@ void DepthSolution::DeepConversion() {
     for (int y = 0; y < src_depth_.rows; ++y) {
         for (int x = 0; x < src_depth_.cols; ++x) {
             //std::cout << depth_scale * src_depth_.at<uint16_t>(y,x) << std::endl;
-            if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > functionConfig_.grip_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < functionConfig_.grip_mode_min_recognition_distance)){
-                mask_depth_filter.at<uchar>(y, x) = 0;
+            switch (functionConfig_._mining_mode) {
+                case 0:
+                    if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > functionConfig_.grip_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < functionConfig_.grip_mode_min_recognition_distance)){
+                        mask_depth_filter.at<uchar>(y, x) = 0;
+                    }
+                    break;
+                case 1:
+                    if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > functionConfig_.catch_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < functionConfig_.catch_mode_min_recognition_distance)){
+                        mask_depth_filter.at<uchar>(y, x) = 0;
+                    }
+                    break;
+                case 2:
+                    if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > functionConfig_.exchange_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < functionConfig_.exchange_mode_min_recognition_distance)){
+                        mask_depth_filter.at<uchar>(y, x) = 0;
+                    }
+                    break;
             }
+
         }
     }
 

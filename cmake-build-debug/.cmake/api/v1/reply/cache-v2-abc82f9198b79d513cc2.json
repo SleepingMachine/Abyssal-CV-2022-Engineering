@@ -139,7 +139,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/snap/clion/189/bin/cmake/linux/bin/cmake"
+			"value" : "/snap/clion/190/bin/cmake/linux/bin/cmake"
 		},
 		{
 			"name" : "CMAKE_CPACK_COMMAND",
@@ -151,7 +151,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/snap/clion/189/bin/cmake/linux/bin/cpack"
+			"value" : "/snap/clion/190/bin/cmake/linux/bin/cpack"
 		},
 		{
 			"name" : "CMAKE_CTEST_COMMAND",
@@ -163,7 +163,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/snap/clion/189/bin/cmake/linux/bin/ctest"
+			"value" : "/snap/clion/190/bin/cmake/linux/bin/ctest"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER",
@@ -195,7 +195,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/gcc-ar-9"
+			"value" : "/usr/bin/gcc-ar-11"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER_RANLIB",
@@ -211,7 +211,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/gcc-ranlib-9"
+			"value" : "/usr/bin/gcc-ranlib-11"
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS",
@@ -323,7 +323,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/gcc-ar-9"
+			"value" : "/usr/bin/gcc-ar-11"
 		},
 		{
 			"name" : "CMAKE_C_COMPILER_RANLIB",
@@ -339,7 +339,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/gcc-ranlib-9"
+			"value" : "/usr/bin/gcc-ranlib-11"
 		},
 		{
 			"name" : "CMAKE_C_FLAGS",
@@ -447,7 +447,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/snap/clion/189/bin/cmake/linux/bin/ccmake"
+			"value" : "/snap/clion/190/bin/cmake/linux/bin/ccmake"
 		},
 		{
 			"name" : "CMAKE_EXECUTABLE_FORMAT",
@@ -627,30 +627,6 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : ""
-		},
-		{
-			"name" : "CMAKE_HAVE_PTHREADS_CREATE",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Have library pthreads"
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : ""
-		},
-		{
-			"name" : "CMAKE_HAVE_PTHREAD_CREATE",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Have library pthread"
-				}
-			],
-			"type" : "INTERNAL",
 			"value" : "1"
 		},
 		{
@@ -727,7 +703,7 @@
 				}
 			],
 			"type" : "UNINITIALIZED",
-			"value" : "/snap/clion/189/bin/ninja/linux/ninja"
+			"value" : "/snap/clion/190/bin/ninja/linux/ninja"
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS",
@@ -959,7 +935,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/snap/clion/189/bin/cmake/linux/share/cmake-3.22"
+			"value" : "/snap/clion/190/bin/cmake/linux/share/cmake-3.22"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
