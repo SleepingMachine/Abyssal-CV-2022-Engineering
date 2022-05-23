@@ -4,6 +4,7 @@
 
 #ifndef ABYSSAL_CV_2022_ENGINEERING_RECORD_VIDEO_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_RECORD_VIDEO_HPP
+
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <atomic>

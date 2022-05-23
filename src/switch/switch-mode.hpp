@@ -4,16 +4,18 @@
 
 #ifndef ABYSSAL_CV_2022_ENGINEERING_SWITCH_MODE_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_SWITCH_MODE_HPP
+
 #include "iostream"
 #include <opencv2/opencv.hpp>
 #include <atomic>
 //#include <opencv2/imgproc.hpp>
-
-#include "../src/ore/ore-identify.hpp"
+#include "switch-tool.hpp"
 #include "../src/depth/depth-analysis.hpp"
+#include "../ore/ore-identify.hpp"
 
 class SwitchControl {
 private:
+    static void InitColorThresholdParameters();
 public:
     SwitchControl();
     ~SwitchControl();

@@ -1,9 +1,14 @@
 //
 // Created by sleepingmachine on 22-4-14.
 //
+
+#ifndef ABYSSAL_CV_2022_ENGINEERING_ORE_IDENTIFY_HPP
+#define ABYSSAL_CV_2022_ENGINEERING_ORE_IDENTIFY_HPP
+
 #include "ore-tool.hpp"
 #include "../depth/depth-analysis.hpp"
 #include "../asset/robomaster-config.hpp"
+#include "../src/switch/switch-tool.hpp"
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
@@ -11,9 +16,9 @@
 
 #include <atomic>
 
-#ifndef ABYSSAL_CV_2022_ENGINEERING_ORE_IDENTIFY_HPP
-#define ABYSSAL_CV_2022_ENGINEERING_ORE_IDENTIFY_HPP
 class IdentifyOre{
+public:
+    friend class SwitchControl;
 private:
     static int hmin_0_;
     static int hmax_0_;

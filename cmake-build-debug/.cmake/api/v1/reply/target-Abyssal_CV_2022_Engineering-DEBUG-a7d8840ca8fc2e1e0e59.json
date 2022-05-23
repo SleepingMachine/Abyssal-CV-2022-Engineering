@@ -430,7 +430,8 @@
 				14,
 				16,
 				18,
-				20
+				20,
+				21
 			]
 		}
 	],
@@ -547,6 +548,11 @@
 		{
 			"backtrace" : 1,
 			"path" : "src/box/box-identify.hpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/switch/switch-tool.hpp",
 			"sourceGroupIndex" : 1
 		}
 	],

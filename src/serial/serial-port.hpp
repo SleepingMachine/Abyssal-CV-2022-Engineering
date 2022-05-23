@@ -4,6 +4,7 @@
 
 #ifndef ABYSSAL_CV_2022_ENGINEERING_SERIAL_PORT_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_SERIAL_PORT_HPP
+
 #include "../asset/robomaster-config.hpp"
 
 #include <opencv2/core/persistence.hpp>
