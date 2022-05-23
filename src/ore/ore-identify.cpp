@@ -10,7 +10,6 @@ extern std::atomic_bool camera_is_open;
 
 IdentifyOre::IdentifyOre() {}
 
-
 int IdentifyOre::hmin_0_ = 0;
 int IdentifyOre::hmax_0_ = 65;
 int IdentifyOre::smin_0_ = 235;
@@ -51,33 +50,31 @@ cv::Mat IdentifyOre::dst_color_     (480, 640, CV_8UC3);
 
 static OrePara orePara = OreParaFactory::getOrePara();
 
-void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_src_depth, int *sentData) {
+void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_src_depth) {
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
 
-    OreTool::CreatTrackbars(&hmin_0_, &hmax_0_, &smin_0_, &smax_0_, &vmin_0_, &vmax_0_,
-                            &hmin_1_, &hmax_1_, &smin_1_, &smax_1_, &vmin_1_, &vmax_1_,
-                              &open_,    &close_,    &erode_,   &dilate_);
+    //OreTool::CreatTrackbars(&hmin_0_, &hmax_0_, &smin_0_, &smax_0_, &vmin_0_, &vmax_0_,
+    //                        &hmin_1_, &hmax_1_, &smin_1_, &smax_1_, &vmin_1_, &vmax_1_,
+    //                        &open_,    &close_,    &erode_,   &dilate_);
 
-    while (camera_is_open){
-        if (mutex_depth_analysis.try_lock()) {
-            temp_src_color = *import_src_color;
-            temp_src_depth = *import_src_depth;
-            mutex_depth_analysis.unlock();
-        }
-        if (!temp_src_color.empty()){
-            temp_src_color.copyTo(src_color_);
-            temp_src_depth.copyTo(src_depth_);
-        }
-
-        ImagePreprocess(src_color_);
-        SearchOre(dst_color_);
-        DepthCalculation();
-        TargetSelection();
-        DropDetection();
-        DrawReferenceGraphics();
-        ResourceRelease();
+    if (mutex_depth_analysis.try_lock()) {
+        temp_src_color = *import_src_color;
+        temp_src_depth = *import_src_depth;
+        mutex_depth_analysis.unlock();
     }
+    if (!temp_src_color.empty()){
+        temp_src_color.copyTo(src_color_);
+        temp_src_depth.copyTo(src_depth_);
+    }
+
+    ImagePreprocess(src_color_);
+    SearchOre(dst_color_);
+    DepthCalculation();
+    TargetSelection();
+    DropDetection();
+    DrawReferenceGraphics();
+    ResourceRelease();
 }
 
 void IdentifyOre::ImagePreprocess(const cv::Mat &src) {
@@ -246,9 +243,4 @@ void IdentifyOre::DropDetection() {
         }
         //cv::line(src_color_, cv::Point(320,240), cv::Point(320 + 50, 240 + 50 * fit_line_slope), cv::Scalar (0,0,255), 2);
     }
-
 }
-
-
-
-

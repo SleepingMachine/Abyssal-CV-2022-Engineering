@@ -30,6 +30,7 @@ void DepthSolution::DepthSolutionStream(cv::Mat *import_src_color, cv::Mat *impo
             temp_src_depth.copyTo(src_depth_);
         }
         DeepConversion();
+
         if (mutex_camera.try_lock()) {
             dst_depth_analysis_.copyTo(*export_dst_color);
             src_depth_.copyTo(*export_dst_depth);
@@ -73,14 +74,16 @@ void DepthSolution::DeepConversion() {
 
         }
     }
-
     src_color_.copyTo(dst_depth_analysis_, mask_depth_filter);
     //dst_depth_analysis_ = src_color_ & mask_depth_filter;
-    if (functionConfig_._enable_debug_mode){
+    /*
+        if (functionConfig_._enable_debug_mode){
         cv::imshow("Color", src_color_);
         cv::imshow("Depth", src_depth_);
         cv::imshow("Depth Mask", dst_depth_analysis_);
-    }
+        }
+    */
+
     /*
     for(int y = 0; y < 480; y++){
         for(int x = 0; x < 640; x++){

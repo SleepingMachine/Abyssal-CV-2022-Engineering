@@ -5,11 +5,11 @@
 #include "switch/switch-mode.hpp"
 #include <thread>
 
-std::mutex mutex_color;
+//std::mutex mutex_color;
 std::mutex mutex_camera;
 std::mutex mutex_depth_analysis;
 
-static int sentPortData;
+static int sent_serial_port_data;
 extern std::atomic_bool camera_is_open;
 
 cv::Mat frame_depth                (Size(kCameraFrameWidth, kCameraFrameHeight), CV_8UC3);
@@ -22,8 +22,8 @@ int main(int argc, char** argv){
     camera_is_open = true;
     std::thread camera_thread (CameraStream::StreamRetrieve, &frame_color, &frame_depth);
     std::thread depth_thread  (DepthSolution::DepthSolutionStream, &frame_color, &frame_depth, &frame_color_depth_analysis, &frame_depth_depth_analysis);
-    //std::thread switch_thread (SwitchControl::SwitchMode);
-    std::thread ore_thread    (IdentifyOre::OreIdentifyStream, &frame_color_depth_analysis, &frame_depth_depth_analysis, &sentPortData);
+    std::thread switch_thread (SwitchControl::SwitchMode, &frame_color_depth_analysis, &frame_depth_depth_analysis, &sent_serial_port_data);
+    //std::thread ore_thread    (IdentifyOre::OreIdentifyStream, &frame_color_depth_analysis, &frame_depth_depth_analysis, &sentPortData);
     std::thread record_thread (RecordVideo::SaveRunningVideo, &frame_color);
 
     camera_thread.join();

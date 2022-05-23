@@ -17,18 +17,14 @@ struct FunctionConfig
 
     int _mining_mode                             = CATCH_MODE;
 
-    float grip_mode_min_recognition_distance     = 60.0;
-    float grip_mode_max_recognition_distance     = 120.0;
-
-    float catch_mode_min_recognition_distance    = 75.0;
-    float catch_mode_max_recognition_distance    = 140.0;
-
-    float exchange_mode_min_recognition_distance = 70.0;
-    float exchange_mode_max_recognition_distance = 120.0;
-
     int ore_track_point_records_num              = 100;
 
     bool _enableSaveVideo                        = false;
+
+    //载入本地视频用于测试，需要注意本地视频无法读取到深度信息
+    bool _enable_local_video_stream              = true;
+    std::string local_video_path                 = "/home/sleepingmachine/视频/box.mp4";
+
     bool _enable_debug_mode                      = false;
 /*
     // RED  => false
@@ -46,6 +42,15 @@ struct FunctionConfig
     std::string localVideoPath = "/home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022/asset/AutoSaveVideo/2022.03.26 14-57-45.avi";
 */
     //bool _enableDebugMode           = true;
+
+    float grip_mode_min_recognition_distance     = 60.0;
+    float grip_mode_max_recognition_distance     = 120.0;
+
+    float catch_mode_min_recognition_distance    = 75.0;
+    float catch_mode_max_recognition_distance    = 140.0;
+
+    float exchange_mode_min_recognition_distance = 70.0;
+    float exchange_mode_max_recognition_distance = 120.0;
 };
 
 class FunctionConfigFactory{

@@ -66,7 +66,7 @@ public:
     IdentifyOre();
     ~IdentifyOre() {};
 
-    static void OreIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth, int* sentData);
+    static void OreIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth);
 
     struct TargetOreLocationStruct {
         cv::Point2f target_ore_center;

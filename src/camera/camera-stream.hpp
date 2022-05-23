@@ -6,6 +6,7 @@
 #define ABYSSAL_CV_2022_ENGINEERING_CAMERA_STREAM_HPP
 
 #include "../src/depth/depth-tool.hpp"
+#include "../src/depth/depth-analysis.hpp"
 #include <librealsense2/rs.hpp>
 #include <opencv2/opencv.hpp>
 #include <atomic>

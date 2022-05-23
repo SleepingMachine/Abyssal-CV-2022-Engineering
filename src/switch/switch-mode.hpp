@@ -5,14 +5,19 @@
 #ifndef ABYSSAL_CV_2022_ENGINEERING_SWITCH_MODE_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_SWITCH_MODE_HPP
 #include "iostream"
+#include <opencv2/opencv.hpp>
+#include <atomic>
+//#include <opencv2/imgproc.hpp>
+
+#include "../src/ore/ore-identify.hpp"
+#include "../src/depth/depth-analysis.hpp"
 
 class SwitchControl {
 private:
-
 public:
     SwitchControl();
     ~SwitchControl();
 
-    static void SwitchMode();
+    static void SwitchMode(cv::Mat* import_src_color, cv::Mat* import_src_depth, int* sent_serial_port_data);
 };
 #endif //ABYSSAL_CV_2022_ENGINEERING_SWITCH_MODE_HPP
