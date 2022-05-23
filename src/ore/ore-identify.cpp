@@ -6,7 +6,7 @@
 
 //extern std::mutex mutex_color;
 extern std::mutex mutex_depth_analysis;
-extern std::atomic_bool camera_is_open;
+//extern std::atomic_bool camera_is_open;
 
 IdentifyOre::IdentifyOre() {}
 

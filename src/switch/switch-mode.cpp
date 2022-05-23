@@ -19,7 +19,9 @@ void SwitchControl::SwitchMode(cv::Mat *import_src_color, cv::Mat *import_src_de
         }
     }
     else if (DepthSolution::functionConfig_._mining_mode == MiningMode::EXCHANGE_MODE){
-        std::cout << "这个模式还没写 别急" << std::endl;
+        while (camera_is_open) {
+            IdentifyBox::BoxIdentifyStream(import_src_color, import_src_depth);
+        }
     }
 
 }
