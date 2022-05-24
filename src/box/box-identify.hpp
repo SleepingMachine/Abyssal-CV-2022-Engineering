@@ -69,6 +69,8 @@ private:
     static std::vector<BoxComponentsStruct> box_components_LL_;
     static std::vector<BoxComponentsStruct> box_components_LR_;
 
+    static std::vector<BoxStruct> boxs;
+
     //static std::vector<std::vector<cv::Point2i>> suspected_ore_contours_;
 
     static void ImagePreprocess(const cv::Mat &src);

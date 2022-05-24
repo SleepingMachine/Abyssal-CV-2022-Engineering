@@ -74,7 +74,11 @@ void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_s
     SearchOre(dst_color_);
     DepthCalculation();
     TargetSelection();
-    DropDetection();
+
+    if (DepthSolution::functionConfig_._mining_mode == MiningMode::CATCH_MODE){
+        DropDetection();
+    }
+
     DrawReferenceGraphics();
     ResourceRelease();
 }

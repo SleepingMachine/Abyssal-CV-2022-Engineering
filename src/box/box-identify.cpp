@@ -44,6 +44,8 @@ std::vector<IdentifyBox::BoxComponentsStruct> IdentifyBox::box_components_TR_;
 std::vector<IdentifyBox::BoxComponentsStruct> IdentifyBox::box_components_LL_;
 std::vector<IdentifyBox::BoxComponentsStruct> IdentifyBox::box_components_LR_;
 
+std::vector<IdentifyBox::BoxStruct> IdentifyBox::boxs;
+
 //std::vector<std::vector<cv::Point2i>> IdentifyBox::suspected_ore_contours_;
 
 static BoxPara boxPara = BoxParaFactory::getBoxPara();
@@ -109,11 +111,15 @@ void IdentifyBox::ResourceRelease() {
     box_components_TR_.clear();
     box_components_LL_.clear();
     box_components_TL_.clear();
+    boxs.clear();
 }
 
 void IdentifyBox::DrawReferenceGraphics() {
     for (int i = 0; i < suspected_box_components_rects_.size(); ++i) {
         BoxTool::drawRotatedRect(src_color_, suspected_box_components_rects_[i], cv::Scalar(15, 198, 150), 2, 16);
+    }
+    if (boxs.size() == 1){
+        cv::circle(src_color_, boxs[0].center_point, 15, cv::Scalar(255,0,255), 10);
     }
     cv::imshow("Dst",  src_color_);
     cv::imshow("Mask", dst_color_);
@@ -166,34 +172,34 @@ void IdentifyBox::BoxComponentsFilter() {
             //cv::waitKey(200);
         }
 
-        BoxComponentsStruct temp_boxComponents;
+        BoxComponentsStruct temp_box_components;
 
         if (counter_U > counter_D && counter_R > counter_L){
             cv::putText(src_color_, "TR", suspected_box_components_rects_[i].center,cv::FONT_HERSHEY_SIMPLEX,1,cv::Scalar(0,255,255),1,8,false);
-            temp_boxComponents.box_components_rect = suspected_box_components_rects_[i];
-            temp_boxComponents.box_components_type = BoxComponentsType::BOX_COMPONENTS_TR;
-            box_components_TR_.push_back(temp_boxComponents);
+            temp_box_components.box_components_rect = suspected_box_components_rects_[i];
+            temp_box_components.box_components_type = BoxComponentsType::BOX_COMPONENTS_TR;
+            box_components_TR_.push_back(temp_box_components);
             //std::cout << counter_U << " " << counter_D <<" "<< counter_L << " " << counter_R << std::endl;
         }
         else if (counter_D > counter_U && counter_R > counter_L){
             cv::putText(src_color_, "LR", suspected_box_components_rects_[i].center,cv::FONT_HERSHEY_SIMPLEX,1,cv::Scalar(0,255,255),1,8,false);
-            temp_boxComponents.box_components_rect = suspected_box_components_rects_[i];
-            temp_boxComponents.box_components_type = BoxComponentsType::BOX_COMPONENTS_LR;
-            box_components_LR_.push_back(temp_boxComponents);
+            temp_box_components.box_components_rect = suspected_box_components_rects_[i];
+            temp_box_components.box_components_type = BoxComponentsType::BOX_COMPONENTS_LR;
+            box_components_LR_.push_back(temp_box_components);
             //std::cout << counter_U << " " << counter_D <<" "<< counter_L << " " << counter_R << std::endl;
         }
         else if (counter_U > counter_D && counter_L > counter_R){
             cv::putText(src_color_, "TL", suspected_box_components_rects_[i].center,cv::FONT_HERSHEY_SIMPLEX,1,cv::Scalar(0,255,255),1,8,false);
-            temp_boxComponents.box_components_rect = suspected_box_components_rects_[i];
-            temp_boxComponents.box_components_type = BoxComponentsType::BOX_COMPONENTS_TL;
-            box_components_TL_.push_back(temp_boxComponents);
+            temp_box_components.box_components_rect = suspected_box_components_rects_[i];
+            temp_box_components.box_components_type = BoxComponentsType::BOX_COMPONENTS_TL;
+            box_components_TL_.push_back(temp_box_components);
             //std::cout << counter_U << " " << counter_D <<" "<< counter_L << " " << counter_R << std::endl;
         }
         else if (counter_D > counter_U && counter_L > counter_R){
             cv::putText(src_color_, "LL", suspected_box_components_rects_[i].center,cv::FONT_HERSHEY_SIMPLEX,1,cv::Scalar(0,255,255),1,8,false);
-            temp_boxComponents.box_components_rect = suspected_box_components_rects_[i];
-            temp_boxComponents.box_components_type = BoxComponentsType::BOX_COMPONENTS_LL;
-            box_components_LL_.push_back(temp_boxComponents);
+            temp_box_components.box_components_rect = suspected_box_components_rects_[i];
+            temp_box_components.box_components_type = BoxComponentsType::BOX_COMPONENTS_LL;
+            box_components_LL_.push_back(temp_box_components);
             //std::cout << counter_U << " " << counter_D <<" "<< counter_L << " " << counter_R << std::endl;
         }
         //cv::imshow("crop", cropped);
@@ -202,23 +208,33 @@ void IdentifyBox::BoxComponentsFilter() {
 }
 
 void IdentifyBox::BoxPairing() {
+    IdentifyBox::BoxStruct temp_box;
     if (box_components_LL_.size() == 1 && box_components_LR_.size() == 1 && box_components_TL_.size() == 1 && box_components_TR_.size() == 1){
         //cv::line(src_color_, box_components_TL.back().box_components_rect.center, box_components_LR.back().box_components_rect.center, cv::Scalar(0,255,255), 2);
         if (box_components_TL_.back().box_components_rect.center.x < box_components_TR_.back().box_components_rect.center.x &&
             box_components_TL_.back().box_components_rect.center.y < box_components_LL_.back().box_components_rect.center.y &&
             box_components_LL_.back().box_components_rect.center.x < box_components_LR_.back().box_components_rect.center.x &&
             box_components_TR_.back().box_components_rect.center.y < box_components_LR_.back().box_components_rect.center.y){
-            cv::line(src_color_, box_components_TL_.back().box_components_rect.center, box_components_LR_.back().box_components_rect.center, cv::Scalar(0,255,255), 2);
-            cv::line(src_color_, box_components_TR_.back().box_components_rect.center, box_components_LL_.back().box_components_rect.center, cv::Scalar(0,255,255), 2);
-            BoxTool::getCrossPoint(box_components_TL_.back().box_components_rect.center, box_components_LR_.back().box_components_rect.center,box_components_TR_.back().box_components_rect.center, box_components_LL_.back().box_components_rect.center);
+            //cv::line(src_color_, box_components_TL_.back().box_components_rect.center, box_components_LR_.back().box_components_rect.center, cv::Scalar(0,255,255), 2);
+            //cv::line(src_color_, box_components_TR_.back().box_components_rect.center, box_components_LL_.back().box_components_rect.center, cv::Scalar(0,255,255), 2);
+            temp_box.box_components_TL = box_components_TL_.back().box_components_rect;
+            temp_box.box_components_TR = box_components_TR_.back().box_components_rect;
+            temp_box.box_components_LR = box_components_LR_.back().box_components_rect;
+            temp_box.box_components_LL = box_components_LL_.back().box_components_rect;
+            temp_box.center_point = BoxTool::getCrossPoint(box_components_TL_.back().box_components_rect.center, box_components_LR_.back().box_components_rect.center,box_components_TR_.back().box_components_rect.center, box_components_LL_.back().box_components_rect.center);
+            boxs.push_back(temp_box);
         }
     }
     else if(box_components_LL_.size() == 1 && box_components_LR_.size() == 1 && box_components_TL_.size() == 1 && box_components_TR_.empty()){
         if (box_components_TL_.back().box_components_rect.center.y < box_components_LL_.back().box_components_rect.center.y &&
             box_components_LL_.back().box_components_rect.center.x < box_components_LR_.back().box_components_rect.center.x){
-            cv::line(src_color_, box_components_TL_.back().box_components_rect.center, box_components_LR_.back().box_components_rect.center, cv::Scalar(0,255,255), 2);
-            BoxTool::getTwoPointCenterPoint(box_components_TL_.back().box_components_rect.center, box_components_LR_.back().box_components_rect.center);
+            //cv::line(src_color_, box_components_TL_.back().box_components_rect.center, box_components_LR_.back().box_components_rect.center, cv::Scalar(0,255,255), 2);
+            temp_box.box_components_TL = box_components_TL_.back().box_components_rect;
+            //temp_box.box_components_TR = box_components_TR_.back().box_components_rect;
+            temp_box.box_components_LR = box_components_LR_.back().box_components_rect;
+            temp_box.box_components_LL = box_components_LL_.back().box_components_rect;
+            temp_box.center_point = BoxTool::getTwoPointCenterPoint(box_components_TL_.back().box_components_rect.center, box_components_LR_.back().box_components_rect.center);
+            boxs.push_back(temp_box);
         }
-
     }
 }
