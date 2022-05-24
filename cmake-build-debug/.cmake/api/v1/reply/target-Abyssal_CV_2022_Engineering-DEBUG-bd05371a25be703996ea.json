@@ -431,7 +431,8 @@
 				16,
 				18,
 				20,
-				21
+				21,
+				22
 			]
 		}
 	],
@@ -553,6 +554,11 @@
 		{
 			"backtrace" : 1,
 			"path" : "src/switch/switch-tool.hpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/box/box-tool.hpp",
 			"sourceGroupIndex" : 1
 		}
 	],

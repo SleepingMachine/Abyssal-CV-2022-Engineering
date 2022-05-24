@@ -14,6 +14,8 @@ extern std::mutex mutex_depth_analysis;
 extern std::atomic_bool camera_is_open;
 
 FunctionConfig DepthSolution::functionConfig_ = FunctionConfigFactory::getFunctionConfig();
+static OrePara orePara = OreParaFactory::getOrePara();
+static BoxPara boxPara = BoxParaFactory::getBoxPara();
 
 void DepthSolution::DepthSolutionStream(cv::Mat *import_src_color, cv::Mat *import_src_depth, cv::Mat* export_dst_color, cv::Mat* export_dst_depth) {
     cv::Mat temp_src_color(480, 640, CV_8UC3);
@@ -56,65 +58,24 @@ void DepthSolution::DeepConversion() {
             //std::cout << depth_scale * src_depth_.at<uint16_t>(y,x) << std::endl;
             switch (functionConfig_._mining_mode) {
                 case 0:
-                    if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > functionConfig_.grip_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < functionConfig_.grip_mode_min_recognition_distance)){
+                    if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > orePara.grip_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < orePara.grip_mode_min_recognition_distance)){
                         mask_depth_filter.at<uchar>(y, x) = 0;
                     }
                     break;
                 case 1:
-                    if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > functionConfig_.catch_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < functionConfig_.catch_mode_min_recognition_distance)){
+                    if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > orePara.catch_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < orePara.catch_mode_min_recognition_distance)){
                         mask_depth_filter.at<uchar>(y, x) = 0;
                     }
                     break;
                 case 2:
-                    if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > functionConfig_.exchange_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < functionConfig_.exchange_mode_min_recognition_distance)){
+                    if ((depth_scale2cm * src_depth_.at<uint16_t>(y,x) > boxPara.exchange_mode_max_recognition_distance) || (depth_scale2cm * src_depth_.at<uint16_t>(y,x) < boxPara.exchange_mode_min_recognition_distance)){
                         mask_depth_filter.at<uchar>(y, x) = 0;
                     }
                     break;
             }
-
         }
     }
     src_color_.copyTo(dst_depth_analysis_, mask_depth_filter);
-    //dst_depth_analysis_ = src_color_ & mask_depth_filter;
-    /*
-        if (functionConfig_._enable_debug_mode){
-        cv::imshow("Color", src_color_);
-        cv::imshow("Depth", src_depth_);
-        cv::imshow("Depth Mask", dst_depth_analysis_);
-        }
-    */
-
-    /*
-    for(int y = 0; y < 480; y++){
-        for(int x = 0; x < 640; x++){
-            //如果深度图下该点像素不为0，表示有距离信息
-            if(depth_scale*src_depth_.at<uint16_t>(y,x) * 1000 < functionConfig_.grip_mode_max_recognition_distance
-                && depth_scale*src_depth_.at<uint16_t>(y,x) * 1000 > functionConfig_.grip_mode_min_recognition_distance){
-                mask_depth_filter.at<uint16_t>(y,x) = (uint16_t)255;
-            }
-            else if (src_depth_.at<uint16_t>(y,x) == 0){
-                mask_depth_filter.at<uint16_t>(y,x) = (uint16_t)255;
-            }
-            else
-            {
-                mask_depth_filter.at<uint16_t>(y,x) = (uint16_t)0;
-            }
-        }
-    }
-    cv::imshow("1111", mask_depth_filter);*/
-    //cv::threshold(mask_depth_filter_, mask_depth_filter_, 127, 255, cv::THRESH_BINARY);
-    //cv::threshold(mask_depth_filter_, mask_depth_filter_, 125,255, cv::THRESH_BINARY_INV);
-    //src_color_ = src_color_ & mask_depth_filter;
-
-    /*
-    std::cout<<"遍历完成，有效像素点:"<<effective_pixel<<std::endl;
-    float effective_distance=distance_sum/effective_pixel;
-    std::cout<<"目标距离："<<effective_distance<<" m"<<std::endl;
-    char distance_str[30];
-    sprintf(distance_str,"the distance is:%f m",effective_distance);
-    cv::putText(src_depth_,(std::string)distance_str,cv::Point(src_depth_.cols*0.02,src_depth_.rows*0.05),
-                cv::FONT_HERSHEY_PLAIN,2,cv::Scalar(255,255,255),2,8);
-    */
 }
 
 float get_depth_scale(rs2::device dev)

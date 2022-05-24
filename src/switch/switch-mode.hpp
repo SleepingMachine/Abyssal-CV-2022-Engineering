@@ -13,6 +13,7 @@
 #include "../src/depth/depth-analysis.hpp"
 #include "../ore/ore-identify.hpp"
 #include "../src/box/box-identify.hpp"
+#include "../box/box-tool.hpp"
 
 class SwitchControl {
 private:

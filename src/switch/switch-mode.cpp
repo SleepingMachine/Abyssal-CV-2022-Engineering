@@ -19,11 +19,13 @@ void SwitchControl::SwitchMode(cv::Mat *import_src_color, cv::Mat *import_src_de
         }
     }
     else if (DepthSolution::functionConfig_._mining_mode == MiningMode::EXCHANGE_MODE){
+        BoxTool::CreatTrackbars(&IdentifyBox::hmin_0_, &IdentifyBox::hmax_0_, &IdentifyBox::smin_0_, &IdentifyBox::smax_0_, &IdentifyBox::vmin_0_, &IdentifyBox::vmax_0_,
+                                &IdentifyBox::hmin_1_, &IdentifyBox::hmax_1_, &IdentifyBox::smin_1_, &IdentifyBox::smax_1_, &IdentifyBox::vmin_1_, &IdentifyBox::vmax_1_,
+                                &IdentifyBox::open_, &IdentifyBox::close_, &IdentifyBox::erode_, &IdentifyBox::dilate_);
         while (camera_is_open) {
             IdentifyBox::BoxIdentifyStream(import_src_color, import_src_depth);
         }
     }
-
 }
 
 void SwitchControl::InitColorThresholdParameters() {
@@ -46,4 +48,24 @@ void SwitchControl::InitColorThresholdParameters() {
     IdentifyOre::close_  = 13;
     IdentifyOre::erode_  = 5;
     IdentifyOre::dilate_ = 3;
+
+    //兑换框识别
+    IdentifyBox::hmin_0_ = 0;
+    IdentifyBox::hmax_0_ = 109;
+    IdentifyBox::smin_0_ = 0;
+    IdentifyBox::smax_0_ = 255;
+    IdentifyBox::vmin_0_ = 150;
+    IdentifyBox::vmax_0_ = 255;
+
+    IdentifyBox::hmin_1_ = 0;
+    IdentifyBox::hmax_1_ = 181;
+    IdentifyBox::smin_1_ = 77;
+    IdentifyBox::smax_1_ = 255;
+    IdentifyBox::vmin_1_ = 205;
+    IdentifyBox::vmax_1_ = 255;
+
+    IdentifyBox::open_   = 1;
+    IdentifyBox::close_  = 1;
+    IdentifyBox::erode_  = 1;
+    IdentifyBox::dilate_ = 2;
 }

@@ -39,15 +39,16 @@ private:
     static int erode_;
     static int dilate_;
 
-    static int target_ore_index;
+    static int target_ore_index_;
+
+    static bool _target_ore_drops_;
 
     static std::vector<std::vector<cv::Point2i>> all_contours_;
-    static std::vector<std::vector<cv::Point2i>> suspected_ore_contours_;
-    //static std::vector<int> target_ore_location_;
-
     static std::vector<cv::Vec4i> hierarchy_;
 
+    static std::vector<std::vector<cv::Point2i>> suspected_ore_contours_;
     static std::vector<cv::RotatedRect> suspected_ore_rects_;
+    //static std::vector<int> target_ore_location_;
 
     static cv::Mat src_color_;
     static cv::Mat src_depth_;

@@ -14,43 +14,16 @@ typedef enum {
 
 struct FunctionConfig
 {
+    int _mining_mode                               = EXCHANGE_MODE;
 
-    int _mining_mode                             = EXCHANGE_MODE;
-
-    int ore_track_point_records_num              = 100;
-
-    bool _enableSaveVideo                        = false;
+    bool _enableSaveVideo                          = false;
 
     //载入本地视频用于测试，需要注意本地视频无法读取到深度信息
-    bool _enable_local_video_stream              = true;
-    std::string local_video_path                 = "/home/sleepingmachine/视频/box2.mp4";
+    bool _enable_local_video_stream                = true;
+    std::string local_video_path                   = "/home/sleepingmachine/视频/box2.mp4";
 
-    bool _enable_debug_mode                      = false;
-/*
-    // RED  => false
-    // BLUE => true
-    bool _enemyColor                = true;
+    bool _enable_debug_mode                        = false;
 
-    bool _enableEnergyBuffMode      = false;
-
-    bool _enableSaveVideo           = false;
-    bool _enableRoiScaling          = true;
-
-    bool _enableLocalVideoStreaming = true;
-    //std::string localVideoPath = "/home/sleepingmachine/视频/lbb_fan.mp4";
-    //std::string localVideoPath = "/home/sleepingmachine/视频/lbr_fan.mp4";
-    std::string localVideoPath = "/home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022/asset/AutoSaveVideo/2022.03.26 14-57-45.avi";
-*/
-    //bool _enableDebugMode           = true;
-
-    float grip_mode_min_recognition_distance     = 60.0;
-    float grip_mode_max_recognition_distance     = 120.0;
-
-    float catch_mode_min_recognition_distance    = 75.0;
-    float catch_mode_max_recognition_distance    = 140.0;
-
-    float exchange_mode_min_recognition_distance = 70.0;
-    float exchange_mode_max_recognition_distance = 120.0;
 };
 
 class FunctionConfigFactory{
@@ -71,11 +44,84 @@ public:
     }
 };
 
+//矿石参数
+struct OrePara {
+
+    int   min_ore_area                           = 800;
+    float min_ore_length_width_ratio              = 0.6;
+    float max_ore_length_width_ratio              = 1.8;
+
+    float grip_mode_min_recognition_distance      = 60.0;
+    float grip_mode_max_recognition_distance      = 120.0;
+
+    float catch_mode_min_recognition_distance     = 75.0;
+    float catch_mode_max_recognition_distance     = 140.0;
+
+    int   ore_track_point_records_num             = 100;
+};
+
+class OreParaFactory {
+private:
+    static OreParaFactory &instance() {
+        static OreParaFactory oreParaFactory;
+        return oreParaFactory;
+    }
+
+public:
+    static OrePara getOrePara() {
+        return instance().orePara;
+    }
+
+    static void resetAllConfig() {
+        instance().orePara = OrePara();
+    }
+
+public:
+    OrePara orePara;
+};
+
+struct BoxPara {
+    int   min_suspected_box_components_area      = 100;
+
+    float exchange_mode_min_recognition_distance  = 70.0;
+    float exchange_mode_max_recognition_distance  = 300.0;
+
+    float min_suspected_box_length_width_ratio    = 0.6;
+    float max_suspected_box_length_width_ratio    = 1.8;
+};
+
+class BoxParaFactory {
+private:
+    static BoxParaFactory &instance() {
+        static BoxParaFactory boxParaFactory;
+        return boxParaFactory;
+    }
+
+public:
+    static BoxPara getBoxPara() {
+        return instance().boxPara;
+    }
+
+    static void resetAllConfig() {
+        instance().boxPara = BoxPara();
+    }
+
+public:
+    BoxPara boxPara;
+};
+
 //敌方颜色
 typedef enum {
     ENEMY_RED = 0,
     ENEMY_BLUE
 } EnemyColor;
+
+typedef enum {
+    BOX_COMPONENTS_TL = 0,
+    BOX_COMPONENTS_TR = 0,
+    BOX_COMPONENTS_LR = 0,
+    BOX_COMPONENTS_LL = 0
+} BoxComponentsType;
 
 //我方颜色
 typedef enum {
@@ -95,10 +141,10 @@ typedef enum {
     EnergyBuffMode
 } NowMode;
 
-//装甲板参数
+/*
 struct OrePara {
     EnemyColor enemyColor;
-    int min_ore_area_ = 800;
+    int min_ore_area = 800;
     float min_ore_length_width_ratio = 0.5;
     float max_ore_length_width_ratio = 2;
 
@@ -123,6 +169,7 @@ public:
 public:
     OrePara orePara;
 };
+*/
 
 struct SerialConfig
 {

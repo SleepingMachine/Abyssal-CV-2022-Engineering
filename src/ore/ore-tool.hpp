@@ -11,6 +11,7 @@ public:
     static void CreatTrackbars(int *hmin_0, int *hmax_0, int *smin_0, int *smax_0, int *vmin_0, int *vmax_0,
                                int *hmin_1, int *hmax_1, int *smin_1, int *smax_1, int *vmin_1, int *vmax_1,
                                int *open,   int *close,  int *erode,  int *dilate){
+
         cv::namedWindow("矿石识别中的阈值调整",cv::WINDOW_AUTOSIZE);
         cv::createTrackbar("hmin0", "矿石识别中的阈值调整",hmin_0, 255,NULL);
         cv::createTrackbar("hmax0", "矿石识别中的阈值调整",hmax_0, 255,NULL);
@@ -26,10 +27,10 @@ public:
         cv::createTrackbar("vmin1", "矿石识别中的阈值调整",vmin_1, 255,NULL);
         cv::createTrackbar("vmax1", "矿石识别中的阈值调整",vmax_1, 255,NULL);
 
-        cv::createTrackbar("open", "矿石识别中的阈值调整",    open, 10,NULL);
+        cv::createTrackbar("open",  "矿石识别中的阈值调整",    open, 10,NULL);
         cv::createTrackbar("close", "矿石识别中的阈值调整",  close, 30,NULL);
         cv::createTrackbar("erode", "矿石识别中的阈值调整",  erode, 10,NULL);
-        cv::createTrackbar("dilate", "矿石识别中的阈值调整",dilate, 20,NULL);
+        cv::createTrackbar("dilate","矿石识别中的阈值调整",dilate, 20,NULL);
     }
 
     static inline void drawRotatedRect(cv::Mat mask,const cv::RotatedRect &rotatedrect,const cv::Scalar &color,int thickness, int lineType)
