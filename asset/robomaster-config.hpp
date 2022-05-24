@@ -22,8 +22,9 @@ struct FunctionConfig
     bool _enable_local_video_stream                = true;
     std::string local_video_path                   = "/home/sleepingmachine/视频/box2.mp4";
 
-    bool _enable_debug_mode                        = false;
+    bool _enable_flip_image                        = false;
 
+    bool _enable_debug_mode                        = false;
 };
 
 class FunctionConfigFactory{

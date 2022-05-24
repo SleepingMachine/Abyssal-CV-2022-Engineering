@@ -18,11 +18,20 @@
 class IdentifyBox{
 public:
     friend class SwitchControl;
-private:
+
     struct BoxComponentsStruct{
         cv::RotatedRect box_components_rect;
         int box_components_type;
     };
+    struct BoxStruct{
+        cv::RotatedRect box_components_TL;
+        cv::RotatedRect box_components_TR;
+        cv::RotatedRect box_components_LR;
+        cv::RotatedRect box_components_LL;
+
+        cv::Point2f center_point;
+    };
+private:
 
     static int hmin_0_;
     static int hmax_0_;
@@ -54,6 +63,12 @@ private:
 
     static std::vector<std::vector<cv::Point2i>> suspected_box_components_contours_;
     static std::vector<cv::RotatedRect> suspected_box_components_rects_;
+
+    static std::vector<BoxComponentsStruct> box_components_TL_;
+    static std::vector<BoxComponentsStruct> box_components_TR_;
+    static std::vector<BoxComponentsStruct> box_components_LL_;
+    static std::vector<BoxComponentsStruct> box_components_LR_;
+
     //static std::vector<std::vector<cv::Point2i>> suspected_ore_contours_;
 
     static void ImagePreprocess(const cv::Mat &src);
@@ -61,6 +76,7 @@ private:
     static void BoxComponentsFilter();
     static void ResourceRelease();
     static void DrawReferenceGraphics();
+    static void BoxPairing();
 public:
     IdentifyBox();
     ~IdentifyBox() {};
