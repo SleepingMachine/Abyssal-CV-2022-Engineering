@@ -25,7 +25,7 @@ public:
     ~SerialPort();
     static void getHitPointData(int tempData);
 
-    static void SendData(int* sentData);
+    static void SendData(int64* sentData);
 
 private:
     static std::string read_device;
@@ -33,7 +33,7 @@ private:
     static int baud_write;
     static int baud_read;
 
-    static char testData[6];
+    static char testData[8];
     static char readData[4];
 
     static void checkPortAvailability();

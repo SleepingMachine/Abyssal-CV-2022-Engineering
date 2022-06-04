@@ -41,7 +41,7 @@ private:
 
     static int target_ore_index_;
 
-    static bool _target_ore_drops_;
+    static bool _target_ore_fall_;
 
     static std::vector<std::vector<cv::Point2i>> all_contours_;
     static std::vector<cv::Vec4i> hierarchy_;
@@ -72,7 +72,7 @@ public:
     IdentifyOre();
     ~IdentifyOre() {};
 
-    static void OreIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth);
+    static void OreIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth, int64* sent_data);
 
     struct TargetOreLocationStruct {
         cv::Point2f target_ore_center;

@@ -83,7 +83,7 @@ public:
     IdentifyBox();
     ~IdentifyBox() {};
 
-    static void BoxIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth);
+    static void BoxIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth, int64* sent_data);
 
 };
 

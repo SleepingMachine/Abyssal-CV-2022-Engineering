@@ -50,7 +50,7 @@ std::vector<IdentifyBox::BoxStruct> IdentifyBox::boxs;
 
 static BoxPara boxPara = BoxParaFactory::getBoxPara();
 
-void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_src_depth) {
+void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_src_depth, int64* sent_data) {
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
 
@@ -69,7 +69,16 @@ void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_s
     BoxComponentsFilter();
     BoxPairing();
     DrawReferenceGraphics();
-
+    if (boxs.size() == 1){
+        int temp_target_x = boxs[0].center_point.x;
+        int temp_target_y = boxs[0].center_point.y;
+        *sent_data = temp_target_x * 10000 + temp_target_y * 10;
+        //long long test = temp_target_x * 10000000 + temp_target_y * 10000;
+        //std::cout << test << std::endl;
+    }
+    else{
+        *sent_data = 0;
+    }
     ResourceRelease();
 }
 

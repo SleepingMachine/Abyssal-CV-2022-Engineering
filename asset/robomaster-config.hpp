@@ -14,15 +14,13 @@ typedef enum {
 
 struct FunctionConfig
 {
-    int _mining_mode                               = EXCHANGE_MODE;
+    int _mining_mode                               = CATCH_MODE;
 
     bool _enableSaveVideo                          = false;
 
     //载入本地视频用于测试，需要注意本地视频无法读取到深度信息
-    bool _enable_local_video_stream                = true;
+    bool _enable_local_video_stream                = false;
     std::string local_video_path                   = "/home/sleepingmachine/视频/box2.mp4";
-
-    bool _enable_flip_image                        = false;
 
     bool _enable_debug_mode                        = false;
 };

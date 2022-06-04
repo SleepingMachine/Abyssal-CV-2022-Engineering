@@ -5,27 +5,40 @@
 #include "switch-mode.hpp"
 
 extern std::mutex mutex_depth_analysis;
+extern std::mutex mutex_serial_port_data;
 extern std::atomic_bool camera_is_open;
 
-void SwitchControl::SwitchMode(cv::Mat *import_src_color, cv::Mat *import_src_depth, int *sent_serial_port_data) {
-    InitColorThresholdParameters();
+long SwitchControl::sent_data_;
 
-    if (DepthSolution::functionConfig_._mining_mode == MiningMode::GRIP_MODE || DepthSolution::functionConfig_._mining_mode == MiningMode::CATCH_MODE){
-        OreTool::CreatTrackbars(&IdentifyOre::hmin_0_, &IdentifyOre::hmax_0_, &IdentifyOre::smin_0_, &IdentifyOre::smax_0_, &IdentifyOre::vmin_0_, &IdentifyOre::vmax_0_,
-                                &IdentifyOre::hmin_1_, &IdentifyOre::hmax_1_, &IdentifyOre::smin_1_, &IdentifyOre::smax_1_, &IdentifyOre::vmin_1_, &IdentifyOre::vmax_1_,
-                                &IdentifyOre::open_, &IdentifyOre::close_, &IdentifyOre::erode_, &IdentifyOre::dilate_);
-        while (camera_is_open){
-            IdentifyOre::OreIdentifyStream(import_src_color, import_src_depth);
+void SwitchControl::SwitchMode(cv::Mat *import_src_color, cv::Mat *import_src_depth, int64* sent_serial_port_data) {
+    InitColorThresholdParameters();
+    if(DepthSolution::functionConfig_._enable_debug_mode){
+        if (DepthSolution::functionConfig_._mining_mode == MiningMode::GRIP_MODE || DepthSolution::functionConfig_._mining_mode == MiningMode::CATCH_MODE){
+            OreTool::CreatTrackbars(&IdentifyOre::hmin_0_, &IdentifyOre::hmax_0_, &IdentifyOre::smin_0_, &IdentifyOre::smax_0_, &IdentifyOre::vmin_0_, &IdentifyOre::vmax_0_,
+                                    &IdentifyOre::hmin_1_, &IdentifyOre::hmax_1_, &IdentifyOre::smin_1_, &IdentifyOre::smax_1_, &IdentifyOre::vmin_1_, &IdentifyOre::vmax_1_,
+                                    &IdentifyOre::open_, &IdentifyOre::close_, &IdentifyOre::erode_, &IdentifyOre::dilate_);
+        }
+        else if (DepthSolution::functionConfig_._mining_mode == MiningMode::EXCHANGE_MODE){
+            BoxTool::CreatTrackbars(&IdentifyBox::hmin_0_, &IdentifyBox::hmax_0_, &IdentifyBox::smin_0_, &IdentifyBox::smax_0_, &IdentifyBox::vmin_0_, &IdentifyBox::vmax_0_,
+                                    &IdentifyBox::hmin_1_, &IdentifyBox::hmax_1_, &IdentifyBox::smin_1_, &IdentifyBox::smax_1_, &IdentifyBox::vmin_1_, &IdentifyBox::vmax_1_,
+                                    &IdentifyBox::open_, &IdentifyBox::close_, &IdentifyBox::erode_, &IdentifyBox::dilate_);
         }
     }
-    else if (DepthSolution::functionConfig_._mining_mode == MiningMode::EXCHANGE_MODE){
-        BoxTool::CreatTrackbars(&IdentifyBox::hmin_0_, &IdentifyBox::hmax_0_, &IdentifyBox::smin_0_, &IdentifyBox::smax_0_, &IdentifyBox::vmin_0_, &IdentifyBox::vmax_0_,
-                                &IdentifyBox::hmin_1_, &IdentifyBox::hmax_1_, &IdentifyBox::smin_1_, &IdentifyBox::smax_1_, &IdentifyBox::vmin_1_, &IdentifyBox::vmax_1_,
-                                &IdentifyBox::open_, &IdentifyBox::close_, &IdentifyBox::erode_, &IdentifyBox::dilate_);
-        while (camera_is_open) {
-            IdentifyBox::BoxIdentifyStream(import_src_color, import_src_depth);
+
+    while (camera_is_open) {
+        if (DepthSolution::functionConfig_._mining_mode == MiningMode::GRIP_MODE || DepthSolution::functionConfig_._mining_mode == MiningMode::CATCH_MODE){
+            IdentifyOre::OreIdentifyStream(import_src_color, import_src_depth, &sent_data_);
+        }
+        else if (DepthSolution::functionConfig_._mining_mode == MiningMode::EXCHANGE_MODE){
+                IdentifyBox::BoxIdentifyStream(import_src_color, import_src_depth, &sent_data_);
+        }
+
+        if (mutex_serial_port_data.try_lock()) {
+            *sent_serial_port_data = sent_data_;
+            mutex_serial_port_data.unlock();
         }
     }
+
 }
 
 void SwitchControl::InitColorThresholdParameters() {

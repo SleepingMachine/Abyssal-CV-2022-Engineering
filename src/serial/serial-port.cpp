@@ -4,8 +4,8 @@
 
 #include "serial-port.hpp"
 //extern std::mutex mutex2;
-std::mutex mutex2;
-std::atomic_bool SerialPortStart;
+extern std::mutex mutex_serial_port_data;
+std::atomic_bool serial_port_start;
 
 static SerialConfig serialConfig = SerialConfigFactory::getSerialConfig();
 SerialPort::SerialPort() {}
@@ -16,16 +16,18 @@ std::string SerialPort::write_device;
 int SerialPort::baud_write;
 int SerialPort::baud_read;
 
-char SerialPort::testData[6];
+char SerialPort::testData[8];
 char SerialPort::readData[4];
 
-void SerialPort::SendData(int* sentData) {
-    while (SerialPortStart) {
+void SerialPort::SendData(int64* sentData) {
+    while (serial_port_start) {
         int tempSendData;
-        if (mutex2.try_lock()) {
+
+        if (mutex_serial_port_data.try_lock()) {
             tempSendData = *sentData;
-            mutex2.unlock();
+            mutex_serial_port_data.unlock();
         }
+        //std::cout << *sentData << std::endl;
         SerialPort::getHitPointData(tempSendData);
 
         int fd; /*File Descriptor*/
@@ -85,9 +87,10 @@ void SerialPort::SendData(int* sentData) {
         //串口写数据
         bytes_written = write(fd, SerialPort::testData, sizeof(testData));
         bytes_readten = read(fd, SerialPort::readData, 3);
+        /*
         for (int i = 0; i < 4; ++i) {
             std::cout << (int)readData[i] << std::endl;
-        }
+        }*/
         printf("\n  %d written to ttyUSB0", tempSendData);
         printf("\n  %d Bytes written to ttyUSB0", bytes_written);
         printf("\n +----------------------------------+\n");
@@ -108,9 +111,10 @@ void SerialPort::getHitPointData(int tempData) {
     SerialPort::testData[1] = (hitPointData - SerialPort::testData[0]*100) /10;
     SerialPort::testData[2] = hitPointData % 10;
 */
-    int hitPointData_y = tempData % 1000;
-    int hitPointData_x = (tempData - hitPointData_y)/1000;
-    //std::cout << hitPointData_x << " " << hitPointData_y << std::endl;
+    int fall_flag = tempData % 10;
+    int hitPointData_y = (tempData - fall_flag)/10 % 1000;
+    int hitPointData_x = ((tempData - fall_flag)/10 - hitPointData_y)/1000;
+    std::cout << hitPointData_x << " " << hitPointData_y << " " << fall_flag << std::endl;
 
     testData[0] = 's';
 
@@ -118,8 +122,10 @@ void SerialPort::getHitPointData(int tempData) {
     testData[2] = (( hitPointData_x>> 0) & 0xFF);
     testData[3] = (( hitPointData_y>> 8) & 0xFF);
     testData[4] = (( hitPointData_y>> 0) & 0xFF);
+    testData[5] = (( fall_flag>> 8) & 0xFF);
+    testData[6] = (( fall_flag>> 0) & 0xFF);
 
-    testData[5] = 'e';
+    testData[7] = 'e';
 
     //std::cout << hitPointData_x << std::endl;
     //std::cout << hitPointData_y << std::endl;
