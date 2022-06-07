@@ -6,6 +6,7 @@
 #define ABYSSAL_CV_2022_ENGINEERING_SERIAL_PORT_HPP
 
 #include "../asset/robomaster-config.hpp"
+#include "../src/depth/depth-analysis.hpp"
 
 #include <opencv2/core/persistence.hpp>
 
@@ -23,21 +24,24 @@ class SerialPort{
 public:
     SerialPort();
     ~SerialPort();
-    static void getHitPointData(int tempData);
 
+    static void GetHitPointData(int tempData);
     static void SendData(int64* sentData);
 
 private:
-    static std::string read_device;
-    static std::string write_device;
-    static int baud_write;
-    static int baud_read;
+    static std::string read_device_;
+    static std::string write_device_;
+    static int baud_write_;
+    static int baud_read_;
 
-    static char testData[8];
-    static char readData[4];
+    static char sent_data_[8];
+    static char read_data_[3];
 
-    static void checkPortAvailability();
-    static void getSerialInfo();
+    static char cache_read_data_[6];
+    //static bool _cache_read_data_wait_flag_;
+
+    static void CheckPortAvailability();
+    static void GetSerialInfo();
 
 };
 

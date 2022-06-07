@@ -1,5 +1,6 @@
 #include "camera/camera-stream.hpp"
 #include "serial/serial-port.hpp"
+#include "serial/serial-TUP/serial-port-TUP.hpp"
 #include "depth/depth-analysis.hpp"
 #include "record/record-video.hpp"
 #include "switch/switch-mode.hpp"
@@ -28,6 +29,7 @@ int main(int argc, char** argv){
     std::thread depth_thread  (DepthSolution::DepthSolutionStream, &frame_color, &frame_depth, &frame_color_depth_analysis, &frame_depth_depth_analysis);
     std::thread switch_thread (SwitchControl::SwitchMode, &frame_color_depth_analysis, &frame_depth_depth_analysis, &sent_serial_port_data);
     std::thread serial_thread (SerialPort::SendData, &sent_serial_port_data);
+    //std::thread serial_thread(SerialPortTUP::SerialSynchronizeTUP, &sent_serial_port_data);
     std::thread record_thread (RecordVideo::SaveRunningVideo, &frame_color);
 
     camera_thread.join();

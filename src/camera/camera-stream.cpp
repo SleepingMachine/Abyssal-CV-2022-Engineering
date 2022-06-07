@@ -18,8 +18,11 @@ void CameraStream::InitCamera(){
     // judge whether devices is exist or not
     rs2::context ctx;
     auto list = ctx.query_devices(); // Get a snapshot of currently connected devices
-    if (list.size() <= 0)
+    if (list.size() <= 0){
+        exit(0);
         throw std::runtime_error("No device detected. Is it plugged in?");
+    }
+
     rs2::device dev = list.front();
 
     //
@@ -161,10 +164,12 @@ int CameraStream::StreamRetrieve(cv::Mat *pFrame_color, cv::Mat *pFrame_depth) t
 catch (const rs2::error & e)
 {
     std::cerr << "RealSense error calling " << e.get_failed_function() << "(" << e.get_failed_args() << "):\n    " << e.what() << std::endl;
+    exit(0);
     return EXIT_FAILURE;
 }
 catch (const std::exception& e)
 {
     std::cerr << e.what() << std::endl;
+    exit(0);
     return EXIT_FAILURE;
 }

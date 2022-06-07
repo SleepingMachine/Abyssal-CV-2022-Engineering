@@ -14,15 +14,15 @@ typedef enum {
 
 struct FunctionConfig
 {
-    int _mining_mode                               = CATCH_MODE;
+    int _mining_mode                               = EXCHANGE_MODE;
 
-    bool _enableSaveVideo                          = false;
+    bool _enableSaveVideo                          = true;
 
     //载入本地视频用于测试，需要注意本地视频无法读取到深度信息
-    bool _enable_local_video_stream                = false;
+    bool _enable_local_video_stream                = true;
     std::string local_video_path                   = "/home/sleepingmachine/视频/box2.mp4";
 
-    bool _enable_debug_mode                        = false;
+    bool _enable_debug_mode                        = true;
 };
 
 class FunctionConfigFactory{
@@ -173,9 +173,9 @@ public:
 struct SerialConfig
 {
     std::string readPortPath  = "/dev/ttyUSB0";
-    std::string writePortPath  = "/dev/ttyUSB1";
-    int baud_writePort = 460800;
-    int baud_readPort = 460800;
+    std::string writePortPath  = "/dev/ttyUSB0";
+    int baud_write_Port = 460800;
+    int baud_read_Port = 460800;
 };
 
 class SerialConfigFactory{
