@@ -122,7 +122,7 @@ void SerialPort::SendData(int64* sentData) {
                                 _mode_flag = 1;
                             }
                             memset(cache_read_data_,'\0',sizeof(cache_read_data_));
-                            
+
                             break;
 
                         }

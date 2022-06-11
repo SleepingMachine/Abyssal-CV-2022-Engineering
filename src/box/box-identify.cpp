@@ -30,7 +30,8 @@ IdentifyBox::IdentifyBox() {}
 cv::Mat IdentifyBox::src_color_     (480, 640, CV_8UC3);
 cv::Mat IdentifyBox::src_depth_     (480, 640, CV_8UC3);
 cv::Mat IdentifyBox::src_color_HSV_ (480, 640, CV_8UC3);
-cv::Mat IdentifyBox::color_mask_    (480, 640, CV_8UC3);
+cv::Mat IdentifyBox::color_mask_0_  (480, 640, CV_8UC3);
+cv::Mat IdentifyBox::color_mask_1_  (480, 640, CV_8UC3);
 cv::Mat IdentifyBox::dst_color_     (480, 640, CV_8UC3);
 
 std::vector<std::vector<cv::Point2i>> IdentifyBox::all_contours_;
@@ -84,14 +85,20 @@ void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_s
 
 void IdentifyBox::ImagePreprocess(const cv::Mat &src) {
     cv::cvtColor(src, src_color_HSV_, CV_BGR2HSV, 0);
+
     cv::inRange(src_color_HSV_, cv::Scalar(hmin_0_, smin_0_, vmin_0_),
                 cv::Scalar(hmax_0_, smax_0_, vmax_0_),
-                color_mask_);
+                color_mask_0_);
+    cv::inRange(src_color_HSV_, cv::Scalar(hmin_1_, smin_1_, vmin_1_),
+                cv::Scalar(hmax_1_, smax_1_, vmax_1_),
+                color_mask_1_);
 
-    morphologyEx(color_mask_, dst_color_, 2, getStructuringElement(cv::MORPH_RECT,cv::Size(open_,   open_)));
-    morphologyEx(dst_color_,  dst_color_, 3, getStructuringElement(cv::MORPH_RECT,cv::Size(close_,  close_)));
-    morphologyEx(dst_color_,  dst_color_, 0, getStructuringElement(cv::MORPH_RECT,cv::Size(erode_,  erode_)));
-    morphologyEx(dst_color_,  dst_color_, 1, getStructuringElement(cv::MORPH_RECT,cv::Size(dilate_, dilate_)));
+    color_mask_0_ = color_mask_0_ | color_mask_1_;
+
+    morphologyEx(color_mask_0_, dst_color_, 2, getStructuringElement (cv::MORPH_RECT,cv::Size(open_,   open_)));
+    morphologyEx(dst_color_,  dst_color_,   3, getStructuringElement (cv::MORPH_RECT,cv::Size(close_,  close_)));
+    morphologyEx(dst_color_,  dst_color_,   0, getStructuringElement (cv::MORPH_RECT,cv::Size(erode_,  erode_)));
+    morphologyEx(dst_color_,  dst_color_,   1, getStructuringElement (cv::MORPH_RECT,cv::Size(dilate_, dilate_)));
 }
 
 void IdentifyBox::SearchSuspectedBoxComponents(cv::Mat &preprocessed) {

@@ -26,36 +26,42 @@ void SwitchControl::SwitchMode(cv::Mat *import_src_color, cv::Mat *import_src_de
     }
 
     while (camera_is_open) {
+        double loop_start_time = (double)cv::getTickCount();
+
         if (DepthSolution::functionConfig_._mining_mode == MiningMode::GRIP_MODE || DepthSolution::functionConfig_._mining_mode == MiningMode::CATCH_MODE){
             IdentifyOre::OreIdentifyStream(import_src_color, import_src_depth, &sent_data_);
         }
         else if (DepthSolution::functionConfig_._mining_mode == MiningMode::EXCHANGE_MODE){
                 IdentifyBox::BoxIdentifyStream(import_src_color, import_src_depth, &sent_data_);
         }
-
         if (mutex_serial_port_data.try_lock()) {
             *sent_serial_port_data = sent_data_;
             mutex_serial_port_data.unlock();
         }
-    }
 
+        double loop_end_time = (double)cv::getTickCount();
+        double loop_total_time = (loop_end_time-loop_start_time)/(cv::getTickFrequency());
+        double fps = 1/loop_total_time;
+
+        std::cout<<"本次循环耗时["<<loop_total_time << "] 识别进程fps[" << fps << "]" << std::endl;
+    }
 }
 
 void SwitchControl::InitColorThresholdParameters() {
     //矿石识别
     IdentifyOre::hmin_0_ = 0;
     IdentifyOre::hmax_0_ = 65;
-    IdentifyOre::smin_0_ = 235;
+    IdentifyOre::smin_0_ = 137;
     IdentifyOre::smax_0_ = 255;
-    IdentifyOre::vmin_0_ = 115;
+    IdentifyOre::vmin_0_ = 126;
     IdentifyOre::vmax_0_ = 255;
 
     IdentifyOre::hmin_1_ = 0;
-    IdentifyOre::hmax_1_ = 0;
-    IdentifyOre::smin_1_ = 0;
-    IdentifyOre::smax_1_ = 0;
-    IdentifyOre::vmin_1_ = 0;
-    IdentifyOre::vmax_1_ = 0;
+    IdentifyOre::hmax_1_ = 65;
+    IdentifyOre::smin_1_ = 125;
+    IdentifyOre::smax_1_ = 255;
+    IdentifyOre::vmin_1_ = 133;
+    IdentifyOre::vmax_1_ = 255;
 
     IdentifyOre::open_   = 1;
     IdentifyOre::close_  = 13;
@@ -64,17 +70,17 @@ void SwitchControl::InitColorThresholdParameters() {
 
     //兑换框识别
     IdentifyBox::hmin_0_ = 0;
-    IdentifyBox::hmax_0_ = 109;
+    IdentifyBox::hmax_0_ = 70;
     IdentifyBox::smin_0_ = 0;
-    IdentifyBox::smax_0_ = 255;
-    IdentifyBox::vmin_0_ = 150;
+    IdentifyBox::smax_0_ = 55;
+    IdentifyBox::vmin_0_ = 197;
     IdentifyBox::vmax_0_ = 255;
 
     IdentifyBox::hmin_1_ = 0;
-    IdentifyBox::hmax_1_ = 181;
-    IdentifyBox::smin_1_ = 77;
-    IdentifyBox::smax_1_ = 255;
-    IdentifyBox::vmin_1_ = 205;
+    IdentifyBox::hmax_1_ = 70;
+    IdentifyBox::smin_1_ = 0;
+    IdentifyBox::smax_1_ = 102;
+    IdentifyBox::vmin_1_ = 207;
     IdentifyBox::vmax_1_ = 255;
 
     IdentifyBox::open_   = 1;

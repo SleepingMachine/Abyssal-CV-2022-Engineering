@@ -16,10 +16,10 @@ struct FunctionConfig
 {
     int _mining_mode                               = EXCHANGE_MODE;
 
-    bool _enableSaveVideo                          = true;
+    bool _enableSaveVideo                          = false;
 
     //载入本地视频用于测试，需要注意本地视频无法读取到深度信息
-    bool _enable_local_video_stream                = true;
+    bool _enable_local_video_stream                = false;
     std::string local_video_path                   = "/home/sleepingmachine/视频/box2.mp4";
 
     bool _enable_debug_mode                        = true;
@@ -46,7 +46,7 @@ public:
 //矿石参数
 struct OrePara {
 
-    int   min_ore_area                           = 800;
+    int   min_ore_area                            = 1200;
     float min_ore_length_width_ratio              = 0.6;
     float max_ore_length_width_ratio              = 1.8;
 
@@ -55,6 +55,8 @@ struct OrePara {
 
     float catch_mode_min_recognition_distance     = 75.0;
     float catch_mode_max_recognition_distance     = 140.0;
+    float catch_mode_max_trigger_distance         = 115;
+    float catch_mode_min_trigger_distance         = 80;
 
     int   ore_track_point_records_num             = 100;
 };
@@ -86,7 +88,7 @@ struct BoxPara {
     float exchange_mode_max_recognition_distance  = 300.0;
 
     float min_suspected_box_length_width_ratio    = 0.6;
-    float max_suspected_box_length_width_ratio    = 1.8;
+    float max_suspected_box_length_width_ratio    = 10;
 };
 
 class BoxParaFactory {

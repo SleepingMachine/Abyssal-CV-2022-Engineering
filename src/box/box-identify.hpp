@@ -55,7 +55,8 @@ private:
     static cv::Mat src_color_;
     static cv::Mat src_depth_;
     static cv::Mat src_color_HSV_;
-    static cv::Mat color_mask_;
+    static cv::Mat color_mask_0_;
+    static cv::Mat color_mask_1_;
     static cv::Mat dst_color_;
 
     static std::vector<std::vector<cv::Point2i>> all_contours_;

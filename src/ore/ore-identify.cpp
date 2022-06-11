@@ -11,11 +11,11 @@ extern std::mutex mutex_depth_analysis;
 IdentifyOre::IdentifyOre() {}
 
 int IdentifyOre::hmin_0_ = 0;
-int IdentifyOre::hmax_0_ = 65;
-int IdentifyOre::smin_0_ = 235;
-int IdentifyOre::smax_0_ = 255;
-int IdentifyOre::vmin_0_ = 115;
-int IdentifyOre::vmax_0_ = 255;
+int IdentifyOre::hmax_0_ = 0;
+int IdentifyOre::smin_0_ = 0;
+int IdentifyOre::smax_0_ = 0;
+int IdentifyOre::vmin_0_ = 0;
+int IdentifyOre::vmax_0_ = 0;
 
 int IdentifyOre::hmin_1_ = 0;
 int IdentifyOre::hmax_1_ = 0;
@@ -24,10 +24,10 @@ int IdentifyOre::smax_1_ = 0;
 int IdentifyOre::vmin_1_ = 0;
 int IdentifyOre::vmax_1_ = 0;
 
-int IdentifyOre::open_   = 1;
-int IdentifyOre::close_  = 13;
-int IdentifyOre::erode_  = 5;
-int IdentifyOre::dilate_ = 3;
+int IdentifyOre::open_   = 0;
+int IdentifyOre::close_  = 0;
+int IdentifyOre::erode_  = 0;
+int IdentifyOre::dilate_ = 0;
 
 int IdentifyOre::target_ore_index_ = -1;
 
@@ -44,11 +44,12 @@ std::vector<cv::RotatedRect> IdentifyOre::suspected_ore_rects_;
 std::vector<IdentifyOre::OreStruct> IdentifyOre::ore_structs_;
 std::vector<cv::Point2f> IdentifyOre::target_ore_track_;
 
-cv::Mat IdentifyOre::src_color_     (480, 640, CV_8UC3);
-cv::Mat IdentifyOre::src_depth_     (480, 640, CV_8UC3);
-cv::Mat IdentifyOre::src_color_HSV_ (480, 640, CV_8UC3);
-cv::Mat IdentifyOre::color_mask_    (480, 640, CV_8UC3);
-cv::Mat IdentifyOre::dst_color_     (480, 640, CV_8UC3);
+cv::Mat IdentifyOre::src_color_      (480, 640, CV_8UC3);
+cv::Mat IdentifyOre::src_depth_      (480, 640, CV_8UC3);
+cv::Mat IdentifyOre::src_color_HSV_  (480, 640, CV_8UC3);
+cv::Mat IdentifyOre::color_mask_0_   (480, 640, CV_8UC3);
+cv::Mat IdentifyOre::color_mask_1_   (480, 640, CV_8UC3);
+cv::Mat IdentifyOre::dst_color_      (480, 640, CV_8UC3);
 
 static OrePara orePara = OreParaFactory::getOrePara();
 
@@ -100,12 +101,20 @@ void IdentifyOre::ImagePreprocess(const cv::Mat &src) {
     cv::cvtColor(src, src_color_HSV_, CV_BGR2HSV, 0);
     cv::inRange(src_color_HSV_, cv::Scalar(hmin_0_, smin_0_, vmin_0_),
                                     cv::Scalar(hmax_0_, smax_0_, vmax_0_),
-                                    color_mask_);
+                                    color_mask_0_);
+    cv::inRange(src_color_HSV_, cv::Scalar(hmin_1_, smin_1_, vmin_1_),
+                cv::Scalar(hmax_1_, smax_1_, vmax_1_),
+                color_mask_1_);
 
-    morphologyEx(color_mask_, dst_color_, 2, getStructuringElement(cv::MORPH_RECT,cv::Size(open_,   open_)));
-    morphologyEx(dst_color_,  dst_color_, 3, getStructuringElement(cv::MORPH_RECT,cv::Size(close_,  close_)));
-    morphologyEx(dst_color_,  dst_color_, 0, getStructuringElement(cv::MORPH_RECT,cv::Size(erode_,  erode_)));
-    morphologyEx(dst_color_,  dst_color_, 1, getStructuringElement(cv::MORPH_RECT,cv::Size(dilate_, dilate_)));
+    //cv::imshow("mask0", color_mask_0_);
+    //cv::imshow("mask1", color_mask_1_);
+
+    color_mask_0_ = color_mask_1_ | color_mask_0_;
+
+    morphologyEx(color_mask_0_, dst_color_,   2, getStructuringElement(cv::MORPH_RECT,cv::Size(open_,   open_)));
+    morphologyEx(dst_color_,    dst_color_,   3, getStructuringElement(cv::MORPH_RECT,cv::Size(close_,  close_)));
+    morphologyEx(dst_color_,    dst_color_,   0, getStructuringElement(cv::MORPH_RECT,cv::Size(erode_,  erode_)));
+    morphologyEx(dst_color_,    dst_color_,   1, getStructuringElement(cv::MORPH_RECT,cv::Size(dilate_, dilate_)));
     //cv::imshow("Src", src);
     //cv::imshow("ImagePreprocess", dst_color_);
 }
@@ -259,7 +268,10 @@ void IdentifyOre::DropDetection() {
         //std::cout << "轨迹点拟合斜率为[" << fit_line_slope  << "]" << std::endl;
         if (/*abs(fit_line_slope) >= 20 &&*/ variance_y > 100 * variance_x){
             cv::circle(src_color_, current_target_ore_location_.target_ore_center, 15, cv::Scalar(0,0,255), 10);
-            _target_ore_fall_ = true;
+            if (current_target_ore_location_.target_ore_depth < orePara.catch_mode_max_trigger_distance && current_target_ore_location_.target_ore_depth > orePara.catch_mode_min_trigger_distance){
+                cv::circle(src_color_, current_target_ore_location_.target_ore_center, 20, cv::Scalar(150,100,255), 5);
+                _target_ore_fall_ = true;
+            }
         }
         //cv::line(src_color_, cv::Point(320,240), cv::Point(320 + 50, 240 + 50 * fit_line_slope), cv::Scalar (0,0,255), 2);
     }

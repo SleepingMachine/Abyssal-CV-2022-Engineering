@@ -53,7 +53,8 @@ private:
     static cv::Mat src_color_;
     static cv::Mat src_depth_;
     static cv::Mat src_color_HSV_;
-    static cv::Mat color_mask_;
+    static cv::Mat color_mask_0_;
+    static cv::Mat color_mask_1_;
     static cv::Mat dst_color_;
 
     static void ImagePreprocess(const cv::Mat &src);
