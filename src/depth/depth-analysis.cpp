@@ -31,7 +31,9 @@ void DepthSolution::DepthSolutionStream(cv::Mat *import_src_color, cv::Mat *impo
             temp_src_color.copyTo(src_color_);
             temp_src_depth.copyTo(src_depth_);
         }
+
         DeepConversion();
+        //DrawReferenceGraphics();
 
         if (mutex_camera.try_lock()) {
             dst_depth_analysis_.copyTo(*export_dst_color);
@@ -76,6 +78,12 @@ void DepthSolution::DeepConversion() {
         }
     }
     src_color_.copyTo(dst_depth_analysis_, mask_depth_filter);
+}
+
+void DepthSolution::DrawReferenceGraphics() {
+    if (functionConfig_._enable_debug_mode){
+        cv::rectangle(dst_depth_analysis_, cv::Point(295,215), cv::Point(345,265), cv::Scalar(255,0,0), 2);
+    }
 }
 
 float get_depth_scale(rs2::device dev)

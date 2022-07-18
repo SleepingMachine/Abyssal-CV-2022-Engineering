@@ -12,14 +12,21 @@ typedef enum {
     EXCHANGE_MODE
 } MiningMode;
 
+typedef enum {
+    REALSENSE_CAMERA  = 0,
+    USB_CAMERA,
+    LOCAL_VIDEO
+} CameraType;
+
 struct FunctionConfig
 {
     int _mining_mode                               = EXCHANGE_MODE;
+    //可以载入本地视频或是使用usb免驱摄像头用于测试，需要注意无法读取到深度信息
+    int _camera_type                               = USB_CAMERA;
 
     bool _enableSaveVideo                          = false;
 
-    //载入本地视频用于测试，需要注意本地视频无法读取到深度信息
-    bool _enable_local_video_stream                = false;
+    //bool _enable_local_video_stream                = true;
     std::string local_video_path                   = "/home/sleepingmachine/视频/box2.mp4";
 
     bool _enable_debug_mode                        = true;
@@ -88,7 +95,10 @@ struct BoxPara {
     float exchange_mode_max_recognition_distance  = 300.0;
 
     float min_suspected_box_length_width_ratio    = 0.6;
-    float max_suspected_box_length_width_ratio    = 10;
+    float max_suspected_box_length_width_ratio    = 1.6;
+
+    float min_suspected_box_components_duty_cycle = 0.2;
+    float max_suspected_box_components_duty_cycle = 0.7;
 };
 
 class BoxParaFactory {

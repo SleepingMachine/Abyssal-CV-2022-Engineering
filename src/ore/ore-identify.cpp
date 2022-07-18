@@ -161,6 +161,8 @@ void IdentifyOre::DrawReferenceGraphics() {
                       << std::endl;
         }
 
+
+
         cv::imshow("Color", src_color_);
         //cv::imshow("Depth", src_depth_);
         cv::imshow("Mask",  dst_color_);

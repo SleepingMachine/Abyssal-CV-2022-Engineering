@@ -43,7 +43,7 @@ void SwitchControl::SwitchMode(cv::Mat *import_src_color, cv::Mat *import_src_de
         double loop_total_time = (loop_end_time-loop_start_time)/(cv::getTickFrequency());
         double fps = 1/loop_total_time;
 
-        std::cout<<"本次循环耗时["<<loop_total_time << "] 识别进程fps[" << fps << "]" << std::endl;
+        //std::cout<<"本次循环耗时["<<loop_total_time << "] 识别进程fps[" << fps << "]" << std::endl;
     }
 }
 
@@ -70,17 +70,17 @@ void SwitchControl::InitColorThresholdParameters() {
 
     //兑换框识别
     IdentifyBox::hmin_0_ = 0;
-    IdentifyBox::hmax_0_ = 70;
+    IdentifyBox::hmax_0_ = 188;
     IdentifyBox::smin_0_ = 0;
     IdentifyBox::smax_0_ = 55;
-    IdentifyBox::vmin_0_ = 197;
+    IdentifyBox::vmin_0_ = 255;
     IdentifyBox::vmax_0_ = 255;
 
     IdentifyBox::hmin_1_ = 0;
     IdentifyBox::hmax_1_ = 70;
     IdentifyBox::smin_1_ = 0;
-    IdentifyBox::smax_1_ = 102;
-    IdentifyBox::vmin_1_ = 207;
+    IdentifyBox::smax_1_ = 255;
+    IdentifyBox::vmin_1_ = 216;
     IdentifyBox::vmax_1_ = 255;
 
     IdentifyBox::open_   = 1;

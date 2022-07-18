@@ -52,7 +52,7 @@ void CameraStream::InitCamera(){
 }
 
 int CameraStream::StreamRetrieve(cv::Mat *pFrame_color, cv::Mat *pFrame_depth) try {
-    if (!DepthSolution::functionConfig_._enable_local_video_stream){
+    if (DepthSolution::functionConfig_._camera_type == CameraType::REALSENSE_CAMERA){
         InitCamera();
         while (true){
             frames_ = pipe_.wait_for_frames();//等待所有配置的流生成框架
@@ -120,7 +120,13 @@ int CameraStream::StreamRetrieve(cv::Mat *pFrame_color, cv::Mat *pFrame_depth) t
         cv::Mat frame_color_local;
         cv::Mat frame_depth_local;
 
-        capture.open(DepthSolution::functionConfig_.local_video_path);
+        if (DepthSolution::functionConfig_._camera_type == CameraType::LOCAL_VIDEO){
+            capture.open(DepthSolution::functionConfig_.local_video_path);
+        }
+        else if (DepthSolution::functionConfig_._camera_type == CameraType::USB_CAMERA){
+            capture.open(0);
+        }
+
         if (!capture.isOpened()) {
             printf("could not read this video file...\n");
             exit(0);

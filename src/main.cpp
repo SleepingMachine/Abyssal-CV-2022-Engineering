@@ -25,7 +25,7 @@ int main(int argc, char** argv){
     camera_is_open = true;
     serial_port_start = true;
 
-    std::thread serial_thread (SerialPort::SendData, &sent_serial_port_data);
+    //std::thread serial_thread (SerialPort::SendData, &sent_serial_port_data);
     std::thread camera_thread (CameraStream::StreamRetrieve, &frame_color, &frame_depth);
     std::thread depth_thread  (DepthSolution::DepthSolutionStream, &frame_color, &frame_depth, &frame_color_depth_analysis, &frame_depth_depth_analysis);
     std::thread switch_thread (SwitchControl::SwitchMode, &frame_color_depth_analysis, &frame_depth_depth_analysis, &sent_serial_port_data);
@@ -36,7 +36,7 @@ int main(int argc, char** argv){
     depth_thread .join();
     switch_thread.join();
     record_thread.join();
-    serial_thread.join();
+    //serial_thread.join();
     return 0;
 }
 
