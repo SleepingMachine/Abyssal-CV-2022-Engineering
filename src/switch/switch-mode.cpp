@@ -76,11 +76,11 @@ void SwitchControl::InitColorThresholdParameters() {
     IdentifyBox::vmin_0_ = 255;
     IdentifyBox::vmax_0_ = 255;
 
-    IdentifyBox::hmin_1_ = 0;
-    IdentifyBox::hmax_1_ = 70;
+    IdentifyBox::hmin_1_ = 34;
+    IdentifyBox::hmax_1_ = 89;
     IdentifyBox::smin_1_ = 0;
-    IdentifyBox::smax_1_ = 255;
-    IdentifyBox::vmin_1_ = 216;
+    IdentifyBox::smax_1_ = 141;
+    IdentifyBox::vmin_1_ = 255;
     IdentifyBox::vmax_1_ = 255;
 
     IdentifyBox::open_   = 1;

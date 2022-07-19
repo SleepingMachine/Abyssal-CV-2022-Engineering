@@ -22,7 +22,7 @@ struct FunctionConfig
 {
     int _mining_mode                               = EXCHANGE_MODE;
     //可以载入本地视频或是使用usb免驱摄像头用于测试，需要注意无法读取到深度信息
-    int _camera_type                               = USB_CAMERA;
+    int _camera_type                               = REALSENSE_CAMERA;
 
     bool _enableSaveVideo                          = false;
 
@@ -99,6 +99,8 @@ struct BoxPara {
 
     float min_suspected_box_components_duty_cycle = 0.2;
     float max_suspected_box_components_duty_cycle = 0.7;
+
+
 };
 
 class BoxParaFactory {

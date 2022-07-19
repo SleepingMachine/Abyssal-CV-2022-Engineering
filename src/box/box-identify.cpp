@@ -111,6 +111,7 @@ void IdentifyBox::SearchSuspectedBoxComponents(cv::Mat &preprocessed) {
             if (scanRect.size.area() < boxPara.min_suspected_box_components_area){
                 continue;
             }
+
             if (BoxTool::getRectLengthWidthRatio(scanRect) < boxPara.min_suspected_box_length_width_ratio ||
                 BoxTool::getRectLengthWidthRatio(scanRect) > boxPara.max_suspected_box_length_width_ratio){
                 continue;
@@ -203,7 +204,7 @@ void IdentifyBox::BoxComponentsFilter() {
             temp_box_components.box_components_type = BoxComponentsType::BOX_COMPONENTS_TR;
             box_components_TR_.push_back(temp_box_components);
             //std::cout << counter_U << " " << counter_D <<" "<< counter_L << " " << counter_R << std::endl;
-            cv::imshow("debug_TR", cropped);
+            //cv::imshow("debug_TR", cropped);
         }
         else if (counter_D > counter_U && counter_R > counter_L){
             cv::putText(src_color_, "LR", suspected_box_components_rects_[i].center,cv::FONT_HERSHEY_SIMPLEX,1,cv::Scalar(0,255,255),1,8,false);
@@ -211,7 +212,7 @@ void IdentifyBox::BoxComponentsFilter() {
             temp_box_components.box_components_type = BoxComponentsType::BOX_COMPONENTS_LR;
             box_components_LR_.push_back(temp_box_components);
             //std::cout << counter_U << " " << counter_D <<" "<< counter_L << " " << counter_R << std::endl;
-            cv::imshow("debug_LR", cropped);
+            //cv::imshow("debug_LR", cropped);
         }
         else if (counter_U > counter_D && counter_L > counter_R){
             cv::putText(src_color_, "TL", suspected_box_components_rects_[i].center,cv::FONT_HERSHEY_SIMPLEX,1,cv::Scalar(0,255,255),1,8,false);
@@ -219,7 +220,7 @@ void IdentifyBox::BoxComponentsFilter() {
             temp_box_components.box_components_type = BoxComponentsType::BOX_COMPONENTS_TL;
             box_components_TL_.push_back(temp_box_components);
             //std::cout << counter_U << " " << counter_D <<" "<< counter_L << " " << counter_R << std::endl;
-            cv::imshow("debug_TL", cropped);
+            //cv::imshow("debug_TL", cropped);
         }
         else if (counter_D > counter_U && counter_L > counter_R){
             cv::putText(src_color_, "LL", suspected_box_components_rects_[i].center,cv::FONT_HERSHEY_SIMPLEX,1,cv::Scalar(0,255,255),1,8,false);
@@ -227,7 +228,7 @@ void IdentifyBox::BoxComponentsFilter() {
             temp_box_components.box_components_type = BoxComponentsType::BOX_COMPONENTS_LL;
             box_components_LL_.push_back(temp_box_components);
             //std::cout << counter_U << " " << counter_D <<" "<< counter_L << " " << counter_R << std::endl;
-            cv::imshow("debug_LL", cropped);
+            //cv::imshow("debug_LL", cropped);
         }
         //cv::imshow("crop", cropped);
         //cv::waitKey(500);
@@ -264,4 +265,8 @@ void IdentifyBox::BoxPairing() {
             boxs.push_back(temp_box);
         }
     }
+}
+
+void IdentifyBox::ReferenceAngleDetermination() {
+
 }

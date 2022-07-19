@@ -76,6 +76,7 @@ private:
 
     static void ImagePreprocess(const cv::Mat &src);
     static void SearchSuspectedBoxComponents(cv::Mat &preprocessed);
+    static void ReferenceAngleDetermination();
     static void BoxComponentsFilter();
     static void ResourceRelease();
     static void DrawReferenceGraphics();

@@ -75,6 +75,9 @@ void DepthSolution::DeepConversion() {
                     }
                     break;
             }
+            if (depth_scale2cm * src_depth_.at<uint16_t>(y,x) == 0){
+                mask_depth_filter.at<uchar>(y, x) = 255;
+            }
         }
     }
     src_color_.copyTo(dst_depth_analysis_, mask_depth_filter);
