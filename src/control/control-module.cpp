@@ -7,6 +7,10 @@
 
 SwitchControl::SwitchControl() {}
 
+int SwitchControl::SwitchMode() {
+    ReadConfig();
+    return 0;
+}
 
 int SwitchControl::ReadConfig() {
     rr::RrConfig config;
@@ -23,12 +27,6 @@ int SwitchControl::ReadConfig() {
     std::cout << "Port=" << Port << std::endl;
     std::cout << "UserName=" << UserName << std::endl;
 }
-
-int SwitchControl::SwitchMode() {
-    ReadConfig();
-    return 0;
-}
-
 
 namespace rr
 {

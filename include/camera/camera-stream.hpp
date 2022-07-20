@@ -4,6 +4,7 @@
 
 #ifndef ABYSSAL_CV_2022_ENGINEERING_CAMERA_STREAM_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_CAMERA_STREAM_HPP
+
 #include <librealsense2/rs.hpp>
 #include <opencv2/opencv.hpp>
 #include <atomic>
@@ -26,7 +27,6 @@ private:
 public:
     static void InitCamera();
     static int StreamRetrieve(cv::Mat* pFrame_color, cv::Mat* pFrame_depth);
-    //static void UnInitCamera();
-    //static int SetCameraResolution(int hCamera, int offsetx, int offsety, int width, int height);
 };
+
 #endif //ABYSSAL_CV_2022_ENGINEERING_CAMERA_STREAM_HPP

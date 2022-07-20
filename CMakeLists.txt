@@ -21,7 +21,8 @@ include_directories( ${realsense2_INCLUDE_DIRS})
 add_executable(Abyssal_CV_2022_Engineering
         main.cpp
         src/camera/camera-stream.cpp
-        include/camera/camera-stream.hpp include/camera/camera-cv-helpers.hpp src/control/control-module.cpp include/control/control-module.hpp include/control/control-read-config.hpp)
+        include/camera/camera-stream.hpp include/camera/camera-cv-helpers.hpp src/control/control-module.cpp include/control/control-module.hpp include/control/control-read-config.hpp include/depth/depth-analysis.hpp src/depth/depth-analysis.cpp include/depth/depth-tool.hpp)
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} ${realsense2_LIBRARY})
+target_link_libraries(${PROJECT_NAME} "${PROJECT_SOURCE_DIR}/3rdparty/libMVSDK.so")

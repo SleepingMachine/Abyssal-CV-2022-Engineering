@@ -1,12 +1,6 @@
 # ninja log v5
-1	2547	1658313966730011648	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/camera/camera-stream.cpp.o	42065aee188940e5
-2547	2737	1658313966918009844	Abyssal_CV_2022_Engineering	319e40cec55b78bf
-1	2621	1658313767544678145	CMakeFiles/Abyssal_CV_2022_Engineering.dir/main.cpp.o	c6e3d4a21a99c1b1
-2	744	1658315312711962475	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/control/control-module.cpp.o	d6b3a3a8dd4ffe38
-1	2640	1658315314607974303	CMakeFiles/Abyssal_CV_2022_Engineering.dir/main.cpp.o	c6e3d4a21a99c1b1
-2	2908	1658315475804776022	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/camera/camera-stream.cpp.o	42065aee188940e5
-2908	3113	1658315476008832122	Abyssal_CV_2022_Engineering	cb33fb0889d3defe
-1	715	1658315627285685701	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/control/control-module.cpp.o	d6b3a3a8dd4ffe38
-715	925	1658315627497731368	Abyssal_CV_2022_Engineering	cb33fb0889d3defe
-1	727	1658315642240870385	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/control/control-module.cpp.o	d6b3a3a8dd4ffe38
-727	939	1658315642448914156	Abyssal_CV_2022_Engineering	cb33fb0889d3defe
+1	727	1658323690131320173	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/control/control-module.cpp.o	d6b3a3a8dd4ffe38
+0	30	1658326991446825903	build.ninja	c921883278381a1c
+1	3000	1658325330947319352	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/camera/camera-stream.cpp.o	42065aee188940e5
+1	216	1658326478904644859	Abyssal_CV_2022_Engineering	63d56411b6eb1ec9
+1	2638	1658324695364631748	CMakeFiles/Abyssal_CV_2022_Engineering.dir/main.cpp.o	c6e3d4a21a99c1b1
