@@ -1,6 +1,6 @@
 # ninja log v5
 1	727	1658323690131320173	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/control/control-module.cpp.o	d6b3a3a8dd4ffe38
-0	30	1658326991446825903	build.ninja	c921883278381a1c
+0	30	1658328291959731689	build.ninja	c921883278381a1c
 1	3000	1658325330947319352	CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/camera/camera-stream.cpp.o	42065aee188940e5
 1	216	1658326478904644859	Abyssal_CV_2022_Engineering	63d56411b6eb1ec9
 1	2638	1658324695364631748	CMakeFiles/Abyssal_CV_2022_Engineering.dir/main.cpp.o	c6e3d4a21a99c1b1

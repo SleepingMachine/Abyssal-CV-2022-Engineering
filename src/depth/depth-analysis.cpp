@@ -13,6 +13,8 @@ extern std::mutex mutex_camera;
 extern std::mutex mutex_depth_analysis;
 extern std::atomic_bool camera_is_open;
 
+DepthSolution::DepthSolution() {}
+
 FunctionConfig DepthSolution::functionConfig_ = FunctionConfigFactory::getFunctionConfig();
 static OrePara orePara = OreParaFactory::getOrePara();
 static BoxPara boxPara = BoxParaFactory::getBoxPara();
