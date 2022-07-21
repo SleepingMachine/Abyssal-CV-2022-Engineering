@@ -6,6 +6,8 @@
 #define ABYSSAL_CV_2022_ENGINEERING_DEPTH_ANALYSIS_HPP
 
 #include "depth-tool.hpp"
+#include "../include/camera/camera-stream.hpp"
+#include "../include/control/control-module.hpp"
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
@@ -14,19 +16,21 @@
 #include <librealsense2/rs.hpp>
 
 #include <atomic>
+#include <thread>
 
 class DepthSolution{
 private:
     static cv::Mat src_color_;
     static cv::Mat src_depth_;
-    static cv::Mat dst_depth_analysis_;
-    //static cv::Mat mask_depth_filter_;
-    static rs2::pipeline_profile profile_;
-    static void DeepConversion();
-    static void DrawReferenceGraphics();
+    static cv::Mat dst_depth_analysis_near_;
+    static cv::Mat dst_depth_analysis_far_ ;
+
+    static int DeepSegmentation();
+    static int AuxiliaryGraphicsDrawing();
+
 public:
-    static FunctionConfig functionConfig_;
-    static void DepthSolutionStream(cv::Mat* import_src_color, cv::Mat* import_src_depth, cv::Mat* export_dst_color, cv::Mat* export_dst_depth);
+    static int DepthSolutionStream(cv::Mat* import_src_color, cv::Mat* import_src_depth);
+
     DepthSolution();
     ~DepthSolution() {};
 

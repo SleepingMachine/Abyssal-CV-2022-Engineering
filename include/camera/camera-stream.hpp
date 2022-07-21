@@ -5,6 +5,9 @@
 #ifndef ABYSSAL_CV_2022_ENGINEERING_CAMERA_STREAM_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_CAMERA_STREAM_HPP
 
+#include"depth/depth-tool.hpp"
+#include "../tools/tools-config.hpp"
+
 #include <librealsense2/rs.hpp>
 #include <opencv2/opencv.hpp>
 #include <atomic>
@@ -25,6 +28,7 @@ private:
 
     static rs2::pipeline_profile profile_;
 public:
+    static CameraPara cameraPara_;
     static void InitCamera();
     static int StreamRetrieve(cv::Mat* pFrame_color, cv::Mat* pFrame_depth);
 };

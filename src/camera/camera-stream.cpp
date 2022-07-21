@@ -10,14 +10,14 @@ extern std::atomic_bool camera_start;
 rs2::frameset CameraStream::frames_;
 rs2::pipeline CameraStream::pipe_;
 rs2::config CameraStream::cfg_;
-rs2::colorizer CameraStream::colorizer_;
+//rs2::colorizer CameraStream::colorizer_;
 rs2::pipeline_profile CameraStream::profile_;
+
+CameraPara CameraStream::cameraPara_ = CameraParaFactory::getCameraPara();
 
 int CameraStream::StreamRetrieve(cv::Mat *pFrame_color, cv::Mat *pFrame_depth) try {
     InitCamera();
     while (true){
-        //double loop_start_time = (double)cv::getTickCount();
-
         frames_ = pipe_.wait_for_frames();//等待所有配置的流生成框架
 
         rs2::align align_to_color(RS2_STREAM_COLOR);
@@ -35,9 +35,6 @@ int CameraStream::StreamRetrieve(cv::Mat *pFrame_color, cv::Mat *pFrame_depth) t
             mutex_camera.unlock();
         }
 
-        camera_start = true;
-        //imshow("depth_src", frame_depth);
-        //imshow("color_src", frame_color);
         waitKey(1);
 
         //double loop_end_time = (double)cv::getTickCount();
@@ -79,5 +76,6 @@ void CameraStream::InitCamera(){
     auto depth_stream=profile_.get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>();
     auto color_stream=profile_.get_stream(RS2_STREAM_COLOR).as<rs2::video_stream_profile>();
     auto extrinDepth2Color=depth_stream.get_extrinsics_to(color_stream);
+    CameraStream::cameraPara_.depth_scale2m = DepthTool::get_depth_scale(profile_.get_device());
     //cv::Mat color_hsv(480, 640, CV_8UC3);
 }

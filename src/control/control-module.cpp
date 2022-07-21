@@ -5,6 +5,8 @@
 #include "../include/control/control-read-config.hpp"
 #include "control/control-module.hpp"
 
+FunctionConfig SwitchControl::functionConfig_ = FunctionConfigFactory::getFunctionConfig();
+
 SwitchControl::SwitchControl() {}
 
 int SwitchControl::SwitchMode() {

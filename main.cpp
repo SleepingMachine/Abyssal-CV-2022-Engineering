@@ -18,9 +18,10 @@ cv::Mat frame_depth_depth_analysis (Size(kCameraFrameWidth, kCameraFrameHeight),
 
 int main(int argc, char** argv) {
     std::thread control_thread (SwitchControl::SwitchMode);
-    std::thread camera_thread (CameraStream::StreamRetrieve, &frame_color, &frame_depth);
-    std::thread depth_thread  (DepthSolution::DepthSolutionStream, &frame_color, &frame_depth, &frame_color_depth_analysis, &frame_depth_depth_analysis);
+    std::thread camera_thread  (CameraStream::StreamRetrieve, &frame_color, &frame_depth);
+    std::thread depth_thread   (DepthSolution::DepthSolutionStream, &frame_color, &frame_depth);
 
     control_thread.join();
     camera_thread.join();
+    depth_thread.join();
 }

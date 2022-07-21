@@ -40,6 +40,36 @@ public:
     }
 };
 
+
+struct CameraPara {
+    float depth_scale2m                 = 0.001;
+    float depth_scale2cm                = depth_scale2m * 100;
+    int   min_recognition_distance_near = 80;
+    int   max_recognition_distance_near = 120;
+    int   min_recognition_distance_far;
+    int   max_recognition_distance_far;
+};
+
+class CameraParaFactory {
+private:
+    static CameraParaFactory &instance() {
+        static CameraParaFactory cameraParaFactory;
+        return cameraParaFactory;
+    }
+
+public:
+    static CameraPara getCameraPara() {
+        return instance().cameraPara;
+    }
+
+    static void resetAllConfig() {
+        instance().cameraPara = CameraPara();
+    }
+
+public:
+    CameraPara cameraPara;
+};
+
 //矿石参数
 struct OrePara {
 
