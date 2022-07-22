@@ -6,6 +6,10 @@
 #define ABYSSAL_CV_2022_ENGINEERING_CONTROL_MODULE_HPP
 
 #include "../tools/tools-config.hpp"
+#include "../asset/robomaster-define.hpp"
+#include "../include/control/control-read-config.hpp"
+
+#include <atomic>
 #include <iostream>
 
 class SwitchControl {

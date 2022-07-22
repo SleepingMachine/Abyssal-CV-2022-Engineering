@@ -2,8 +2,11 @@
 // Created by sleepingmachine on 22-7-20.
 //
 
-#include "../include/control/control-read-config.hpp"
 #include "control/control-module.hpp"
+
+extern std::atomic_bool camera_start;
+extern std::atomic_bool serial_port_start;
+extern std::atomic_bool configuration_file_read_complete;
 
 FunctionConfig SwitchControl::functionConfig_ = FunctionConfigFactory::getFunctionConfig();
 
@@ -21,13 +24,28 @@ int SwitchControl::ReadConfig() {
         printf("ReadConfig is Error,Cfg=%s", "robomaster-config.ini");
         return 1;
     }
-    std::string HostName = config.ReadString("RMCONFIG", "HostName", "");
-    int Port = config.ReadInt("RMCONFIG", "Port", 0);
-    std::string UserName = config.ReadString("RMCONFIG", "UserName", "");
 
-    std::cout << "HostName=" << HostName << std::endl;
-    std::cout << "Port=" << Port << std::endl;
+    std::string UserName        = config.ReadString("RMCONFIG", "UserName", "");
+    std::string _save_video     = config.ReadString("RMCONFIG", "EnableSaveVideo", "false");
+    std::string _operating_mode = config.ReadString("RMCONFIG", "OperatingMode", "EXCHANGE_MODE");
+
     std::cout << "UserName=" << UserName << std::endl;
+
+    if (_save_video == "false"){
+        SwitchControl::functionConfig_._enableSaveVideo = false;
+    }
+    else if (_save_video == "true"){
+        SwitchControl::functionConfig_._enableSaveVideo = true;
+    }
+
+    if (_operating_mode == "SEARCH_MODE"){
+        SwitchControl::functionConfig_._operating_mode = OperatingMode::SEARCH_MODE;
+    }
+    else if (_operating_mode == "EXCHANGE_MODE"){
+        SwitchControl::functionConfig_._operating_mode = OperatingMode::EXCHANGE_MODE;
+    }
+
+    configuration_file_read_complete = true;
 }
 
 namespace rr

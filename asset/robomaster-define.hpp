@@ -6,10 +6,9 @@
 #define ABYSSAL_CV_2022_ENGINEERING_ROBOMASTER_DEFINE_HPP
 
 typedef enum {
-    GRIP_MODE  = 0,
-    CATCH_MODE,
+    SEARCH_MODE  = 0,
     EXCHANGE_MODE
-} MiningMode;
+} OperatingMode;
 
 typedef enum {
     REALSENSE_CAMERA  = 0,

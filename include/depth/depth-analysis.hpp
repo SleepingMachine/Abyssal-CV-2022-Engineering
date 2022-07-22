@@ -5,6 +5,7 @@
 #ifndef ABYSSAL_CV_2022_ENGINEERING_DEPTH_ANALYSIS_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_DEPTH_ANALYSIS_HPP
 
+#include "../asset/robomaster-define.hpp"
 #include "depth-tools.hpp"
 #include "../include/camera/camera-stream.hpp"
 #include "../include/control/control-module.hpp"

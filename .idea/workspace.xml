@@ -18,25 +18,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6fe1877-6497-44ca-9700-fafab52a081b" name="变更" comment="">
-      <change afterPath="$PROJECT_DIR$/src/identify/identify-box.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/identify/identify-ore.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/identify/identify-stream.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/serial/serial-port.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/identify/identify-stream.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/serial/serial-port.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-78e0791508f4ee4fc351.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/index-2022-07-20T14-44-51-0968.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/target-Abyssal_CV_2022_Engineering-DEBUG-56708595af8a29761836.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset/robomaster-config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/asset/robomaster-config.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset/robomaster-define.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/asset/robomaster-define.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-35720479945b349f50d9.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/index-2022-07-22T09-45-52-0663.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/target-Abyssal_CV_2022_Engineering-DEBUG-4538291299b71fe6e9f9.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Abyssal_CV_2022_Engineering" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Abyssal_CV_2022_Engineering" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/main.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/camera/camera-stream.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/camera/camera-stream.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/control/control-module.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/control/control-module.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/depth/depth-analysis.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/depth/depth-analysis.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/build.ninja" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/build.ninja" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/control/control-module.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/control/control-module.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/depth/depth-analysis.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/depth/depth-analysis.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/depth/depth-tools.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/depth/depth-tools.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/identify/identify-ore.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/identify/identify-ore.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/identify/identify-tools.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/identify/identify-tools.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/camera/camera-stream.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/camera/camera-stream.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/control/control-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/control-module.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/depth/depth-analysis.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/depth/depth-analysis.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/identify/identify-ore.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/identify/identify-ore.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools/tools-config.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/tools/tools-config.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -107,7 +117,7 @@
       <updated>1658306828548</updated>
       <workItem from="1658306830659" duration="2156000" />
       <workItem from="1658309470497" duration="8684000" />
-      <workItem from="1658392230426" duration="17363000" />
+      <workItem from="1658392230426" duration="30335000" />
     </task>
     <servers />
   </component>

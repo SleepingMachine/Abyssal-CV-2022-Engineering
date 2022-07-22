@@ -10,7 +10,7 @@
 
 struct FunctionConfig
 {
-    int _mining_mode                               = EXCHANGE_MODE;
+    int _operating_mode                            = OperatingMode::EXCHANGE_MODE;
     //可以载入本地视频或是使用usb免驱摄像头用于测试，需要注意无法读取到深度信息
     int _camera_type                               = REALSENSE_CAMERA;
 
@@ -42,12 +42,14 @@ public:
 
 
 struct CameraPara {
-    float depth_scale2m                 = 0.001;
-    float depth_scale2cm                = depth_scale2m * 100;
-    int   min_recognition_distance_near = 40;
-    int   max_recognition_distance_near = 100;
-    int   min_recognition_distance_far  = 80;
-    int   max_recognition_distance_far  = 200;
+    float depth_scale2m                   = 0.001;
+    float depth_scale2cm                  = depth_scale2m * 100;
+    int   min_recognition_distance_near   = 40;
+    int   max_recognition_distance_near   = 100;
+    int   min_recognition_distance_far    = 80;
+    int   max_recognition_distance_far    = 200;
+    int   min_recognition_distance_search = 80.0;
+    int   max_recognition_distance_search = 140.0;
 };
 
 class CameraParaFactory {

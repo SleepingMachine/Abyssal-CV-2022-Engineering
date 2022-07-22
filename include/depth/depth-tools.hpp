@@ -5,6 +5,8 @@
 #ifndef ABYSSAL_CV_2022_ENGINEERING_DEPTH_TOOLS_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_DEPTH_TOOLS_HPP
 
+#include "control/control-module.hpp"
+
 #include <librealsense2/rs.hpp>
 #include <opencv2/opencv.hpp>
 
