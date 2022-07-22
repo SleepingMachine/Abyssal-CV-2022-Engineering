@@ -13,13 +13,14 @@ std::atomic_bool serial_port_start;
 
 cv::Mat frame_depth                (Size(kCameraFrameWidth, kCameraFrameHeight), CV_8UC3);
 cv::Mat frame_color                (Size(kCameraFrameWidth, kCameraFrameHeight), CV_8UC3);
-cv::Mat frame_color_depth_analysis (Size(kCameraFrameWidth, kCameraFrameHeight), CV_8UC3);
+cv::Mat frame_color_depth_analysis_near (Size(kCameraFrameWidth, kCameraFrameHeight), CV_8UC3);
+cv::Mat frame_color_depth_analysis_far (Size(kCameraFrameWidth, kCameraFrameHeight), CV_8UC3);
 cv::Mat frame_depth_depth_analysis (Size(kCameraFrameWidth, kCameraFrameHeight), CV_8UC3);
 
 int main(int argc, char** argv) {
     std::thread control_thread (SwitchControl::SwitchMode);
     std::thread camera_thread  (CameraStream::StreamRetrieve, &frame_color, &frame_depth);
-    std::thread depth_thread   (DepthSolution::DepthSolutionStream, &frame_color, &frame_depth);
+    std::thread depth_thread   (DepthSolution::DepthSolutionStream, &frame_color, &frame_depth, &frame_color_depth_analysis_near, &frame_color_depth_analysis_far, &frame_depth_depth_analysis);
 
     control_thread.join();
     camera_thread.join();

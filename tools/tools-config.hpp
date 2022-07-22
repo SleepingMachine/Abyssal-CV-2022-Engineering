@@ -44,10 +44,10 @@ public:
 struct CameraPara {
     float depth_scale2m                 = 0.001;
     float depth_scale2cm                = depth_scale2m * 100;
-    int   min_recognition_distance_near = 80;
-    int   max_recognition_distance_near = 120;
-    int   min_recognition_distance_far;
-    int   max_recognition_distance_far;
+    int   min_recognition_distance_near = 40;
+    int   max_recognition_distance_near = 100;
+    int   min_recognition_distance_far  = 80;
+    int   max_recognition_distance_far  = 200;
 };
 
 class CameraParaFactory {

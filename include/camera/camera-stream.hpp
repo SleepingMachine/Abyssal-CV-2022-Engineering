@@ -5,7 +5,7 @@
 #ifndef ABYSSAL_CV_2022_ENGINEERING_CAMERA_STREAM_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_CAMERA_STREAM_HPP
 
-#include"depth/depth-tool.hpp"
+#include"depth/depth-tools.hpp"
 #include "../tools/tools-config.hpp"
 
 #include <librealsense2/rs.hpp>

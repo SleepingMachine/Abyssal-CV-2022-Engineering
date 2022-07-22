@@ -2,8 +2,8 @@
 // Created by sleepingmachine on 22-7-20.
 //
 
-#ifndef ABYSSAL_CV_2022_ENGINEERING_DEPTH_TOOL_HPP
-#define ABYSSAL_CV_2022_ENGINEERING_DEPTH_TOOL_HPP
+#ifndef ABYSSAL_CV_2022_ENGINEERING_DEPTH_TOOLS_HPP
+#define ABYSSAL_CV_2022_ENGINEERING_DEPTH_TOOLS_HPP
 
 #include <librealsense2/rs.hpp>
 #include <opencv2/opencv.hpp>
@@ -24,4 +24,4 @@ public:
     }
 };
 
-#endif //ABYSSAL_CV_2022_ENGINEERING_DEPTH_TOOL_HPP
+#endif //ABYSSAL_CV_2022_ENGINEERING_DEPTH_TOOLS_HPP

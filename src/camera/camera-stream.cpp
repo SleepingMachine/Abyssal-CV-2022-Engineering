@@ -18,6 +18,7 @@ CameraPara CameraStream::cameraPara_ = CameraParaFactory::getCameraPara();
 int CameraStream::StreamRetrieve(cv::Mat *pFrame_color, cv::Mat *pFrame_depth) try {
     InitCamera();
     while (true){
+        //double loop_start_time = (double)cv::getTickCount();
         frames_ = pipe_.wait_for_frames();//等待所有配置的流生成框架
 
         rs2::align align_to_color(RS2_STREAM_COLOR);

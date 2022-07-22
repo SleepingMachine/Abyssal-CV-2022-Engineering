@@ -5,7 +5,7 @@
 #ifndef ABYSSAL_CV_2022_ENGINEERING_DEPTH_ANALYSIS_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_DEPTH_ANALYSIS_HPP
 
-#include "depth-tool.hpp"
+#include "depth-tools.hpp"
 #include "../include/camera/camera-stream.hpp"
 #include "../include/control/control-module.hpp"
 
@@ -29,7 +29,7 @@ private:
     static int AuxiliaryGraphicsDrawing();
 
 public:
-    static int DepthSolutionStream(cv::Mat* import_src_color, cv::Mat* import_src_depth);
+    static int DepthSolutionStream(cv::Mat* import_src_color, cv::Mat* import_src_depth, cv::Mat* export_dst_color_near, cv::Mat* export_dst_color_far, cv::Mat* export_dst_depth);
 
     DepthSolution();
     ~DepthSolution() {};
