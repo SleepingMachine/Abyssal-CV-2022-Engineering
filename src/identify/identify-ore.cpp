@@ -5,7 +5,7 @@
 #include "../include/identify/identify-ore.hpp"
 
 //extern std::mutex mutex_color;
-extern std::mutex mutex_depth_analysis;
+extern std::mutex mutex_depth;
 //extern std::atomic_bool camera_is_open;
 
 IdentifyOre::IdentifyOre() {}
@@ -61,10 +61,10 @@ void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_s
     //                        &hmin_1_, &hmax_1_, &smin_1_, &smax_1_, &vmin_1_, &vmax_1_,
     //                        &open_,    &close_,    &erode_,   &dilate_);
     while (true){
-        if (mutex_depth_analysis.try_lock()) {
+        if (mutex_depth.try_lock()) {
             temp_src_color = *import_src_color;
             temp_src_depth = *import_src_depth;
-            mutex_depth_analysis.unlock();
+            mutex_depth.unlock();
         }
         if (!temp_src_color.empty()){
             temp_src_color.copyTo(src_color_);

@@ -5,7 +5,9 @@
 #include "../include/depth/depth-analysis.hpp"
 
 extern std::atomic_bool camera_start;
+
 extern std::mutex mutex_camera;
+extern std::mutex mutex_depth;
 
 cv::Mat DepthSolution::src_color_               (480, 640, CV_8UC3);
 cv::Mat DepthSolution::src_depth_               (480, 640, CV_8UC3);
@@ -35,11 +37,11 @@ int DepthSolution::DepthSolutionStream(cv::Mat* import_src_color, cv::Mat* impor
         //cv::imshow("depth", src_depth_);
         //cv::waitKey(1);
 
-        if (mutex_camera.try_lock()) {
+        if (mutex_depth.try_lock()) {
             dst_depth_analysis_near_.copyTo(*export_dst_color_near);
             dst_depth_analysis_near_.copyTo(*export_dst_color_far);
             src_depth_.copyTo(*export_dst_depth);
-            mutex_camera.unlock();
+            mutex_depth.unlock();
         }
 
         /*

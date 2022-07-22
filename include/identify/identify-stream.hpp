@@ -14,7 +14,8 @@
 
 class IdentifyStream{
 private:
-
+    static void IdentifyNearStream(cv::Mat *import_src_color_near);
+    static void IdentifyFarStream();
 public:
     static int IdentifyDivert(cv::Mat *import_src_color_near, cv::Mat *import_src_color_far, cv::Mat* import_src_depth, int64* sent_data);
     IdentifyStream();

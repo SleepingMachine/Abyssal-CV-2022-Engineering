@@ -5,7 +5,7 @@
 #include "include/identify/identify-stream.hpp"
 
 std::mutex mutex_camera;
-std::mutex mutex_depth_analysis;
+std::mutex mutex_depth;
 std::mutex mutex_serial_port_data;
 
 std::atomic_bool camera_start                     = false;
