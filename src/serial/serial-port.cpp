@@ -1,11 +1,11 @@
 //
-// Created by sleepingmachine on 22-5-21.
+// Created by sleepingmachine on 22-7-22.
 //
 
-#include "serial-port.hpp"
+#include "../include/serial/serial-port.hpp"
 //extern std::mutex mutex2;
 extern std::mutex mutex_serial_port_data;
-std::atomic_bool serial_port_start;
+extern std::atomic_bool serial_port_start;
 
 static SerialConfig serialConfig = SerialConfigFactory::getSerialConfig();
 SerialPort::SerialPort() {}
@@ -20,7 +20,8 @@ char SerialPort::read_data_[3];
 char SerialPort::cache_read_data_[6] = {};
 
 void SerialPort::SendData(int64* sentData) {
-    while (serial_port_start) {
+    serial_port_start = true;
+    while (true) {
 
         int temp_send_data;
 
@@ -32,23 +33,25 @@ void SerialPort::SendData(int64* sentData) {
         SerialPort::GetHitPointData(temp_send_data);
 
         int fd; /*File Descriptor*/
-
+/*
         printf("\n +----------------------------------+");
         printf("\n |        Serial Port Write         |");
         printf("\n +----------------------------------+");
-
+*/
         SerialPort::GetSerialInfo();
         SerialPort::CheckPortAvailability();
 
         fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY | O_NDELAY);
-
-        if (fd == -1) {/* Error Checking */
+/*
+        if (fd == -1) {
             printf("\n  ERROR ! in Opening ttyUSB0  ");
             //exit(0);
-        }
-        else
-            printf("\n  ttyUSB0 Opened Successfully ");
 
+        }
+        else{
+            printf("\n  ttyUSB0 Opened Successfully ");
+        }
+*/
         struct termios SerialPortSettings;
 
         tcgetattr(fd, &SerialPortSettings);
@@ -79,12 +82,12 @@ void SerialPort::SendData(int64* sentData) {
 
         SerialPortSettings.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
         SerialPortSettings.c_oflag &= ~OPOST;
-
+/*
         if ((tcsetattr(fd, TCSANOW, &SerialPortSettings)) != 0)
             printf("\n  ERROR ! in Setting attributes");
         else
             printf("\n  BaudRate = 115200 \n  StopBits = 1 \n  Parity   = none\n  ");
-
+*/
         //定义传输内容
         char write_buffer[] = "Hello World";
         //传输字节数
@@ -94,55 +97,58 @@ void SerialPort::SendData(int64* sentData) {
         bytes_readten = read (fd, SerialPort::read_data_, sizeof(read_data_));
         bytes_written = write(fd, SerialPort::sent_data_, sizeof(sent_data_));
 
-        std::cout << "接收了[" << bytes_readten << "]bytes的数据" << std::endl;
+        //std::cout << "接收了[" << bytes_readten << "]bytes的数据" << std::endl;
 
         int _mode_flag = -1;
         if (bytes_readten > 0){
-                if (read_data_[0] == 's' && read_data_[2] == 'e'){
-                    //std::cout << "yesss" << std::endl;
-                    if (read_data_[1] == '0'){
-                        _mode_flag = 0;
-                    }
-                    if (read_data_[1] == '1'){
-                        _mode_flag = 1;
-                    }
+            if (read_data_[0] == 's' && read_data_[2] == 'e'){
+                //std::cout << "yesss" << std::endl;
+                if (read_data_[1] == '0'){
+                    _mode_flag = 0;
                 }
-                else if(sizeof(cache_read_data_) == 0){
-                    strcat(cache_read_data_, read_data_);
+                if (read_data_[1] == '1'){
+                    _mode_flag = 1;
                 }
-                else if(sizeof(cache_read_data_) > 0){
-                    strcat(cache_read_data_, read_data_);
-                    for (int i = 0; i < sizeof(cache_read_data_); ++i) {
-                        if (cache_read_data_[i] == 's'){
-                            //std::cout << "yesss" << std::endl;
-                            if (read_data_[1] == '0'){
-                                _mode_flag = 0;
-                            }
-                            if (read_data_[1] == '1'){
-                                _mode_flag = 1;
-                            }
-                            memset(cache_read_data_,'\0',sizeof(cache_read_data_));
-
-                            break;
-
+            }
+            else if(sizeof(cache_read_data_) == 0){
+                strcat(cache_read_data_, read_data_);
+            }
+            else if(sizeof(cache_read_data_) > 0){
+                strcat(cache_read_data_, read_data_);
+                for (int i = 0; i < sizeof(cache_read_data_); ++i) {
+                    if (cache_read_data_[i] == 's'){
+                        //std::cout << "yesss" << std::endl;
+                        if (read_data_[1] == '0'){
+                            _mode_flag = 0;
                         }
+                        if (read_data_[1] == '1'){
+                            _mode_flag = 1;
+                        }
+                        memset(cache_read_data_,'\0',sizeof(cache_read_data_));
+
+                        break;
+
                     }
                 }
+            }
         }
+        /*
         if (_mode_flag == 0){
             DepthSolution::functionConfig_._mining_mode = MiningMode::GRIP_MODE;
         }
         else if(_mode_flag == 1){
             DepthSolution::functionConfig_._mining_mode = MiningMode::EXCHANGE_MODE;
         }
-
+        */
+        /*
         printf("\n  %d written to ttyUSB0", temp_send_data);
         printf("\n  %d Bytes written to ttyUSB0", bytes_written);
         printf("\n +----------------------------------+\n");
-
+*/
         close(fd);
         //usleep(5000);
     }
+
 }
 
 void SerialPort::GetHitPointData(int tempData) {
@@ -154,7 +160,7 @@ void SerialPort::GetHitPointData(int tempData) {
     int fall_flag = tempData % 10;
     int hitPointData_y = (tempData - fall_flag)/10 % 1000;
     int hitPointData_x = ((tempData - fall_flag)/10 - hitPointData_y)/1000;
-    std::cout << hitPointData_x << " " << hitPointData_y << " " << fall_flag << std::endl;
+    //std::cout << hitPointData_x << " " << hitPointData_y << " " << fall_flag << std::endl;
 
     sent_data_[0] = 's';
 
@@ -175,14 +181,15 @@ void SerialPort::GetHitPointData(int tempData) {
 
 void SerialPort::CheckPortAvailability()
 {
+    /*
     std::cout << "  目前设定的读出串口 : " << read_device_ << "\n";
     std::cout << "  目前设定的写入串口 : " << write_device_ << "\n";
-
+    */
     int fd   = open(read_device_.c_str(), O_EXCL, NULL);
     bool ret = false;
     if(fd < 0)
     {
-        std::cout << "读出串口 [" + read_device_ + "] 无响应" << "\n";
+        //std::cout << "读出串口 [" + read_device_ + "] 无响应" << "\n";
         ret = true;
     }
     close(fd);
@@ -190,15 +197,15 @@ void SerialPort::CheckPortAvailability()
     fd = open(write_device_.c_str(), O_EXCL, NULL);
     if(fd < 0)
     {
-        std::cout << "写入串口 [" + write_device_ + "] 无响应" << "\n";
+        //std::cout << "写入串口 [" + write_device_ + "] 无响应" << "\n";
         ret = true;
     }
     close(fd);
 
     if(ret)
     {
-        std::cout << "当前在线的串口 : " << "\n";
-        system("ls -l /dev/ttyUSB*");
+        //std::cout << "当前在线的串口 : " << "\n";
+        //system("ls -l /dev/ttyUSB*");
         //exit(0);
     }
 }
@@ -208,6 +215,6 @@ void SerialPort::GetSerialInfo() {
     write_device_ = serialConfig.writePortPath;
     baud_read_ = serialConfig.baud_read_Port;
     baud_write_ = serialConfig.baud_write_Port;
-    std::cout << "\n  getinfo" << " " << "baud set:" << baud_read_ << std::endl;
+    //std::cout << "\n  getinfo" << " " << "baud set:" << baud_read_ << std::endl;
 }
 
