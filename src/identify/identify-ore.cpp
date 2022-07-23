@@ -8,6 +8,9 @@
 extern std::mutex mutex_depth;
 //extern std::atomic_bool camera_is_open;
 
+extern std::atomic_bool _near_thread_state_flag;
+
+
 IdentifyOre::IdentifyOre() {}
 
 int IdentifyOre::hmin_0_ = 0;
@@ -61,37 +64,42 @@ void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_s
     //                        &hmin_1_, &hmax_1_, &smin_1_, &smax_1_, &vmin_1_, &vmax_1_,
     //                        &open_,    &close_,    &erode_,   &dilate_);
     while (true){
-        if (mutex_depth.try_lock()) {
-            temp_src_color = *import_src_color;
-            temp_src_depth = *import_src_depth;
-            mutex_depth.unlock();
-        }
-        if (!temp_src_color.empty()){
-            temp_src_color.copyTo(src_color_);
-            temp_src_depth.copyTo(src_depth_);
-        }
-
-        ImagePreprocess(src_color_);
-        SearchOre(dst_color_);
-        DepthCalculation();
-        TargetSelection();
-        DropDetection();
-
-        if (target_ore_index_ >= 0){
-            int temp_target_x = ore_structs_[target_ore_index_].ore_rect.center.x;
-            int temp_target_y = ore_structs_[target_ore_index_].ore_rect.center.y;
-            int temp_ore_fall = 0;
-            if (_target_ore_fall_){
-                temp_ore_fall = 1;
+        if(_near_thread_state_flag){
+            if (mutex_depth.try_lock()) {
+                temp_src_color = *import_src_color;
+                temp_src_depth = *import_src_depth;
+                mutex_depth.unlock();
             }
-            //*sent_data = temp_target_x * 10000 + temp_target_y * 10 + temp_ore_fall;
-        }
-        else{
-            //*sent_data = 0;
-        }
+            if (!temp_src_color.empty()){
+                temp_src_color.copyTo(src_color_);
+                temp_src_depth.copyTo(src_depth_);
+            }
 
-        DrawReferenceGraphics();
-        ResourceRelease();
+            ImagePreprocess(src_color_);
+            SearchOre(dst_color_);
+            DepthCalculation();
+            TargetSelection();
+
+            if (SwitchControl::functionConfig_._enable_ore_drop_detection){
+                DropDetection();
+            }
+
+            if (target_ore_index_ >= 0){
+                int temp_target_x = ore_structs_[target_ore_index_].ore_rect.center.x;
+                int temp_target_y = ore_structs_[target_ore_index_].ore_rect.center.y;
+                int temp_ore_fall = 0;
+                if (_target_ore_fall_){
+                    temp_ore_fall = 1;
+                }
+                //*sent_data = temp_target_x * 10000 + temp_target_y * 10 + temp_ore_fall;
+            }
+            else{
+                //*sent_data = 0;
+            }
+
+            AuxiliaryGraphicsDrawing();
+            ResourceRelease();
+        }
     }
 }
 
@@ -147,7 +155,7 @@ void IdentifyOre::ResourceRelease() {
     _target_ore_fall_ = false;
 }
 
-void IdentifyOre::DrawReferenceGraphics() {
+void IdentifyOre::AuxiliaryGraphicsDrawing() {
     if (SwitchControl::functionConfig_._enable_debug_mode){
         if (target_ore_index_ >= 0){
             OreTool::drawRotatedRect(src_color_, ore_structs_[target_ore_index_].ore_rect, cv::Scalar(15, 198, 150), 4, 16);
@@ -166,9 +174,9 @@ void IdentifyOre::DrawReferenceGraphics() {
 
 
 
-        cv::imshow("Color", src_color_);
+        cv::imshow("Ore", src_color_);
         //cv::imshow("Depth", src_depth_);
-        cv::imshow("Mask",  dst_color_);
+        //cv::imshow("Mask",  dst_color_);
     }
 
 }

@@ -21,7 +21,7 @@ include_directories( ${realsense2_INCLUDE_DIRS})
 add_executable(Abyssal_CV_2022_Engineering
         main.cpp
         src/camera/camera-stream.cpp
-        include/camera/camera-stream.hpp include/camera/camera-cv-helpers.hpp src/control/control-module.cpp include/control/control-module.hpp include/control/control-read-config.hpp include/depth/depth-analysis.hpp src/depth/depth-analysis.cpp include/depth/depth-tools.hpp tools/tools-config.hpp asset/robomaster-define.hpp src/identify/identify-box.cpp src/identify/identify-ore.cpp include/identify/identify-box.hpp include/identify/identify-ore.hpp include/identify/identify-tools.hpp src/serial/serial-port.cpp include/serial/serial-port.hpp src/identify/identify-stream.cpp include/identify/identify-stream.hpp)
+        include/camera/camera-stream.hpp include/camera/camera-cv-helpers.hpp src/control/control-module.cpp include/control/control-module.hpp include/control/control-read-config.hpp include/depth/depth-analysis.hpp src/depth/depth-analysis.cpp include/depth/depth-tools.hpp tools/tools-config.hpp asset/robomaster-define.hpp src/identify/identify-box.cpp src/identify/identify-ore.cpp include/identify/identify-box.hpp include/identify/identify-ore.hpp include/identify/identify-tools.hpp src/serial/serial-port.cpp include/serial/serial-port.hpp src/identify/identify-stream.cpp include/identify/identify-stream.hpp include/record/record-data.hpp src/record/record-data.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} ${realsense2_LIBRARY})

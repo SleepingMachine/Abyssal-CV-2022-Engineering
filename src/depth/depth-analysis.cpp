@@ -33,17 +33,12 @@ int DepthSolution::DepthSolutionStream(cv::Mat* import_src_color, cv::Mat* impor
 
         DeepSegmentation();
 
-        //cv::imshow("color", src_color_);
-        //cv::imshow("depth", src_depth_);
-        //cv::waitKey(1);
-
         if (mutex_depth.try_lock()) {
             dst_depth_analysis_near_.copyTo(*export_dst_color_near);
-            dst_depth_analysis_near_.copyTo(*export_dst_color_far);
+            dst_depth_analysis_far_ .copyTo(*export_dst_color_far);
             src_depth_.copyTo(*export_dst_depth);
             mutex_depth.unlock();
         }
-
         /*
         count++;
         if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count() - loop_start_time >= 1){

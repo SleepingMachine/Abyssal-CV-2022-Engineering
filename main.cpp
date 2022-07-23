@@ -3,6 +3,7 @@
 #include "include/depth/depth-analysis.hpp"
 #include "include/serial/serial-port.hpp"
 #include "include/identify/identify-stream.hpp"
+#include "include/record/record-data.hpp"
 
 std::mutex mutex_camera;
 std::mutex mutex_depth;
@@ -11,6 +12,7 @@ std::mutex mutex_serial_port_data;
 std::atomic_bool camera_start                     = false;
 std::atomic_bool serial_port_start                = false;
 std::atomic_bool configuration_file_read_complete = false;
+
 
 cv::Mat frame_depth                     (Size(kCameraFrameWidth, kCameraFrameHeight), CV_8UC3);
 cv::Mat frame_color                     (Size(kCameraFrameWidth, kCameraFrameHeight), CV_8UC3);
@@ -26,12 +28,14 @@ int main(int argc, char** argv) {
     std::thread camera_thread   (CameraStream::StreamRetrieve, &frame_color, &frame_depth);
     std::thread depth_thread    (DepthSolution::DepthSolutionStream, &frame_color, &frame_depth, &frame_color_depth_analysis_near, &frame_color_depth_analysis_far, &frame_depth_depth_analysis);
     std::thread identify_thread (IdentifyStream::IdentifyDivert, &frame_color_depth_analysis_near, &frame_color_depth_analysis_far, &frame_depth_depth_analysis, &sent_serial_port_data);
+    std::thread record_thread   (RecordData::SaveDataStream, &frame_color);
 
     control_thread .join();
     serial_thread  .join();
     camera_thread  .join();
     depth_thread   .join();
     identify_thread.join();
+    record_thread  .join();
 
     return 0;
 }
