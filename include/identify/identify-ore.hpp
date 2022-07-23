@@ -60,7 +60,7 @@ private:
     static void DepthCalculation();
     static void TargetSelection();
     static void DropDetection();
-    static void DrawReferenceGraphics();
+    static void AuxiliaryGraphicsDrawing();
     static void ResourceRelease();
 
 public:

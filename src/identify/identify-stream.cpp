@@ -21,10 +21,10 @@ int IdentifyStream::IdentifyDivert(cv::Mat *import_src_color_near, cv::Mat *impo
         cv::waitKey(10);
     }
     std::thread identify_near_thread( IdentifyStream::IdentifyNearStream,import_src_color_near, import_src_depth);
-    //std::thread identify_far_thread ( IdentifyStream::IdentifyFarStream ,import_src_color_far,  import_src_depth);
+    std::thread identify_far_thread ( IdentifyStream::IdentifyFarStream ,import_src_color_far,  import_src_depth);
 
     identify_near_thread.join();
-    //identify_far_thread .join();
+    identify_far_thread .join();
     return 0;
 }
 
@@ -33,6 +33,6 @@ void IdentifyStream::IdentifyNearStream(cv::Mat *import_src_color_near, cv::Mat 
 }
 
 void IdentifyStream::IdentifyFarStream(cv::Mat *import_src_color_far, cv::Mat *import_src_depth) {
-    IdentifyOre::OreIdentifyStream(import_src_color_far, import_src_depth);
+    IdentifyBox::BoxIdentifyStream(import_src_color_far, import_src_depth);
 }
 

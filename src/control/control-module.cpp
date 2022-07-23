@@ -8,6 +8,9 @@ extern std::atomic_bool camera_start;
 extern std::atomic_bool serial_port_start;
 extern std::atomic_bool configuration_file_read_complete;
 
+extern std::atomic_bool _near_thread_state_flag;
+extern std::atomic_bool _far_thread_state_flag;
+
 FunctionConfig SwitchControl::functionConfig_ = FunctionConfigFactory::getFunctionConfig();
 
 SwitchControl::SwitchControl() {}
@@ -15,6 +18,16 @@ SwitchControl::SwitchControl() {}
 int SwitchControl::SwitchMode() {
     ReadConfig();
     configuration_file_read_complete = true;
+    while(true){
+        if (SwitchControl::functionConfig_._operating_mode == OperatingMode::SEARCH_MODE){
+            _near_thread_state_flag = true;
+            _far_thread_state_flag  = false;
+        }
+        else if (SwitchControl::functionConfig_._operating_mode == OperatingMode::EXCHANGE_MODE){
+            _near_thread_state_flag = true;
+            _far_thread_state_flag  = true;
+        }
+    }
     return 0;
 }
 
@@ -26,24 +39,29 @@ int SwitchControl::ReadConfig() {
         return 1;
     }
 
-    std::string UserName        = config.ReadString("RMCONFIG", "UserName", "");
-    std::string _save_video     = config.ReadString("RMCONFIG", "EnableSaveVideo", "false");
-    std::string _operating_mode = config.ReadString("RMCONFIG", "OperatingMode", "EXCHANGE_MODE");
+    std::string UserName           = config.ReadString("RMCONFIG", "UserName", "");
+    std::string _save_video        = config.ReadString("RMCONFIG", "EnableSaveVideo", "false");
+    std::string _operating_mode    = config.ReadString("RMCONFIG", "OperatingMode", "EXCHANGE_MODE");
+    std::string _ore_drop_detection = config.ReadString("RMCONFIG", "OreDropDetection", "false");
 
-    std::cout << "UserName=" << UserName << std::endl;
-
-    if (_save_video == "false"){
-        SwitchControl::functionConfig_._enableSaveVideo = false;
-    }
-    else if (_save_video == "true"){
-        SwitchControl::functionConfig_._enableSaveVideo = true;
-    }
-
+    std::cout << "User::" << UserName << std::endl;
     if (_operating_mode == "SEARCH_MODE"){
         SwitchControl::functionConfig_._operating_mode = OperatingMode::SEARCH_MODE;
     }
     else if (_operating_mode == "EXCHANGE_MODE"){
         SwitchControl::functionConfig_._operating_mode = OperatingMode::EXCHANGE_MODE;
+    }
+    if (_save_video == "true"){
+        SwitchControl::functionConfig_._enable_save_video = true;
+    }
+    else if (_save_video == "false"){
+        SwitchControl::functionConfig_._enable_save_video = false;
+    }
+    if (_ore_drop_detection == "true"){
+        SwitchControl::functionConfig_._enable_ore_drop_detection = true;
+    }
+    else if (_ore_drop_detection == "false"){
+        SwitchControl::functionConfig_._enable_ore_drop_detection = false;
     }
 
 }

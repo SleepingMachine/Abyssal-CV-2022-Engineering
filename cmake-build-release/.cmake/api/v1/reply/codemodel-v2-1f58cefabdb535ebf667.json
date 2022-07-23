@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "Abyssal_CV_2022_Engineering::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Abyssal_CV_2022_Engineering-DEBUG-19411d8e1df30f1cb0b4.json",
+					"jsonFile" : "target-Abyssal_CV_2022_Engineering-DEBUG-5ca61f4d1fe8f5022aff.json",
 					"name" : "Abyssal_CV_2022_Engineering",
 					"projectIndex" : 0
 				}
@@ -49,7 +49,7 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering/cmake-build-debug",
+		"build" : "/home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering/cmake-build-release",
 		"source" : "/home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering"
 	},
 	"version" : 
