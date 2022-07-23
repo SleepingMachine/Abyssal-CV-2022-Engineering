@@ -9,6 +9,7 @@
 //#include "../src/depth/depth-analysis.hpp"
 
 #include <opencv2/core/persistence.hpp>
+#include <opencv2/highgui.hpp>
 
 #include <iostream>
 #include <stdio.h>

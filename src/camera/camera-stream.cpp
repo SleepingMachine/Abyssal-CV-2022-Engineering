@@ -7,6 +7,8 @@
 extern std::mutex mutex_camera;
 extern std::atomic_bool camera_start;
 
+extern std::atomic_bool configuration_file_read_complete;
+
 rs2::frameset CameraStream::frames_;
 rs2::pipeline CameraStream::pipe_;
 rs2::config CameraStream::cfg_;
@@ -16,6 +18,9 @@ rs2::pipeline_profile CameraStream::profile_;
 CameraPara CameraStream::cameraPara_ = CameraParaFactory::getCameraPara();
 
 int CameraStream::StreamRetrieve(cv::Mat *pFrame_color, cv::Mat *pFrame_depth) try {
+    while(!configuration_file_read_complete){
+        cv::waitKey(10);
+    }
     InitCamera();
     while (true){
         //double loop_start_time = (double)cv::getTickCount();

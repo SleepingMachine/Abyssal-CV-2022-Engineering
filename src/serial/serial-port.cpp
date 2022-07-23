@@ -7,6 +7,8 @@
 extern std::mutex mutex_serial_port_data;
 extern std::atomic_bool serial_port_start;
 
+extern std::atomic_bool configuration_file_read_complete;
+
 static SerialConfig serialConfig = SerialConfigFactory::getSerialConfig();
 SerialPort::SerialPort() {}
 
@@ -22,7 +24,9 @@ char SerialPort::cache_read_data_[6] = {};
 void SerialPort::SendData(int64* sentData) {
     serial_port_start = true;
     while (true) {
-
+        while(!configuration_file_read_complete){
+            cv::waitKey(10);
+        }
         int temp_send_data;
 
         if (mutex_serial_port_data.try_lock()) {
