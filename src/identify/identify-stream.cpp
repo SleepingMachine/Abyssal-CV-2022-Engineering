@@ -17,21 +17,22 @@ IdentifyStream::IdentifyStream() {}
 
 int IdentifyStream::IdentifyDivert(cv::Mat *import_src_color_near, cv::Mat *import_src_color_far, cv::Mat *import_src_depth,
                                    int64 *sent_data) {
-    IdentifyStream::IdentifyNearStream(import_src_color_near);
+    while(!camera_start || !serial_port_start){
+        cv::waitKey(10);
+    }
+    std::thread identify_near_thread( IdentifyStream::IdentifyNearStream,import_src_color_near, import_src_depth);
+    //std::thread identify_far_thread ( IdentifyStream::IdentifyFarStream ,import_src_color_far,  import_src_depth);
+
+    identify_near_thread.join();
+    //identify_far_thread .join();
     return 0;
 }
 
-void IdentifyStream::IdentifyNearStream(cv::Mat *import_src_color_near) {
-    cv::Mat a;
-    while(true){
-        if (mutex_depth.try_lock()) {
-            a = *import_src_color_near;
-            mutex_depth.unlock();
-        }
-        cv::imshow("1", a);
-        cv::waitKey(1);
-    }
-    //这样可以
+void IdentifyStream::IdentifyNearStream(cv::Mat *import_src_color_near, cv::Mat *import_src_depth) {
+    IdentifyOre::OreIdentifyStream(import_src_color_near, import_src_depth);
 }
 
+void IdentifyStream::IdentifyFarStream(cv::Mat *import_src_color_far, cv::Mat *import_src_depth) {
+    IdentifyOre::OreIdentifyStream(import_src_color_far, import_src_depth);
+}
 

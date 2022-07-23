@@ -14,6 +14,7 @@ SwitchControl::SwitchControl() {}
 
 int SwitchControl::SwitchMode() {
     ReadConfig();
+    configuration_file_read_complete = true;
     return 0;
 }
 
@@ -45,7 +46,6 @@ int SwitchControl::ReadConfig() {
         SwitchControl::functionConfig_._operating_mode = OperatingMode::EXCHANGE_MODE;
     }
 
-    configuration_file_read_complete = true;
 }
 
 namespace rr

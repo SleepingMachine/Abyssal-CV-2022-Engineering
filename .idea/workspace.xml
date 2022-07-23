@@ -22,16 +22,22 @@
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Abyssal_CV_2022_Engineering" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Abyssal_CV_2022_Engineering" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/camera/camera-stream.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/camera/camera-stream.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/control/control-module.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/control/control-module.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/depth/depth-analysis.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/depth/depth-analysis.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/identify/identify-ore.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/identify/identify-ore.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/identify/identify-stream.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/identify/identify-stream.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/serial/serial-port.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/serial/serial-port.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/identify/identify-box.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/identify/identify-box.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/identify/identify-stream.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/identify/identify-stream.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/depth/depth-analysis.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/depth/depth-analysis.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/serial/serial-port.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/serial/serial-port.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/camera/camera-stream.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/camera/camera-stream.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/control/control-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/control/control-module.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/identify/identify-ore.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/identify/identify-ore.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/identify/identify-stream.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/identify/identify-stream.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/serial/serial-port.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/serial/serial-port.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/tools-config.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/tools/tools-config.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +107,7 @@
       <updated>1658306828548</updated>
       <workItem from="1658306830659" duration="2156000" />
       <workItem from="1658309470497" duration="8684000" />
-      <workItem from="1658392230426" duration="31917000" />
+      <workItem from="1658392230426" duration="37185000" />
     </task>
     <servers />
   </component>

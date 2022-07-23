@@ -11,23 +11,23 @@ extern std::mutex mutex_depth;
 IdentifyOre::IdentifyOre() {}
 
 int IdentifyOre::hmin_0_ = 0;
-int IdentifyOre::hmax_0_ = 0;
-int IdentifyOre::smin_0_ = 0;
-int IdentifyOre::smax_0_ = 0;
-int IdentifyOre::vmin_0_ = 0;
-int IdentifyOre::vmax_0_ = 0;
+int IdentifyOre::hmax_0_ = 65;
+int IdentifyOre::smin_0_ = 137;
+int IdentifyOre::smax_0_ = 255;
+int IdentifyOre::vmin_0_ = 126;
+int IdentifyOre::vmax_0_ = 255;
 
 int IdentifyOre::hmin_1_ = 0;
-int IdentifyOre::hmax_1_ = 0;
-int IdentifyOre::smin_1_ = 0;
-int IdentifyOre::smax_1_ = 0;
-int IdentifyOre::vmin_1_ = 0;
-int IdentifyOre::vmax_1_ = 0;
+int IdentifyOre::hmax_1_ = 65;
+int IdentifyOre::smin_1_ = 125;
+int IdentifyOre::smax_1_ = 255;
+int IdentifyOre::vmin_1_ = 133;
+int IdentifyOre::vmax_1_ = 255;
 
-int IdentifyOre::open_   = 0;
-int IdentifyOre::close_  = 0;
-int IdentifyOre::erode_  = 0;
-int IdentifyOre::dilate_ = 0;
+int IdentifyOre::open_   = 1;
+int IdentifyOre::close_  = 13;
+int IdentifyOre::erode_  = 5;
+int IdentifyOre::dilate_ = 3;
 
 int IdentifyOre::target_ore_index_ = -1;
 
@@ -151,12 +151,17 @@ void IdentifyOre::DrawReferenceGraphics() {
     if (SwitchControl::functionConfig_._enable_debug_mode){
         if (target_ore_index_ >= 0){
             OreTool::drawRotatedRect(src_color_, ore_structs_[target_ore_index_].ore_rect, cv::Scalar(15, 198, 150), 4, 16);
+            if (_target_ore_fall_ == true){
+                cv::circle(src_color_, current_target_ore_location_.target_ore_center, 15, cv::Scalar(0,0,255), 10);
+            }
 
+            /*
             std::cout << "找到[" << ore_structs_.size() << "]个矿石, 目标矿石中心点的平面坐标为["
                       << ore_structs_[target_ore_index_].ore_rect.center.x << "," << ore_structs_[target_ore_index_].ore_rect.center.y
                       << "],深度为[" << ore_structs_[target_ore_index_].ore_depth << "]，参考单位为[cm]" << "\n"
                       << "当前保存的矿石轨迹座标点数为[" << target_ore_track_.size() << "]"
                       << std::endl;
+            */
         }
 
 
@@ -267,7 +272,7 @@ void IdentifyOre::DropDetection() {
         //float fit_line_slope = OreTool::trackLineFit(target_ore_track_);
         //std::cout << "轨迹点拟合斜率为[" << fit_line_slope  << "]" << std::endl;
         if (/*abs(fit_line_slope) >= 20 &&*/ variance_y > 100 * variance_x){
-            cv::circle(src_color_, current_target_ore_location_.target_ore_center, 15, cv::Scalar(0,0,255), 10);
+            //cv::circle(src_color_, current_target_ore_location_.target_ore_center, 15, cv::Scalar(0,0,255), 10);
             if (current_target_ore_location_.target_ore_depth < orePara.catch_mode_max_trigger_distance && current_target_ore_location_.target_ore_depth > orePara.catch_mode_min_trigger_distance){
                 cv::circle(src_color_, current_target_ore_location_.target_ore_center, 20, cv::Scalar(150,100,255), 5);
                 _target_ore_fall_ = true;

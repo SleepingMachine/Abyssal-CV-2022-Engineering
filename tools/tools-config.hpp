@@ -48,8 +48,8 @@ struct CameraPara {
     int   max_recognition_distance_near   = 100;
     int   min_recognition_distance_far    = 80;
     int   max_recognition_distance_far    = 200;
-    int   min_recognition_distance_search = 80.0;
-    int   max_recognition_distance_search = 140.0;
+    int   min_recognition_distance_search = 80;
+    int   max_recognition_distance_search = 180;
 };
 
 class CameraParaFactory {
