@@ -14,6 +14,7 @@ rs2::pipeline CameraStream::pipe_;
 rs2::config CameraStream::cfg_;
 //rs2::colorizer CameraStream::colorizer_;
 rs2::pipeline_profile CameraStream::profile_;
+rs2::sensor CameraStream::sensor_;
 
 CameraPara CameraStream::cameraPara_ = CameraParaFactory::getCameraPara();
 
@@ -77,7 +78,18 @@ void CameraStream::InitCamera(){
     cfg_.enable_stream(RS2_STREAM_COLOR, kCameraFrameWidth, kCameraFrameHeight, RS2_FORMAT_BGR8, kCameraFps);//向配置添加所需的流
     cfg_.enable_stream(RS2_STREAM_DEPTH, kCameraFrameWidth, kCameraFrameHeight, RS2_FORMAT_Z16, kCameraFps);
 
+    pipe_ = rs2::pipeline();
+
     profile_ = pipe_.start(cfg_);
+
+    sensor_ = pipe_.get_active_profile().get_device().query_sensors()[1];
+    if (CameraStream::cameraPara_.realsense_camera_exposure < 0){
+        sensor_.set_option(RS2_OPTION_AUTO_EXPOSURE_PRIORITY, true);
+    }
+    else{
+        sensor_.set_option(RS2_OPTION_EXPOSURE, CameraStream::cameraPara_.realsense_camera_exposure);
+    }
+
 
     auto depth_stream=profile_.get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>();
     auto color_stream=profile_.get_stream(RS2_STREAM_COLOR).as<rs2::video_stream_profile>();

@@ -8,6 +8,7 @@
 #include "../tools/tools-config.hpp"
 #include "../asset/robomaster-define.hpp"
 #include "../include/control/control-read-config.hpp"
+#include "../include/camera/camera-stream.hpp"
 
 #include <atomic>
 #include <iostream>

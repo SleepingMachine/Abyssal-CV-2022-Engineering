@@ -6,7 +6,7 @@
 #define ABYSSAL_CV_2022_ENGINEERING_IDENTIFY_TOOLS_HPP
 #include <opencv2/opencv.hpp>
 
-class OreTool{
+class IdentifyTool{
 public:
     static void CreatTrackbars(int *hmin_0, int *hmax_0, int *smin_0, int *smax_0, int *vmin_0, int *vmax_0,
                                int *hmin_1, int *hmax_1, int *smin_1, int *smax_1, int *vmin_1, int *vmax_1,
@@ -75,6 +75,17 @@ public:
         return sqrtf(pow((point_1.x - point_2.x), 2) + pow((point_1.y - point_2.y), 2));
     }
 
+    static inline cv::Mat structuringElement3() {
+        return instance().StructuringElement3;
+    }
+
 private:
+    static IdentifyTool &instance() {
+        static IdentifyTool identifyTool;
+        return identifyTool;
+    }
+    const cv::Mat StructuringElement3 = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
+    const cv::Mat StructuringElement5 = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5));
+    const cv::Mat StructuringElement7 = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7));
 };
 #endif //ABYSSAL_CV_2022_ENGINEERING_IDENTIFY_TOOLS_HPP
