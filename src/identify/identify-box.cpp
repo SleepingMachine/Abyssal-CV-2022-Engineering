@@ -21,6 +21,9 @@ cv::Mat IdentifyBox::dst_color_            (480, 640, CV_8UC3);
 
 std::vector<cv::Mat> IdentifyBox::split_src_;
 
+std::vector<std::vector<cv::Point2i>> IdentifyBox::all_contours_;
+std::vector<cv::Vec4i> IdentifyBox::hierarchy_;
+
 void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_src_depth) {
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
@@ -37,8 +40,8 @@ void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_s
                 temp_src_depth.copyTo(src_depth_);
             }
             ImagePreprocess();
-            cv::imshow("0", src_color_);
-            cv::imshow("1", dst_color_);
+            SearchBoxComponents();
+            AuxiliaryGraphicsDrawing();
         }
     }
 }
@@ -59,6 +62,23 @@ void IdentifyBox::ImagePreprocess() {
 
     dst_color_ = separation_src_ & src_gray_ & separation_src_green_ & separation_src_data_;                                                                //逻辑与获得最终二值化图像
     cv::dilate(dst_color_, dst_color_, IdentifyTool::structuringElement3());
+}
+
+void IdentifyBox::SearchBoxComponents() {
+    cv::findContours(dst_color_, all_contours_, hierarchy_, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+    //cv::Mat test = imread("../asset/box_component_900.jpge");
+
+    for(int i = 0; i < all_contours_.size(); ++i){
+        if (hierarchy_[i][3] != -1){
+            cv::RotatedRect scanRect = cv::minAreaRect(all_contours_[i]);
+            IdentifyTool::drawRotatedRect(src_color_, scanRect, cv::Scalar(15, 198, 150), 2, 16);
+        }
+    }
+}
+
+void IdentifyBox::AuxiliaryGraphicsDrawing() {
+    cv::imshow("0", src_color_);
+    cv::imshow("1", dst_color_);
 }
 
 

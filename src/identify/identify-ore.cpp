@@ -174,9 +174,9 @@ void IdentifyOre::AuxiliaryGraphicsDrawing() {
 
 
 
-        cv::imshow("Ore", src_color_);
-        //cv::imshow("Depth", src_depth_);
+        //cv::imshow("Ore",   src_color_);
         //cv::imshow("Mask",  dst_color_);
+        //cv::imshow("Depth", src_depth_);
     }
 
 }

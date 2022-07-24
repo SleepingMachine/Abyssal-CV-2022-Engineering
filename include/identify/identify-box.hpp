@@ -29,7 +29,12 @@ private:
 
     static std::vector<cv::Mat> split_src_;
 
+    static std::vector<std::vector<cv::Point2i>> all_contours_;
+    static std::vector<cv::Vec4i> hierarchy_;
+
     static void ImagePreprocess();
+    static void SearchBoxComponents();
+    static void AuxiliaryGraphicsDrawing();
 
 public:
     static void BoxIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth);
