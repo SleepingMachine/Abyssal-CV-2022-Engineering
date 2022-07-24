@@ -45,12 +45,15 @@ public:
 struct CameraPara {
     float depth_scale2m                   = 0.001;
     float depth_scale2cm                  = depth_scale2m * 100;
+
     int   min_recognition_distance_near   = 40;
     int   max_recognition_distance_near   = 100;
     int   min_recognition_distance_far    = 80;
     int   max_recognition_distance_far    = 200;
     int   min_recognition_distance_search = 80;
     int   max_recognition_distance_search = 180;
+
+    int   realsense_camera_exposure       = 100; //设置为-1使用自动曝光
 };
 
 class CameraParaFactory {
@@ -122,6 +125,11 @@ struct BoxPara {
 
     float min_suspected_box_components_duty_cycle = 0.2;
     float max_suspected_box_components_duty_cycle = 0.7;
+
+    int grayThreshold_PURPLE                      = 150;
+    int gray_threshold_RED                        = 80;
+    int separation_threshold_RED                  = 50;
+    int separation_threshold_GREEN                = 10;
 
 
 };

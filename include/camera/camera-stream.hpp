@@ -25,6 +25,7 @@ private:
     static rs2::pipeline pipe_;
     static rs2::config cfg_;
     static rs2::colorizer colorizer_;
+    static rs2::sensor sensor_;
 
     static rs2::pipeline_profile profile_;
 public:

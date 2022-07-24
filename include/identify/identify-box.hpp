@@ -5,10 +5,10 @@
 #ifndef ABYSSAL_CV_2022_ENGINEERING_IDENTIFY_BOX_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_IDENTIFY_BOX_HPP
 
-#include "../tools/tools-config.hpp"
 #include "control/control-module.hpp"
 #include "../include/identify/identify-tools.hpp"
 #include "../asset/robomaster-define.hpp"
+#include "../tools/tools-config.hpp"
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
@@ -18,6 +18,18 @@ class IdentifyBox{
 private:
     static cv::Mat src_color_;
     static cv::Mat src_depth_;
+    static cv::Mat src_gray_;
+    static cv::Mat purple_src_;
+    static cv::Mat separation_src_data_;
+    static cv::Mat separation_src_;
+    static cv::Mat separation_src_green_;
+    static cv::Mat dst_color_;
+
+    static BoxPara boxPara_;
+
+    static std::vector<cv::Mat> split_src_;
+
+    static void ImagePreprocess();
 
 public:
     static void BoxIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth);

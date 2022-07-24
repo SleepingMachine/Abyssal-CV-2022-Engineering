@@ -39,10 +39,12 @@ int SwitchControl::ReadConfig() {
         return 1;
     }
 
-    std::string UserName           = config.ReadString("RMCONFIG", "UserName", "");
-    std::string _save_video        = config.ReadString("RMCONFIG", "EnableSaveVideo", "false");
-    std::string _operating_mode    = config.ReadString("RMCONFIG", "OperatingMode", "EXCHANGE_MODE");
+    std::string UserName            = config.ReadString("RMCONFIG", "UserName", "");
+
+    std::string _save_video         = config.ReadString("RMCONFIG", "EnableSaveVideo", "false");
+    std::string _operating_mode     = config.ReadString("RMCONFIG", "OperatingMode", "EXCHANGE_MODE");
     std::string _ore_drop_detection = config.ReadString("RMCONFIG", "OreDropDetection", "false");
+    int _realsense_camera_exposure  = config.ReadInt   ("RMCONFIG", "RealsenseCameraExposure", -1);
 
     std::cout << "User::" << UserName << std::endl;
     if (_operating_mode == "SEARCH_MODE"){
@@ -63,6 +65,8 @@ int SwitchControl::ReadConfig() {
     else if (_ore_drop_detection == "false"){
         SwitchControl::functionConfig_._enable_ore_drop_detection = false;
     }
+
+    CameraStream::cameraPara_.realsense_camera_exposure = _realsense_camera_exposure;
 
 }
 

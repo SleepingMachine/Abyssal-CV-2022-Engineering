@@ -60,7 +60,7 @@ void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_s
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
 
-    //OreTool::CreatTrackbars(&hmin_0_, &hmax_0_, &smin_0_, &smax_0_, &vmin_0_, &vmax_0_,
+    //IdentifyTool::CreatTrackbars(&hmin_0_, &hmax_0_, &smin_0_, &smax_0_, &vmin_0_, &vmax_0_,
     //                        &hmin_1_, &hmax_1_, &smin_1_, &smax_1_, &vmin_1_, &vmax_1_,
     //                        &open_,    &close_,    &erode_,   &dilate_);
     while (true){
@@ -97,7 +97,7 @@ void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_s
                 //*sent_data = 0;
             }
 
-            AuxiliaryGraphicsDrawing();
+            //AuxiliaryGraphicsDrawing();
             ResourceRelease();
         }
     }
@@ -135,7 +135,7 @@ void IdentifyOre::SearchOre(cv::Mat &preprocessed) {
             if (scanRect.size.area() < orePara.min_ore_area){
                 continue;
             }
-            if (OreTool::getRectLengthWidthRatio(scanRect) < orePara.min_ore_length_width_ratio || OreTool::getRectLengthWidthRatio(scanRect) > orePara.max_ore_length_width_ratio){
+            if (IdentifyTool::getRectLengthWidthRatio(scanRect) < orePara.min_ore_length_width_ratio || IdentifyTool::getRectLengthWidthRatio(scanRect) > orePara.max_ore_length_width_ratio){
                 continue;
             }
             suspected_ore_rects_.push_back(scanRect);
@@ -158,7 +158,7 @@ void IdentifyOre::ResourceRelease() {
 void IdentifyOre::AuxiliaryGraphicsDrawing() {
     if (SwitchControl::functionConfig_._enable_debug_mode){
         if (target_ore_index_ >= 0){
-            OreTool::drawRotatedRect(src_color_, ore_structs_[target_ore_index_].ore_rect, cv::Scalar(15, 198, 150), 4, 16);
+            IdentifyTool::drawRotatedRect(src_color_, ore_structs_[target_ore_index_].ore_rect, cv::Scalar(15, 198, 150), 4, 16);
             if (_target_ore_fall_ == true){
                 cv::circle(src_color_, current_target_ore_location_.target_ore_center, 15, cv::Scalar(0,0,255), 10);
             }
@@ -233,7 +233,7 @@ void IdentifyOre::DropDetection() {
             target_ore_track_.push_back(current_target_ore_location_.target_ore_center);
         }
 
-        else if(OreTool::getTwoPointDistance(current_target_ore_location_.target_ore_center, target_ore_track_.back()) < current_target_ore_location_.target_ore_radius){
+        else if(IdentifyTool::getTwoPointDistance(current_target_ore_location_.target_ore_center, target_ore_track_.back()) < current_target_ore_location_.target_ore_radius){
             if (target_ore_track_.size() >= orePara.ore_track_point_records_num){
                 std::vector<cv::Point2f>::iterator k = target_ore_track_.begin();
                 target_ore_track_.erase(k);
@@ -277,7 +277,7 @@ void IdentifyOre::DropDetection() {
         }
         variance_y /= target_ore_track_.size();
 
-        //float fit_line_slope = OreTool::trackLineFit(target_ore_track_);
+        //float fit_line_slope = IdentifyTool::trackLineFit(target_ore_track_);
         //std::cout << "轨迹点拟合斜率为[" << fit_line_slope  << "]" << std::endl;
         if (/*abs(fit_line_slope) >= 20 &&*/ variance_y > 100 * variance_x){
             //cv::circle(src_color_, current_target_ore_location_.target_ore_center, 15, cv::Scalar(0,0,255), 10);
