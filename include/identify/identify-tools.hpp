@@ -32,6 +32,15 @@ public:
         cv::createTrackbar("erode", "矿石识别中的阈值调整",  erode, 10,NULL);
         cv::createTrackbar("dilate","矿石识别中的阈值调整",dilate, 20,NULL);
     }
+    static void CreatTrackbars(int *open,   int *close,  int *erode,  int *dilate){
+
+        cv::namedWindow("阈值调整",cv::WINDOW_AUTOSIZE);
+
+        cv::createTrackbar("open",  "阈值调整",open,  10,NULL);
+        cv::createTrackbar("close", "阈值调整",close, 30,NULL);
+        cv::createTrackbar("erode", "阈值调整",erode, 10,NULL);
+        cv::createTrackbar("dilate","阈值调整",dilate,20,NULL);
+    }
 
     static inline void drawRotatedRect(cv::Mat mask,const cv::RotatedRect &rotatedrect,const cv::Scalar &color,int thickness, int lineType)
     {

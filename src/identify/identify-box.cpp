@@ -11,6 +11,11 @@ IdentifyBox::IdentifyBox() {}
 
 BoxPara IdentifyBox::boxPara_ = BoxParaFactory::getBoxPara();
 
+int IdentifyBox::open_   = 1;
+int IdentifyBox::close_  = 1;
+int IdentifyBox::erode_  = 2;
+int IdentifyBox::dilate_ = 8;
+
 cv::Mat IdentifyBox::src_color_            (480, 640, CV_8UC3);
 cv::Mat IdentifyBox::src_depth_            (480, 640, CV_8UC3);
 cv::Mat IdentifyBox::src_gray_             (480, 640, CV_8UC3);
@@ -27,6 +32,7 @@ std::vector<cv::Vec4i> IdentifyBox::hierarchy_;
 void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_src_depth) {
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
+    //IdentifyTool::CreatTrackbars(&open_,&close_,&erode_,&dilate_);
 
     while (true){
         if(_far_thread_state_flag) {
@@ -62,6 +68,10 @@ void IdentifyBox::ImagePreprocess() {
 
     dst_color_ = separation_src_ & src_gray_ & separation_src_green_ & separation_src_data_;                                                                //逻辑与获得最终二值化图像
     cv::dilate(dst_color_, dst_color_, IdentifyTool::structuringElement3());
+    morphologyEx(dst_color_, dst_color_, 2, getStructuringElement (cv::MORPH_RECT,cv::Size(open_,   open_)));
+    morphologyEx(dst_color_,  dst_color_,   3, getStructuringElement (cv::MORPH_RECT,cv::Size(close_,  close_)));
+    morphologyEx(dst_color_,  dst_color_,   0, getStructuringElement (cv::MORPH_RECT,cv::Size(erode_,  erode_)));
+    morphologyEx(dst_color_,  dst_color_,   1, getStructuringElement (cv::MORPH_RECT,cv::Size(dilate_, dilate_)));
 }
 
 void IdentifyBox::SearchBoxComponents() {
@@ -69,7 +79,7 @@ void IdentifyBox::SearchBoxComponents() {
     //cv::Mat test = imread("../asset/box_component_900.jpge");
 
     for(int i = 0; i < all_contours_.size(); ++i){
-        if (hierarchy_[i][3] != -1){
+        if (hierarchy_[i][3] == -1){
             cv::RotatedRect scanRect = cv::minAreaRect(all_contours_[i]);
             IdentifyTool::drawRotatedRect(src_color_, scanRect, cv::Scalar(15, 198, 150), 2, 16);
         }

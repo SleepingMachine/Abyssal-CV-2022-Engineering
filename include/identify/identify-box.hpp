@@ -16,6 +16,11 @@
 
 class IdentifyBox{
 private:
+    static int open_;
+    static int close_;
+    static int erode_;
+    static int dilate_;
+
     static cv::Mat src_color_;
     static cv::Mat src_depth_;
     static cv::Mat src_gray_;
