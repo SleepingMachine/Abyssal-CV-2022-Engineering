@@ -12,9 +12,11 @@ IdentifyBox::IdentifyBox() {}
 BoxPara IdentifyBox::boxPara_ = BoxParaFactory::getBoxPara();
 
 int IdentifyBox::open_   = 1;
-int IdentifyBox::close_  = 14;
-int IdentifyBox::erode_  = 1;
-int IdentifyBox::dilate_ = 5;
+int IdentifyBox::close_  = 8;
+int IdentifyBox::erode_  = 2;
+int IdentifyBox::dilate_ = 4;
+
+bool IdentifyBox::_find_box_flag = false;
 
 cv::Mat IdentifyBox::src_color_            (480, 640, CV_8UC3);
 cv::Mat IdentifyBox::src_depth_            (480, 640, CV_8UC3);
@@ -40,7 +42,7 @@ std::vector<cv::RotatedRect> IdentifyBox::suspected_box_components_rects_;
 void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_src_depth) {
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
-    //IdentifyTool::CreatTrackbars(&open_,&close_,&erode_,&dilate_);
+    IdentifyTool::CreatTrackbars(&open_,&close_,&erode_,&dilate_);
 
     while (true){
         if(_far_thread_state_flag) {
@@ -111,7 +113,7 @@ void IdentifyBox::SearchBoxComponents() {
             }
             if (cv::contourArea( all_contours_[i], false ) / scanRect.size.area() <= boxPara_.min_suspected_box_components_duty_cycle ||
                 cv::contourArea( all_contours_[i], false ) / scanRect.size.area() >= boxPara_.max_suspected_box_components_duty_cycle){
-                continue;
+                //continue;
             }
 
             Moments m_src = moments(all_contours_[i]);
@@ -122,7 +124,7 @@ void IdentifyBox::SearchBoxComponents() {
 
             if (dist > boxPara_.max_suspected_box_components_hu_value)
             {
-                continue;
+                //continue;
             }
 
             suspected_box_components_rects_.push_back(scanRect);
@@ -132,12 +134,17 @@ void IdentifyBox::SearchBoxComponents() {
 }
 
 void IdentifyBox::AuxiliaryGraphicsDrawing() {
-
     for (int i = 0; i < suspected_box_components_rects_.size(); ++i) {
         IdentifyTool::drawRotatedRect(src_color_, suspected_box_components_rects_[i], cv::Scalar(15, 198, 150), 2, 16);
     }
-    cv::line(src_color_, target_box.box_components_UL, target_box.box_components_LL, cv::Scalar(124,211,32),2);
-    cv::line(src_color_, target_box.box_components_UR, target_box.box_components_LR, cv::Scalar(124,211,32),2);
+    if(_find_box_flag){
+        cv::line(src_color_, target_box.box_components_UL, target_box.box_components_LL, cv::Scalar(124,211,32),2);
+        cv::line(src_color_, target_box.box_components_UR, target_box.box_components_LR, cv::Scalar(124,211,32),2);
+        cv::line(src_color_, target_box.box_components_UL, target_box.box_components_UR, cv::Scalar(124,211,32),2);
+        cv::line(src_color_, target_box.box_components_LL, target_box.box_components_LR, cv::Scalar(124,211,32),2);
+        cv::circle(src_color_, target_box.box_center, 15, cv::Scalar(124,211,32), 10);
+    }
+
     cv::imshow("0", src_color_);
     cv::imshow("1", dst_color_);
 }
@@ -147,6 +154,7 @@ void IdentifyBox::ResourceRelease() {
     suspected_box_components_rects_   .clear();
     box_components_inside_corners_    .clear();
     target_box = IdentifyBox::BoxStruct();
+    _find_box_flag = false;
 }
 
 void IdentifyBox::BoxPairing() {
@@ -193,6 +201,16 @@ void IdentifyBox::BoxPairing() {
         else if(box_components_inside_corners_[i].x < box_reference_center_x && box_components_inside_corners_[i].y > box_reference_center_y){
             target_box.box_components_LL = box_components_inside_corners_[i];
         }
+    }
+    if(target_box.box_components_LL.x && target_box.box_components_LL.y &&
+       target_box.box_components_LR.x && target_box.box_components_LR.y &&
+       target_box.box_components_UL.x && target_box.box_components_UL.y &&
+       target_box.box_components_UR.x && target_box.box_components_UR.y){
+        _find_box_flag = true;
+        target_box.box_center =  IdentifyTool::getCrossPoint(target_box.box_components_UL, target_box.box_components_LR, target_box.box_components_UR, target_box.box_components_LL);
+    }
+    else{
+        _find_box_flag = false;
     }
 }
 

@@ -23,6 +23,8 @@ private:
     static int erode_;
     static int dilate_;
 
+    static bool _find_box_flag;
+
     static cv::Mat src_color_;
     static cv::Mat src_depth_;
     static cv::Mat src_gray_;
@@ -31,7 +33,6 @@ private:
     static cv::Mat separation_src_;
     static cv::Mat separation_src_green_;
     static cv::Mat dst_color_;
-
 
     static cv::Mat target_graphics_box_components_;
 

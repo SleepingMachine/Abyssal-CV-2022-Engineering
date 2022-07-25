@@ -42,6 +42,10 @@ public:
         cv::createTrackbar("dilate","阈值调整",dilate,20,NULL);
     }
 
+    static inline cv::Point2f getTwoPointCenterPoint(cv::Point2f point1, cv::Point2f point2){
+        return cv::Point2f((point1.x + point2.x)/2, (point1.y + point2.y)/2);
+    }
+
     static inline void drawRotatedRect(cv::Mat mask,const cv::RotatedRect &rotatedrect,const cv::Scalar &color,int thickness, int lineType)
     {
         // 提取旋转矩形的四个角点
@@ -78,6 +82,35 @@ public:
         //cout<<"直线上一点坐标x: "<<lines[2]<<",y: "<<lines[3]<<endl;
         //cout<<"直线解析式: y="<<k<<"(x-"<<lines[2]<<")+"<<lines[3]<<endl;
         return k;
+    }
+
+    static inline cv::Point2f getCrossPoint(cv::Point2f line1, cv::Point2f line2, cv::Point2f line3, cv::Point2f line4) //交点
+    {
+        double x_member, x_denominator, y_member, y_denominator;
+        cv::Point2f cross_point;
+        x_denominator = line4.x*line2.y - line4.x*line1.y - line3.x*line2.y + line3.x*line1.y
+                        - line2.x*line4.y + line2.x*line3.y + line1.x*line4.y - line1.x*line3.y;
+
+        x_member = line3.y*line4.x*line2.x - line4.y*line3.x*line2.x - line3.y*line4.x*line1.x + line4.y*line3.x*line1.x
+                   - line1.y*line2.x*line4.x + line2.y*line1.x*line4.x + line1.y*line2.x*line3.x - line2.y*line1.x*line3.x;
+
+        if (x_denominator == 0)
+            cross_point.x = 0;
+        else
+            cross_point.x = x_member / x_denominator;
+
+        y_denominator = line4.y*line2.x - line4.y*line1.x - line3.y*line2.x + line1.x*line3.y
+                        - line2.y*line4.x + line2.y*line3.x + line1.y*line4.x - line1.y*line3.x;
+
+        y_member = -line3.y*line4.x*line2.y + line4.y*line3.x*line2.y + line3.y*line4.x*line1.y - line4.y*line3.x*line1.y
+                   + line1.y*line2.x*line4.y - line1.y*line2.x*line3.y - line2.y*line1.x*line4.y + line2.y*line1.x*line3.y;
+
+        if (y_denominator == 0)
+            cross_point.y = 0;
+        else
+            cross_point.y = y_member / y_denominator;
+
+        return cross_point;  //平行返回(0,0)
     }
 
     static inline float getTwoPointDistance(cv::Point2f point_1, cv::Point2f point_2) {
