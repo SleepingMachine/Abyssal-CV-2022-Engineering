@@ -57,10 +57,10 @@ public:
 
     struct BoxStruct{
         BoxStruct(){};
-        cv::Point2i box_components_UL_rect;
-        cv::Point2i box_components_UR_rect;
-        cv::Point2i box_components_LR_rect;
-        cv::Point2i box_components_LL_rect;
+        cv::Point2i box_components_UL;
+        cv::Point2i box_components_UR;
+        cv::Point2i box_components_LR;
+        cv::Point2i box_components_LL;
 
         cv::Point2i box_center;
         //cv::RotatedRect box_rect;

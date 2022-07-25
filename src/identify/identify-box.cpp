@@ -32,6 +32,8 @@ std::vector<std::vector<cv::Point2i>> IdentifyBox::all_contours_;
 std::vector<cv::Vec4i> IdentifyBox::hierarchy_;
 std::vector<cv::Point2i> IdentifyBox::box_components_inside_corners_;
 
+IdentifyBox::BoxStruct IdentifyBox::target_box;
+
 std::vector<std::vector<cv::Point2i>> IdentifyBox::suspected_box_components_contours_;
 std::vector<cv::RotatedRect> IdentifyBox::suspected_box_components_rects_;
 
@@ -134,6 +136,8 @@ void IdentifyBox::AuxiliaryGraphicsDrawing() {
     for (int i = 0; i < suspected_box_components_rects_.size(); ++i) {
         IdentifyTool::drawRotatedRect(src_color_, suspected_box_components_rects_[i], cv::Scalar(15, 198, 150), 2, 16);
     }
+    cv::line(src_color_, target_box.box_components_UL, target_box.box_components_LL, cv::Scalar(124,211,32),2);
+    cv::line(src_color_, target_box.box_components_UR, target_box.box_components_LR, cv::Scalar(124,211,32),2);
     cv::imshow("0", src_color_);
     cv::imshow("1", dst_color_);
 }
@@ -142,6 +146,7 @@ void IdentifyBox::ResourceRelease() {
     suspected_box_components_contours_.clear();
     suspected_box_components_rects_   .clear();
     box_components_inside_corners_    .clear();
+    target_box = IdentifyBox::BoxStruct();
 }
 
 void IdentifyBox::BoxPairing() {
@@ -177,7 +182,16 @@ void IdentifyBox::BoxPairing() {
 
     for (int i = 0; i < box_components_inside_corners_.size(); ++i) {
         if(box_components_inside_corners_[i].x < box_reference_center_x && box_components_inside_corners_[i].y < box_reference_center_y){
-
+            target_box.box_components_UL = box_components_inside_corners_[i];
+        }
+        else if(box_components_inside_corners_[i].x > box_reference_center_x && box_components_inside_corners_[i].y < box_reference_center_y){
+            target_box.box_components_UR = box_components_inside_corners_[i];
+        }
+        else if(box_components_inside_corners_[i].x > box_reference_center_x && box_components_inside_corners_[i].y > box_reference_center_y){
+            target_box.box_components_LR = box_components_inside_corners_[i];
+        }
+        else if(box_components_inside_corners_[i].x < box_reference_center_x && box_components_inside_corners_[i].y > box_reference_center_y){
+            target_box.box_components_LL = box_components_inside_corners_[i];
         }
     }
 }
