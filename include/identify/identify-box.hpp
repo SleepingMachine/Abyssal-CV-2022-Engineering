@@ -10,6 +10,8 @@
 #include "../asset/robomaster-define.hpp"
 #include "../tools/tools-config.hpp"
 
+#include <iomanip>
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 #include "opencv2/imgproc/imgproc_c.h"
