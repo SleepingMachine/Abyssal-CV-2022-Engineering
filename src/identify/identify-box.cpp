@@ -52,7 +52,7 @@ void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_s
             }
             ImagePreprocess();
             SearchBoxComponents();
-            BoxComponentsFilter();
+            //BoxComponentsFilter();
             BoxPairing();
             AuxiliaryGraphicsDrawing();
             ResourceRelease();
@@ -86,6 +86,14 @@ void IdentifyBox::ImagePreprocess() {
 void IdentifyBox::SearchBoxComponents() {
     cv::findContours(dst_color_, all_contours_, hierarchy_, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
 
+    cv::Mat dst_gray;
+    cv::cvtColor(target_graphics_box_components_,dst_gray, COLOR_BGR2GRAY);
+    std::vector<std::vector<cv::Point2i>> target_contours;
+    cv::findContours(dst_gray, target_contours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
+    Moments m_target = moments(target_contours[0]);
+    Mat hu_target;
+    HuMoments(m_target, hu_target);
+
     for(int i = 0; i < all_contours_.size(); ++i){
         if (hierarchy_[i][3] == -1){
             cv::RotatedRect scanRect = cv::minAreaRect(all_contours_[i]);
@@ -102,6 +110,18 @@ void IdentifyBox::SearchBoxComponents() {
                 cv::contourArea( all_contours_[i], false ) / scanRect.size.area() >= boxPara_.max_suspected_box_components_duty_cycle){
                 continue;
             }
+
+            Moments m_src = moments(all_contours_[i]);
+            Mat hu_src;
+            HuMoments(m_src, hu_src);
+
+            double dist = matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0);
+
+            if (dist > boxPara_.max_suspected_box_components_hu_value)
+            {
+                continue;
+            }
+
             suspected_box_components_rects_.push_back(scanRect);
             suspected_box_components_contours_.push_back(all_contours_[i]);
         }
@@ -109,10 +129,10 @@ void IdentifyBox::SearchBoxComponents() {
 }
 
 void IdentifyBox::AuxiliaryGraphicsDrawing() {
-    /*
+
     for (int i = 0; i < suspected_box_components_rects_.size(); ++i) {
         IdentifyTool::drawRotatedRect(src_color_, suspected_box_components_rects_[i], cv::Scalar(15, 198, 150), 2, 16);
-    }*/
+    }
     cv::imshow("0", src_color_);
     cv::imshow("1", dst_color_);
 }
@@ -145,38 +165,5 @@ void IdentifyBox::BoxPairing() {
     }
 }
 
-void IdentifyBox::BoxComponentsFilter() {
-    cv::Mat dst_gray;
-    cv::cvtColor(target_graphics_box_components_,dst_gray, COLOR_BGR2GRAY);
-    std::vector<std::vector<cv::Point2i>> target_contours;
-    cv::findContours(dst_gray, target_contours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
-    Moments m_target = moments(target_contours[0]);
-    Mat hu_target;
-    HuMoments(m_target, hu_target);
-
-    double MinDis = 1000;
-    int MinIndex = 0;
-
-    for (int i = 0; i < suspected_box_components_contours_.size(); ++i) {
-        Moments m_src = moments(suspected_box_components_contours_[i]);
-        Mat hu_src;
-        HuMoments(m_src, hu_src);
-
-        double dist = matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0);
-
-        if (dist < 70)
-        {
-            //suspected_box_components_contours_.erase(std::begin(suspected_box_components_contours_) + i);
-            IdentifyTool::drawRotatedRect(src_color_, suspected_box_components_rects_[i], cv::Scalar(15, 198, 150), 2, 16);
-        }
-        else{
-            suspected_box_components_contours_.erase(std::begin(suspected_box_components_contours_) + i);
-        }
-
-        //drawContours(src_color_, suspected_box_components_contours_, MinIndex, Scalar(0, 255, 0), 2);
-
-    }
-
-}
 
 

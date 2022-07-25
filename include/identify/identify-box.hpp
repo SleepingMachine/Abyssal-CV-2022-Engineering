@@ -47,7 +47,6 @@ private:
 
     static void ImagePreprocess();
     static void SearchBoxComponents();
-    static void BoxComponentsFilter();
     static void BoxPairing();
     static void AuxiliaryGraphicsDrawing();
     static void ResourceRelease();
