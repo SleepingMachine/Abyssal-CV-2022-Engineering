@@ -120,8 +120,8 @@ struct BoxPara {
     float exchange_mode_min_recognition_distance  = 70.0;
     float exchange_mode_max_recognition_distance  = 300.0;
 
-    float min_suspected_box_length_width_ratio    = 0.6;
-    float max_suspected_box_length_width_ratio    = 1.6;
+    float min_suspected_box_length_width_ratio    = 0.5;
+    float max_suspected_box_length_width_ratio    = 2;
 
     float min_suspected_box_components_duty_cycle = 0.2;
     float max_suspected_box_components_duty_cycle = 0.7;

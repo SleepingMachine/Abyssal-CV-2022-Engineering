@@ -12,9 +12,9 @@ IdentifyBox::IdentifyBox() {}
 BoxPara IdentifyBox::boxPara_ = BoxParaFactory::getBoxPara();
 
 int IdentifyBox::open_   = 1;
-int IdentifyBox::close_  = 1;
-int IdentifyBox::erode_  = 2;
-int IdentifyBox::dilate_ = 8;
+int IdentifyBox::close_  = 14;
+int IdentifyBox::erode_  = 1;
+int IdentifyBox::dilate_ = 1;
 
 cv::Mat IdentifyBox::src_color_            (480, 640, CV_8UC3);
 cv::Mat IdentifyBox::src_depth_            (480, 640, CV_8UC3);
@@ -29,10 +29,13 @@ std::vector<cv::Mat> IdentifyBox::split_src_;
 std::vector<std::vector<cv::Point2i>> IdentifyBox::all_contours_;
 std::vector<cv::Vec4i> IdentifyBox::hierarchy_;
 
+std::vector<std::vector<cv::Point2i>> IdentifyBox::suspected_box_components_contours_;
+std::vector<cv::RotatedRect> IdentifyBox::suspected_box_components_rects_;
+
 void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_src_depth) {
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
-    //IdentifyTool::CreatTrackbars(&open_,&close_,&erode_,&dilate_);
+    IdentifyTool::CreatTrackbars(&open_,&close_,&erode_,&dilate_);
 
     while (true){
         if(_far_thread_state_flag) {
@@ -48,6 +51,7 @@ void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_s
             ImagePreprocess();
             SearchBoxComponents();
             AuxiliaryGraphicsDrawing();
+            ResourceRelease();
         }
     }
 }
@@ -68,6 +72,7 @@ void IdentifyBox::ImagePreprocess() {
 
     dst_color_ = separation_src_ & src_gray_ & separation_src_green_ & separation_src_data_;                                                                //逻辑与获得最终二值化图像
     cv::dilate(dst_color_, dst_color_, IdentifyTool::structuringElement3());
+
     morphologyEx(dst_color_, dst_color_, 2, getStructuringElement (cv::MORPH_RECT,cv::Size(open_,   open_)));
     morphologyEx(dst_color_,  dst_color_,   3, getStructuringElement (cv::MORPH_RECT,cv::Size(close_,  close_)));
     morphologyEx(dst_color_,  dst_color_,   0, getStructuringElement (cv::MORPH_RECT,cv::Size(erode_,  erode_)));
@@ -81,14 +86,36 @@ void IdentifyBox::SearchBoxComponents() {
     for(int i = 0; i < all_contours_.size(); ++i){
         if (hierarchy_[i][3] == -1){
             cv::RotatedRect scanRect = cv::minAreaRect(all_contours_[i]);
-            IdentifyTool::drawRotatedRect(src_color_, scanRect, cv::Scalar(15, 198, 150), 2, 16);
+
+            if (scanRect.size.area() < boxPara_.min_suspected_box_components_area){
+                continue;
+            }
+
+            if (IdentifyTool::getRectLengthWidthRatio(scanRect) < boxPara_.min_suspected_box_length_width_ratio ||
+                IdentifyTool::getRectLengthWidthRatio(scanRect) > boxPara_.max_suspected_box_length_width_ratio){
+                continue;
+            }
+            if (cv::contourArea( all_contours_[i], false ) / scanRect.size.area() <= boxPara_.min_suspected_box_components_duty_cycle ||
+                cv::contourArea( all_contours_[i], false ) / scanRect.size.area() >= boxPara_.max_suspected_box_components_duty_cycle){
+                continue;
+            }
+            suspected_box_components_rects_.push_back(scanRect);
+            suspected_box_components_contours_.push_back(all_contours_[i]);
         }
     }
 }
 
 void IdentifyBox::AuxiliaryGraphicsDrawing() {
+    for (int i = 0; i < suspected_box_components_rects_.size(); ++i) {
+        IdentifyTool::drawRotatedRect(src_color_, suspected_box_components_rects_[i], cv::Scalar(15, 198, 150), 2, 16);
+    }
     cv::imshow("0", src_color_);
     cv::imshow("1", dst_color_);
+}
+
+void IdentifyBox::ResourceRelease() {
+    suspected_box_components_contours_.clear();
+    suspected_box_components_rects_   .clear();
 }
 
 

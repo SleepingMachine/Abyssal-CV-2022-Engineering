@@ -37,9 +37,13 @@ private:
     static std::vector<std::vector<cv::Point2i>> all_contours_;
     static std::vector<cv::Vec4i> hierarchy_;
 
+    static std::vector<std::vector<cv::Point2i>> suspected_box_components_contours_;
+    static std::vector<cv::RotatedRect> suspected_box_components_rects_;
+
     static void ImagePreprocess();
     static void SearchBoxComponents();
     static void AuxiliaryGraphicsDrawing();
+    static void ResourceRelease();
 
 public:
     static void BoxIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth);
