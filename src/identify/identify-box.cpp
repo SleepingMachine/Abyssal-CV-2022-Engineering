@@ -14,7 +14,7 @@ BoxPara IdentifyBox::boxPara_ = BoxParaFactory::getBoxPara();
 int IdentifyBox::open_   = 1;
 int IdentifyBox::close_  = 14;
 int IdentifyBox::erode_  = 1;
-int IdentifyBox::dilate_ = 1;
+int IdentifyBox::dilate_ = 5;
 
 cv::Mat IdentifyBox::src_color_            (480, 640, CV_8UC3);
 cv::Mat IdentifyBox::src_depth_            (480, 640, CV_8UC3);
@@ -98,6 +98,30 @@ void IdentifyBox::SearchBoxComponents() {
             if (cv::contourArea( all_contours_[i], false ) / scanRect.size.area() <= boxPara_.min_suspected_box_components_duty_cycle ||
                 cv::contourArea( all_contours_[i], false ) / scanRect.size.area() >= boxPara_.max_suspected_box_components_duty_cycle){
                 continue;
+            }
+            std::vector<cv::Point2i> hull;
+            cv::convexHull(all_contours_[i],hull);
+            cv::Point2i right_angle_point;
+            int counter_max = 0;
+            for (int j = 0; j < all_contours_[i].size(); ++j) {
+                int counter_min = 640;
+                for (int k = 0; k < hull.size(); ++k) {
+                    int counter = IdentifyTool::getTwoPointDistance(all_contours_[i][j],hull[k]);
+                    if (counter < counter_min){
+                        counter_min = counter;
+                    }
+                }
+                if (counter_min > counter_max){
+                    counter_max = counter_min;
+                    right_angle_point = all_contours_[i][j];
+                }
+            }
+            circle(src_color_, right_angle_point, 4, Scalar(255, 255, 0), 2, 8, 0);//点
+
+            int len = hull.size();
+            for (int i = 0; i < hull.size(); i++) {
+                circle(src_color_, hull[i], 4, Scalar(255, 0, 0), 2, 8, 0);//点
+                line(src_color_, hull[i%len], hull[(i + 1) % len], Scalar(0, 0, 255), 2, 8, 0);//线
             }
             suspected_box_components_rects_.push_back(scanRect);
             suspected_box_components_contours_.push_back(all_contours_[i]);
