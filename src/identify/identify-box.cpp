@@ -24,6 +24,8 @@ cv::Mat IdentifyBox::separation_src_       (480, 640, CV_8UC3);
 cv::Mat IdentifyBox::separation_src_green_ (480, 640, CV_8UC3);
 cv::Mat IdentifyBox::dst_color_            (480, 640, CV_8UC3);
 
+cv::Mat IdentifyBox::target_graphics_box_components_ = imread("../asset/box_component_250.jpge");
+
 std::vector<cv::Mat> IdentifyBox::split_src_;
 
 std::vector<std::vector<cv::Point2i>> IdentifyBox::all_contours_;
@@ -50,6 +52,7 @@ void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_s
             }
             ImagePreprocess();
             SearchBoxComponents();
+            BoxPairing();
             AuxiliaryGraphicsDrawing();
             ResourceRelease();
         }
@@ -81,7 +84,6 @@ void IdentifyBox::ImagePreprocess() {
 
 void IdentifyBox::SearchBoxComponents() {
     cv::findContours(dst_color_, all_contours_, hierarchy_, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
-    //cv::Mat test = imread("../asset/box_component_900.jpge");
 
     for(int i = 0; i < all_contours_.size(); ++i){
         if (hierarchy_[i][3] == -1){
@@ -98,30 +100,6 @@ void IdentifyBox::SearchBoxComponents() {
             if (cv::contourArea( all_contours_[i], false ) / scanRect.size.area() <= boxPara_.min_suspected_box_components_duty_cycle ||
                 cv::contourArea( all_contours_[i], false ) / scanRect.size.area() >= boxPara_.max_suspected_box_components_duty_cycle){
                 continue;
-            }
-            std::vector<cv::Point2i> hull;
-            cv::convexHull(all_contours_[i],hull);
-            cv::Point2i right_angle_point;
-            int counter_max = 0;
-            for (int j = 0; j < all_contours_[i].size(); ++j) {
-                int counter_min = 640;
-                for (int k = 0; k < hull.size(); ++k) {
-                    int counter = IdentifyTool::getTwoPointDistance(all_contours_[i][j],hull[k]);
-                    if (counter < counter_min){
-                        counter_min = counter;
-                    }
-                }
-                if (counter_min > counter_max){
-                    counter_max = counter_min;
-                    right_angle_point = all_contours_[i][j];
-                }
-            }
-            circle(src_color_, right_angle_point, 4, Scalar(255, 255, 0), 2, 8, 0);//点
-
-            int len = hull.size();
-            for (int i = 0; i < hull.size(); i++) {
-                circle(src_color_, hull[i], 4, Scalar(255, 0, 0), 2, 8, 0);//点
-                line(src_color_, hull[i%len], hull[(i + 1) % len], Scalar(0, 0, 255), 2, 8, 0);//线
             }
             suspected_box_components_rects_.push_back(scanRect);
             suspected_box_components_contours_.push_back(all_contours_[i]);
@@ -140,6 +118,45 @@ void IdentifyBox::AuxiliaryGraphicsDrawing() {
 void IdentifyBox::ResourceRelease() {
     suspected_box_components_contours_.clear();
     suspected_box_components_rects_   .clear();
+}
+
+void IdentifyBox::BoxPairing() {
+    std::vector<cv::Point2i> hull;
+    for (int i = 0; i < suspected_box_components_contours_.size(); ++i) {
+        cv::convexHull(suspected_box_components_contours_[i],hull);
+        cv::Point2i right_angle_point;
+        int counter_max = 0;
+        for (int j = 0; j < suspected_box_components_contours_[i].size(); ++j) {
+            int counter_min = 640;
+            for (int k = 0; k < hull.size(); ++k) {
+                int counter = IdentifyTool::getTwoPointDistance(suspected_box_components_contours_[i][j],hull[k]);
+                if (counter < counter_min){
+                    counter_min = counter;
+                }
+            }
+            if (counter_min > counter_max){
+                counter_max = counter_min;
+                right_angle_point = suspected_box_components_contours_[i][j];
+            }
+        }
+        circle(src_color_, right_angle_point, 4, Scalar(255, 255, 0), 2, 8, 0);//点
+
+        int len = hull.size();
+        for (int i = 0; i < hull.size(); i++) {
+            circle(src_color_, hull[i], 4, Scalar(255, 0, 0), 2, 8, 0);//点
+            line(src_color_, hull[i%len], hull[(i + 1) % len], Scalar(0, 0, 255), 2, 8, 0);//线
+        }
+    }
+}
+
+void IdentifyBox::BoxComponentsFilter() {
+
+    std::vector<std::vector<cv::Point2i>> target_contours;
+    cv::findContours(target_graphics_box_components_, target_contours, RETR_EXTERNAL, CHAIN_APPROX_NONE);
+    Moments m_target = moments(target_contours[0]);
+    Mat hu_target;
+    HuMoments(m_target, hu_target);
+    
 }
 
 

@@ -30,6 +30,9 @@ private:
     static cv::Mat separation_src_green_;
     static cv::Mat dst_color_;
 
+
+    static cv::Mat target_graphics_box_components_;
+
     static BoxPara boxPara_;
 
     static std::vector<cv::Mat> split_src_;
@@ -42,6 +45,8 @@ private:
 
     static void ImagePreprocess();
     static void SearchBoxComponents();
+    static void BoxComponentsFilter();
+    static void BoxPairing();
     static void AuxiliaryGraphicsDrawing();
     static void ResourceRelease();
 
