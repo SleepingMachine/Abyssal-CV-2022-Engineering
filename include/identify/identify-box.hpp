@@ -41,6 +41,7 @@ private:
 
     static std::vector<std::vector<cv::Point2i>> all_contours_;
     static std::vector<cv::Vec4i> hierarchy_;
+    static std::vector<cv::Point2i> box_components_inside_corners_;
 
     static std::vector<std::vector<cv::Point2i>> suspected_box_components_contours_;
     static std::vector<cv::RotatedRect> suspected_box_components_rects_;
@@ -55,11 +56,14 @@ public:
     static void BoxIdentifyStream(cv::Mat* import_src_color, cv::Mat* import_src_depth);
 
     struct BoxStruct{
-        cv::RotatedRect box_components_UL_rect;
-        cv::RotatedRect box_components_UR_rect;
-        cv::RotatedRect box_components_LR_rect;
-        cv::RotatedRect box_components_LL_rect;
-        cv::RotatedRect box_rect;
+        BoxStruct(){};
+        cv::Point2i box_components_UL_rect;
+        cv::Point2i box_components_UR_rect;
+        cv::Point2i box_components_LR_rect;
+        cv::Point2i box_components_LL_rect;
+
+        cv::Point2i box_center;
+        //cv::RotatedRect box_rect;
         float box_pitch_angle;
         float box_yaw_angle;
         float box_depth;
@@ -67,7 +71,8 @@ public:
 
     IdentifyBox();
     ~IdentifyBox() {};
-
+private:
+    static BoxStruct target_box;
 };
 
 #endif //ABYSSAL_CV_2022_ENGINEERING_IDENTIFY_BOX_HPP

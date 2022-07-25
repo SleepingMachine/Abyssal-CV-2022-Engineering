@@ -30,6 +30,7 @@ std::vector<cv::Mat> IdentifyBox::split_src_;
 
 std::vector<std::vector<cv::Point2i>> IdentifyBox::all_contours_;
 std::vector<cv::Vec4i> IdentifyBox::hierarchy_;
+std::vector<cv::Point2i> IdentifyBox::box_components_inside_corners_;
 
 std::vector<std::vector<cv::Point2i>> IdentifyBox::suspected_box_components_contours_;
 std::vector<cv::RotatedRect> IdentifyBox::suspected_box_components_rects_;
@@ -140,6 +141,7 @@ void IdentifyBox::AuxiliaryGraphicsDrawing() {
 void IdentifyBox::ResourceRelease() {
     suspected_box_components_contours_.clear();
     suspected_box_components_rects_   .clear();
+    box_components_inside_corners_    .clear();
 }
 
 void IdentifyBox::BoxPairing() {
@@ -161,7 +163,22 @@ void IdentifyBox::BoxPairing() {
                 right_angle_point = suspected_box_components_contours_[i][j];
             }
         }
-        circle(src_color_, right_angle_point, 4, Scalar(255, 255, 0), 2, 8, 0);//点
+        box_components_inside_corners_.push_back(right_angle_point);
+        //circle(src_color_, right_angle_point, 4, Scalar(255, 255, 0), 2, 8, 0);//点
+    }
+    float box_reference_center_x;
+    float box_reference_center_y;
+    for (int i = 0; i < box_components_inside_corners_.size(); ++i) {
+        box_reference_center_x += box_components_inside_corners_[i].x;
+        box_reference_center_y += box_components_inside_corners_[i].y;
+    }
+    box_reference_center_x /= box_components_inside_corners_.size();
+    box_reference_center_y /= box_components_inside_corners_.size();
+
+    for (int i = 0; i < box_components_inside_corners_.size(); ++i) {
+        if(box_components_inside_corners_[i].x < box_reference_center_x && box_components_inside_corners_[i].y < box_reference_center_y){
+
+        }
     }
 }
 
