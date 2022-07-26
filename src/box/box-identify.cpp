@@ -114,7 +114,7 @@ void IdentifyBox::SearchSuspectedBoxComponents(cv::Mat &preprocessed) {
 
             if (BoxTool::getRectLengthWidthRatio(scanRect) < boxPara.min_suspected_box_length_width_ratio ||
                 BoxTool::getRectLengthWidthRatio(scanRect) > boxPara.max_suspected_box_length_width_ratio){
-                continue;
+                //continue;
             }
             if (cv::contourArea( all_contours_[i], false ) / scanRect.size.area() <= boxPara.min_suspected_box_components_duty_cycle ||
                 cv::contourArea( all_contours_[i], false ) / scanRect.size.area() >= boxPara.max_suspected_box_components_duty_cycle){

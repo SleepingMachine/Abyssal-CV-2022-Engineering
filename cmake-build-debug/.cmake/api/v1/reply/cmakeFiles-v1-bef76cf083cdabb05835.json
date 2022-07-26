@@ -21,6 +21,11 @@
 		{
 			"isCMake" : true,
 			"isExternal" : true,
+			"path" : "/snap/clion/198/bin/cmake/linux/share/cmake-3.22/Modules/CMakeUnixFindMake.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
 			"path" : "/snap/clion/198/bin/cmake/linux/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake"
 		},
 		{
@@ -514,6 +519,21 @@
 		{
 			"isCMake" : true,
 			"isExternal" : true,
+			"path" : "/snap/clion/198/bin/cmake/linux/share/cmake-3.22/Modules/CMakeFindCodeBlocks.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/snap/clion/198/bin/cmake/linux/share/cmake-3.22/Modules/CMakeExtraGeneratorDetermineCompilerMacrosAndIncludeDirs.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/snap/clion/198/bin/cmake/linux/share/cmake-3.22/Modules/ProcessorCount.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
 			"path" : "/snap/clion/198/bin/cmake/linux/share/cmake-3.22/Modules/CMakeCInformation.cmake"
 		},
 		{
@@ -790,8 +810,8 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering/cmake-build-debug",
-		"source" : "/home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering"
+		"build" : "/home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering-Ver1.0/cmake-build-debug",
+		"source" : "/home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering-Ver1.0"
 	},
 	"version" : 
 	{
