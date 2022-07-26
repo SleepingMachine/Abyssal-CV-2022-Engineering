@@ -99,6 +99,8 @@ void IdentifyBox::SearchBoxComponents() {
     Mat hu_target;
     HuMoments(m_target, hu_target);
 
+    //vector<double> filter_value;
+    //vector<int>    filter_index;
     for(int i = 0; i < all_contours_.size(); ++i){
         if (hierarchy_[i][3] == -1){
             cv::RotatedRect scanRect = cv::minAreaRect(all_contours_[i]);
@@ -113,24 +115,50 @@ void IdentifyBox::SearchBoxComponents() {
             }
             if (cv::contourArea( all_contours_[i], false ) / scanRect.size.area() <= boxPara_.min_suspected_box_components_duty_cycle ||
                 cv::contourArea( all_contours_[i], false ) / scanRect.size.area() >= boxPara_.max_suspected_box_components_duty_cycle){
-                //continue;
+                continue;
             }
 
             Moments m_src = moments(all_contours_[i]);
             Mat hu_src;
             HuMoments(m_src, hu_src);
+            matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0);
+
+            //filter_index.push_back(i);
+            //filter_value.push_back(matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0));
 
             double dist = matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0);
-
             if (dist > boxPara_.max_suspected_box_components_hu_value)
             {
-                //continue;
+                continue;
             }
 
             suspected_box_components_rects_.push_back(scanRect);
             suspected_box_components_contours_.push_back(all_contours_[i]);
         }
     }
+
+    /*
+    for (int i = 0; i < filter_index.size(); i++) {
+        for (int j = 0; j < filter_index.size() - i; j++) {
+            if (filter_value[j] > filter_value[j+1]) {        // 相邻元素两两对比
+                double temp_value = filter_value[j+1];        // 元素交换
+                int    temp_index = filter_index[j+1];
+
+                filter_value[j+1] = filter_value[j];
+                filter_value[j] = temp_value;
+
+                filter_index[j+1] = filter_index[j];
+                filter_index[j] = temp_index;
+            }
+        }
+    }
+    for (int i = 0; filter_index.size(); ++i) {
+        //suspected_box_components_rects_.push_back(scanRect);
+        if (i <= 3){
+            suspected_box_components_contours_.push_back(all_contours_[filter_index[i]]);
+        }
+        }*/
+        //std::cout << filter_value[i] << " " << filter_index[i] << std::endl;
 }
 
 void IdentifyBox::AuxiliaryGraphicsDrawing() {
@@ -179,6 +207,30 @@ void IdentifyBox::BoxPairing() {
         box_components_inside_corners_.push_back(right_angle_point);
         //circle(src_color_, right_angle_point, 4, Scalar(255, 255, 0), 2, 8, 0);//点
     }
+
+    /*
+    for (int i = 0; i < box_components_inside_corners_.size(); i++) {
+        for (int j = 0; j < box_components_inside_corners_.size() - i; j++) {
+            if (box_components_inside_corners_[j].x < box_components_inside_corners_[j+1].x) {        // 相邻元素两两对比
+                cv::Point2i temp = box_components_inside_corners_[j+1];        // 元素交换
+                box_components_inside_corners_[j+1] = box_components_inside_corners_[j];
+                box_components_inside_corners_[j] = temp;
+            }
+        }
+    }
+    if (box_components_inside_corners_.size() == 4){
+        target_box.box_components_UL = box_components_inside_corners_[0];
+        target_box.box_components_UR = box_components_inside_corners_[1].y < box_components_inside_corners_[2].y ? box_components_inside_corners_[1] : box_components_inside_corners_[2];
+        target_box.box_components_UL = box_components_inside_corners_[3];
+        target_box.box_components_LL = box_components_inside_corners_[1].y > box_components_inside_corners_[2].y ? box_components_inside_corners_[1] : box_components_inside_corners_[2];
+        target_box.box_center =  IdentifyTool::getCrossPoint(target_box.box_components_UL, target_box.box_components_LR, target_box.box_components_UR, target_box.box_components_LL);
+        _find_box_flag = true;
+    }
+    else{
+        _find_box_flag = false;
+    }*/
+
+
     float box_reference_center_x;
     float box_reference_center_y;
     for (int i = 0; i < box_components_inside_corners_.size(); ++i) {
@@ -187,7 +239,6 @@ void IdentifyBox::BoxPairing() {
     }
     box_reference_center_x /= box_components_inside_corners_.size();
     box_reference_center_y /= box_components_inside_corners_.size();
-
     for (int i = 0; i < box_components_inside_corners_.size(); ++i) {
         if(box_components_inside_corners_[i].x < box_reference_center_x && box_components_inside_corners_[i].y < box_reference_center_y){
             target_box.box_components_UL = box_components_inside_corners_[i];
