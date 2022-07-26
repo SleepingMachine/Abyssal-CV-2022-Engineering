@@ -16,7 +16,7 @@ int IdentifyBox::close_  = 8;
 int IdentifyBox::erode_  = 2;
 int IdentifyBox::dilate_ = 4;
 
-bool IdentifyBox::_find_box_flag = false;
+int IdentifyBox::_find_box_flag = BoxIdentifyStatus::LOST;
 
 cv::Mat IdentifyBox::src_color_            (480, 640, CV_8UC3);
 cv::Mat IdentifyBox::src_depth_            (480, 640, CV_8UC3);
@@ -177,7 +177,7 @@ void IdentifyBox::ResourceRelease() {
     suspected_box_components_rects_   .clear();
     box_components_inside_corners_    .clear();
     target_box = IdentifyBox::BoxStruct();
-    _find_box_flag = false;
+    _find_box_flag = BoxIdentifyStatus::LOST;
 }
 
 void IdentifyBox::BoxPairing() {
@@ -216,7 +216,7 @@ void IdentifyBox::BoxPairing() {
         target_box.box_components_LL = box_components_inside_corners_[1].y > box_components_inside_corners_[2].y ? box_components_inside_corners_[1] : box_components_inside_corners_[2];
         target_box.box_center =  IdentifyTool::getCrossPoint(target_box.box_components_UL, target_box.box_components_LR, target_box.box_components_UR, target_box.box_components_LL);
         if (target_box.box_center.x > 0 && target_box.box_center.x < 640 && target_box.box_center.y > 0 && target_box.box_center.y < 480){
-            _find_box_flag = true;
+            _find_box_flag = BoxIdentifyStatus::FULL_POINTS;
         }
         else{
             for (int i = 0; i < box_components_inside_corners_.size(); i++) {
@@ -232,12 +232,19 @@ void IdentifyBox::BoxPairing() {
             target_box.box_components_LL = box_components_inside_corners_[1].y > box_components_inside_corners_[2].y ? box_components_inside_corners_[1] : box_components_inside_corners_[2];
             target_box.box_center =  IdentifyTool::getCrossPoint(target_box.box_components_UL, target_box.box_components_LR, target_box.box_components_UR, target_box.box_components_LL);
             if (target_box.box_center.x > 0 && target_box.box_center.x < 640 && target_box.box_center.y > 0 && target_box.box_center.y < 480){
-                _find_box_flag = true;
+                _find_box_flag = BoxIdentifyStatus::FULL_POINTS;
             }
         }
     }
     if (box_components_inside_corners_.size() == 3){
-        
+        std::vector<int> max_distance;
+        int temp_distance_0 = IdentifyTool::getTwoPointDistance(box_components_inside_corners_[0], box_components_inside_corners_[1]);
+        int temp_distance_1 = IdentifyTool::getTwoPointDistance(box_components_inside_corners_[0], box_components_inside_corners_[2]);
+        int temp_distance_2 = IdentifyTool::getTwoPointDistance(box_components_inside_corners_[1], box_components_inside_corners_[2]);
+
+
+
+        _find_box_flag = BoxIdentifyStatus::THREE_POINTS;
     }
 }
 

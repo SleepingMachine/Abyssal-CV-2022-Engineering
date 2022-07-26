@@ -23,7 +23,7 @@ private:
     static int erode_;
     static int dilate_;
 
-    static bool _find_box_flag;
+    static int _find_box_flag;
 
     static cv::Mat src_color_;
     static cv::Mat src_depth_;
