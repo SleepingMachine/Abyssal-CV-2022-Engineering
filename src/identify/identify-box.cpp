@@ -147,7 +147,6 @@ void IdentifyBox::SearchBoxComponents() {
         if (i <= 3){
             suspected_box_components_contours_.push_back(all_contours_[filter_index[i]]);
         }
-        //std::cout << filter_value[i] << std::endl;
     }
 }
 
@@ -160,6 +159,12 @@ void IdentifyBox::AuxiliaryGraphicsDrawing() {
         cv::line(src_color_, target_box.box_components_UR, target_box.box_components_LR, cv::Scalar(124,211,32),2);
         cv::line(src_color_, target_box.box_components_UL, target_box.box_components_UR, cv::Scalar(124,211,32),2);
         cv::line(src_color_, target_box.box_components_LL, target_box.box_components_LR, cv::Scalar(124,211,32),2);
+        /*
+        cv::putText(src_color_, "UL", target_box.box_components_UL, 0, 1, cv::Scalar(47,255,173),1);
+        cv::putText(src_color_, "UR", target_box.box_components_UR, 0, 1, cv::Scalar(47,255,173),1);
+        cv::putText(src_color_, "LR", target_box.box_components_LR, 0, 1, cv::Scalar(47,255,173),1);
+        cv::putText(src_color_, "LL", target_box.box_components_LL, 0, 1, cv::Scalar(47,255,173),1);
+        */
         cv::circle(src_color_, target_box.box_center, 15, cv::Scalar(124,211,32), 10);
     }
 
@@ -195,63 +200,44 @@ void IdentifyBox::BoxPairing() {
             }
         }
         box_components_inside_corners_.push_back(right_angle_point);
-        //circle(src_color_, right_angle_point, 4, Scalar(255, 255, 0), 2, 8, 0);//点
     }
 
-    /*
     for (int i = 0; i < box_components_inside_corners_.size(); i++) {
-        for (int j = 0; j < box_components_inside_corners_.size() - i; j++) {
-            if (box_components_inside_corners_[j].x < box_components_inside_corners_[j+1].x) {        // 相邻元素两两对比
-                cv::Point2i temp = box_components_inside_corners_[j+1];        // 元素交换
-                box_components_inside_corners_[j+1] = box_components_inside_corners_[j];
-                box_components_inside_corners_[j] = temp;
+        for (int j = 0; j < box_components_inside_corners_.size()-i-1; j++) {
+            if ( box_components_inside_corners_[j].x + box_components_inside_corners_[j].y > box_components_inside_corners_[j+1].x + box_components_inside_corners_[j+1].y){
+                swap( box_components_inside_corners_[j],  box_components_inside_corners_[j + 1]);
             }
         }
     }
     if (box_components_inside_corners_.size() == 4){
         target_box.box_components_UL = box_components_inside_corners_[0];
         target_box.box_components_UR = box_components_inside_corners_[1].y < box_components_inside_corners_[2].y ? box_components_inside_corners_[1] : box_components_inside_corners_[2];
-        target_box.box_components_UL = box_components_inside_corners_[3];
+        target_box.box_components_LR = box_components_inside_corners_[3];
         target_box.box_components_LL = box_components_inside_corners_[1].y > box_components_inside_corners_[2].y ? box_components_inside_corners_[1] : box_components_inside_corners_[2];
         target_box.box_center =  IdentifyTool::getCrossPoint(target_box.box_components_UL, target_box.box_components_LR, target_box.box_components_UR, target_box.box_components_LL);
-        _find_box_flag = true;
-    }
-    else{
-        _find_box_flag = false;
-    }*/
-
-
-    float box_reference_center_x;
-    float box_reference_center_y;
-    for (int i = 0; i < box_components_inside_corners_.size(); ++i) {
-        box_reference_center_x += box_components_inside_corners_[i].x;
-        box_reference_center_y += box_components_inside_corners_[i].y;
-    }
-    box_reference_center_x /= box_components_inside_corners_.size();
-    box_reference_center_y /= box_components_inside_corners_.size();
-    for (int i = 0; i < box_components_inside_corners_.size(); ++i) {
-        if(box_components_inside_corners_[i].x < box_reference_center_x && box_components_inside_corners_[i].y < box_reference_center_y){
-            target_box.box_components_UL = box_components_inside_corners_[i];
+        if (target_box.box_center.x > 0 && target_box.box_center.x < 640 && target_box.box_center.y > 0 && target_box.box_center.y < 480){
+            _find_box_flag = true;
         }
-        else if(box_components_inside_corners_[i].x > box_reference_center_x && box_components_inside_corners_[i].y < box_reference_center_y){
-            target_box.box_components_UR = box_components_inside_corners_[i];
-        }
-        else if(box_components_inside_corners_[i].x > box_reference_center_x && box_components_inside_corners_[i].y > box_reference_center_y){
-            target_box.box_components_LR = box_components_inside_corners_[i];
-        }
-        else if(box_components_inside_corners_[i].x < box_reference_center_x && box_components_inside_corners_[i].y > box_reference_center_y){
-            target_box.box_components_LL = box_components_inside_corners_[i];
+        else{
+            for (int i = 0; i < box_components_inside_corners_.size(); i++) {
+                for (int j = 0; j < box_components_inside_corners_.size()-i-1; j++) {
+                    if ( box_components_inside_corners_[j].x> box_components_inside_corners_[j+1].x){
+                        swap( box_components_inside_corners_[j],  box_components_inside_corners_[j + 1]);
+                    }
+                }
+            }
+            target_box.box_components_UL = box_components_inside_corners_[0];
+            target_box.box_components_UR = box_components_inside_corners_[1].y < box_components_inside_corners_[2].y ? box_components_inside_corners_[1] : box_components_inside_corners_[2];
+            target_box.box_components_LR = box_components_inside_corners_[3];
+            target_box.box_components_LL = box_components_inside_corners_[1].y > box_components_inside_corners_[2].y ? box_components_inside_corners_[1] : box_components_inside_corners_[2];
+            target_box.box_center =  IdentifyTool::getCrossPoint(target_box.box_components_UL, target_box.box_components_LR, target_box.box_components_UR, target_box.box_components_LL);
+            if (target_box.box_center.x > 0 && target_box.box_center.x < 640 && target_box.box_center.y > 0 && target_box.box_center.y < 480){
+                _find_box_flag = true;
+            }
         }
     }
-    if(target_box.box_components_LL.x && target_box.box_components_LL.y &&
-       target_box.box_components_LR.x && target_box.box_components_LR.y &&
-       target_box.box_components_UL.x && target_box.box_components_UL.y &&
-       target_box.box_components_UR.x && target_box.box_components_UR.y){
-        _find_box_flag = true;
-        target_box.box_center =  IdentifyTool::getCrossPoint(target_box.box_components_UL, target_box.box_components_LR, target_box.box_components_UR, target_box.box_components_LL);
-    }
-    else{
-        _find_box_flag = false;
+    if (box_components_inside_corners_.size() == 3){
+        
     }
 }
 
