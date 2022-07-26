@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /snap/clion/198/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering-Ver1.0 -B /home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering-Ver1.0/cmake-build-debug
 -- The C compiler identification is GNU 11.2.0
 -- The CXX compiler identification is GNU 11.2.0
@@ -17,6 +18,9 @@
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
 -- Found Threads: TRUE  
+=======
+/snap/clion/198/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/198/bin/ninja/linux/ninja -G Ninja -S /home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering -B /home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering/cmake-build-debug
+>>>>>>> 0e5426822fa4782063b02ca6fac52826caeae48c
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/sleepingmachine/RoboMaster-Code/Abyssal-CV-2022-Engineering-Ver1.0/cmake-build-debug
