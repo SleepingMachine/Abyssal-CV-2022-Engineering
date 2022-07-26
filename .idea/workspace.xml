@@ -20,12 +20,21 @@
   <component name="ChangeListManager">
     <list default="true" id="c6fe1877-6497-44ca-9700-fafab52a081b" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/index-2022-07-24T12-50-43-0140.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Abyssal_CV_2022_Engineering" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Abyssal_CV_2022_Engineering" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/identify/identify-box.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Abyssal_CV_2022_Engineering.dir/src/identify/identify-box.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/.cmake/api/v1/reply/cmakeFiles-v1-2bd67d5ff19f14e46990.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/.cmake/api/v1/reply/codemodel-v2-1f58cefabdb535ebf667.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/.cmake/api/v1/reply/index-2022-07-23T13-22-16-0754.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/.cmake/api/v1/reply/target-Abyssal_CV_2022_Engineering-DEBUG-5ca61f4d1fe8f5022aff.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-release/build.ninja" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-release/build.ninja" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/identify/identify-box.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/identify/identify-box.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/tools-config.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/tools/tools-config.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +84,11 @@
   }
 }</component>
   <component name="RunManager">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Abyssal_CV_2022_Engineering" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Abyssal_CV_2022_Engineering" TARGET_NAME="Abyssal_CV_2022_Engineering" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Abyssal_CV_2022_Engineering" RUN_TARGET_NAME="Abyssal_CV_2022_Engineering">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -94,6 +108,7 @@
       <workItem from="1658392230426" duration="60965000" />
       <workItem from="1658734239161" duration="18939000" />
       <workItem from="1658823597656" duration="7607000" />
+      <workItem from="1658833769968" duration="2606000" />
     </task>
     <servers />
   </component>

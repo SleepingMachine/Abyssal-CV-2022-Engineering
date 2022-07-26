@@ -99,8 +99,8 @@ void IdentifyBox::SearchBoxComponents() {
     Mat hu_target;
     HuMoments(m_target, hu_target);
 
-    //vector<double> filter_value;
-    //vector<int>    filter_index;
+    vector<double> filter_value;
+    vector<int>    filter_index;
     for(int i = 0; i < all_contours_.size(); ++i){
         if (hierarchy_[i][3] == -1){
             cv::RotatedRect scanRect = cv::minAreaRect(all_contours_[i]);
@@ -123,42 +123,32 @@ void IdentifyBox::SearchBoxComponents() {
             HuMoments(m_src, hu_src);
             matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0);
 
-            //filter_index.push_back(i);
-            //filter_value.push_back(matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0));
+            filter_index.push_back(i);
+            filter_value.push_back(matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0));
 
+            /*
             double dist = matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0);
-            if (dist > boxPara_.max_suspected_box_components_hu_value)
+            if (dist < boxPara_.max_suspected_box_components_hu_value)
             {
-                continue;
-            }
-
-            suspected_box_components_rects_.push_back(scanRect);
-            suspected_box_components_contours_.push_back(all_contours_[i]);
+                filter_index.push_back(i);
+                filter_value.push_back(matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0));
+                suspected_box_components_contours_.push_back(all_contours_[i]);
+            }*/
         }
     }
-
-    /*
-    for (int i = 0; i < filter_index.size(); i++) {
-        for (int j = 0; j < filter_index.size() - i; j++) {
-            if (filter_value[j] > filter_value[j+1]) {        // 相邻元素两两对比
-                double temp_value = filter_value[j+1];        // 元素交换
-                int    temp_index = filter_index[j+1];
-
-                filter_value[j+1] = filter_value[j];
-                filter_value[j] = temp_value;
-
-                filter_index[j+1] = filter_index[j];
-                filter_index[j] = temp_index;
-            }
+    for (int i = 0; i < filter_index.size(); ++i) {
+        for (int j = 0; j < filter_index.size()-i-1; ++j) {
+            if (filter_value[j] > filter_value[j + 1])
+                swap(filter_index[j], filter_index[j + 1]);
+                //swap(filter_value[j], filter_value[j + 1]);
         }
     }
-    for (int i = 0; filter_index.size(); ++i) {
-        //suspected_box_components_rects_.push_back(scanRect);
+    for (int i = 0; i < filter_value.size(); ++i) {
         if (i <= 3){
             suspected_box_components_contours_.push_back(all_contours_[filter_index[i]]);
         }
-        }*/
-        //std::cout << filter_value[i] << " " << filter_index[i] << std::endl;
+        //std::cout << filter_value[i] << std::endl;
+    }
 }
 
 void IdentifyBox::AuxiliaryGraphicsDrawing() {

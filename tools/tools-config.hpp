@@ -53,7 +53,7 @@ struct CameraPara {
     int   min_recognition_distance_search = 80;
     int   max_recognition_distance_search = 180;
 
-    int   realsense_camera_exposure       = 100; //设置为-1使用自动曝光
+    int   realsense_camera_exposure       = 100; //设置为负数使用自动曝光
 };
 
 class CameraParaFactory {
