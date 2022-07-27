@@ -75,11 +75,6 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Abyssal_CV_2022_Engineering" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Abyssal_CV_2022_Engineering" TARGET_NAME="Abyssal_CV_2022_Engineering" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Abyssal_CV_2022_Engineering" RUN_TARGET_NAME="Abyssal_CV_2022_Engineering">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -100,6 +95,8 @@
       <workItem from="1658734239161" duration="18939000" />
       <workItem from="1658823597656" duration="7607000" />
       <workItem from="1658833769968" duration="5849000" />
+      <workItem from="1658893096184" duration="3331000" />
+      <workItem from="1658905604699" duration="90000" />
     </task>
     <servers />
   </component>
