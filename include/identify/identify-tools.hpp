@@ -121,6 +121,18 @@ public:
         return instance().StructuringElement3;
     }
 
+    static inline float getLineSlope(cv::Point2f point_0, cv::Point2f point_1){
+        if (point_0.x == point_1.x){
+            return 999;
+        }
+        else if (point_0.y == point_1.y){
+            return 0;
+        }
+        else {
+            return point_0.x < point_1.x ? -(point_1.y - point_0.y)/(point_1.x - point_0.x) : (point_1.y - point_0.y)/(point_1.x - point_0.x);
+        }
+    }
+
 private:
     static IdentifyTool &instance() {
         static IdentifyTool identifyTool;
@@ -130,4 +142,5 @@ private:
     const cv::Mat StructuringElement5 = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5));
     const cv::Mat StructuringElement7 = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7));
 };
+
 #endif //ABYSSAL_CV_2022_ENGINEERING_IDENTIFY_TOOLS_HPP

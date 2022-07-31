@@ -60,9 +60,9 @@ void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_s
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
 
-    //IdentifyTool::CreatTrackbars(&hmin_0_, &hmax_0_, &smin_0_, &smax_0_, &vmin_0_, &vmax_0_,
-    //                        &hmin_1_, &hmax_1_, &smin_1_, &smax_1_, &vmin_1_, &vmax_1_,
-    //                        &open_,    &close_,    &erode_,   &dilate_);
+    IdentifyTool::CreatTrackbars(&hmin_0_, &hmax_0_, &smin_0_, &smax_0_, &vmin_0_, &vmax_0_,
+                           &hmin_1_, &hmax_1_, &smin_1_, &smax_1_, &vmin_1_, &vmax_1_,
+                            &open_,    &close_,    &erode_,   &dilate_);
     while (true){
         if(_near_thread_state_flag){
             if (mutex_depth.try_lock()) {
@@ -112,7 +112,7 @@ void IdentifyOre::ImagePreprocess(const cv::Mat &src) {
                 cv::Scalar(hmax_1_, smax_1_, vmax_1_),
                 color_mask_1_);
 
-    //cv::imshow("mask0", color_mask_0_);
+    cv::imshow("color", src_color_);
     //cv::imshow("mask1", color_mask_1_);
 
     color_mask_0_ = color_mask_1_ | color_mask_0_;

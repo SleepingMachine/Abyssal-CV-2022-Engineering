@@ -132,6 +132,9 @@ struct BoxPara {
     int separation_threshold_GREEN                = 10;
 
     int max_suspected_box_components_hu_value     = 150;
+
+    float max_slash_judgment_value                = 2;
+    float min_slash_judgment_value                = 0.5;
 };
 
 class BoxParaFactory {

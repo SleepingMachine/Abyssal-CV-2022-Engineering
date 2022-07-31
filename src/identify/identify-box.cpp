@@ -270,12 +270,11 @@ void IdentifyBox::BoxPairing() {
     else if (box_components_inside_corners_.size() == 2){
         target_box.box_components_UL = box_components_inside_corners_[0];
         target_box.box_components_UR = box_components_inside_corners_[1];
-        if (abs(box_components_inside_corners_[0].x - box_components_inside_corners_[1].x) > abs(box_components_inside_corners_[0].y - box_components_inside_corners_[1].y)){
-
-        }
-        else{
+        if (abs(IdentifyTool::getLineSlope(target_box.box_components_UL, target_box.box_components_UR)) < boxPara_.max_slash_judgment_value &&
+            abs(IdentifyTool::getLineSlope(target_box.box_components_UL, target_box.box_components_UR)) > boxPara_.min_slash_judgment_value){
             target_box.box_center = IdentifyTool::getTwoPointCenterPoint(box_components_inside_corners_[0], box_components_inside_corners_[1]);
         }
+
         _find_box_flag = BoxIdentifyStatus::TWO_POINTS;
     }
     //std::cout << box_components_inside_corners_.size() << std::endl;
