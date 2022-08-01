@@ -115,7 +115,7 @@ public:
 };
 
 struct BoxPara {
-    int   min_suspected_box_components_area      = 100;
+    int   min_suspected_box_components_area       = 500;
 
     float exchange_mode_min_recognition_distance  = 70.0;
     float exchange_mode_max_recognition_distance  = 300.0;
@@ -133,8 +133,13 @@ struct BoxPara {
 
     int max_suspected_box_components_hu_value     = 150;
 
-    float max_slash_judgment_value                = 2;
+    float max_slash_judgment_value                = 1.5;
     float min_slash_judgment_value                = 0.5;
+
+    int max_distance_variance                     = 600;
+
+    int full_points_freshness_value               = 100;
+    int three_points_freshness_value              = 80;
 };
 
 class BoxParaFactory {

@@ -5,6 +5,8 @@
 #ifndef ABYSSAL_CV_2022_ENGINEERING_IDENTIFY_TOOLS_HPP
 #define ABYSSAL_CV_2022_ENGINEERING_IDENTIFY_TOOLS_HPP
 #include <opencv2/opencv.hpp>
+#include <math.h>
+#include <numeric>
 
 class IdentifyTool{
 public:
@@ -34,12 +36,30 @@ public:
     }
     static void CreatTrackbars(int *open,   int *close,  int *erode,  int *dilate){
 
-        cv::namedWindow("阈值调整",cv::WINDOW_AUTOSIZE);
+        cv::namedWindow("兑换框识别中的形态学阈值调整",cv::WINDOW_AUTOSIZE);
 
-        cv::createTrackbar("open",  "阈值调整",open,  10,NULL);
-        cv::createTrackbar("close", "阈值调整",close, 30,NULL);
-        cv::createTrackbar("erode", "阈值调整",erode, 10,NULL);
-        cv::createTrackbar("dilate","阈值调整",dilate,20,NULL);
+        cv::createTrackbar("open",  "兑换框识别中的形态学阈值调整",open,  10,NULL);
+        cv::createTrackbar("close", "兑换框识别中的形态学阈值调整",close, 30,NULL);
+        cv::createTrackbar("erode", "兑换框识别中的形态学阈值调整",erode, 10,NULL);
+        cv::createTrackbar("dilate","兑换框识别中的形态学阈值调整",dilate,20,NULL);
+    }
+    static void CreatTrackbars(int *hmin_0, int *hmax_0, int *smin_0, int *smax_0, int *vmin_0, int *vmax_0,
+                               int *hmin_1, int *hmax_1, int *smin_1, int *smax_1, int *vmin_1, int *vmax_1){
+
+        cv::namedWindow("兑换框识别中的HSV阈值调整",cv::WINDOW_AUTOSIZE);
+        cv::createTrackbar("hmin0", "兑换框识别中的HSV阈值调整",hmin_0, 255,NULL);
+        cv::createTrackbar("hmax0", "兑换框识别中的HSV阈值调整",hmax_0, 255,NULL);
+        cv::createTrackbar("smin0", "兑换框识别中的HSV阈值调整",smin_0, 255,NULL);
+        cv::createTrackbar("smax0", "兑换框识别中的HSV阈值调整",smax_0, 255,NULL);
+        cv::createTrackbar("vmin0", "兑换框识别中的HSV阈值调整",vmin_0, 255,NULL);
+        cv::createTrackbar("vmax0", "兑换框识别中的HSV阈值调整",vmax_0, 255,NULL);
+
+        cv::createTrackbar("hmin1", "兑换框识别中的HSV阈值调整",hmin_1, 255,NULL);
+        cv::createTrackbar("hmax1", "兑换框识别中的HSV阈值调整",hmax_1, 255,NULL);
+        cv::createTrackbar("smin1", "兑换框识别中的HSV阈值调整",smin_1, 255,NULL);
+        cv::createTrackbar("smax1", "兑换框识别中的HSV阈值调整",smax_1, 255,NULL);
+        cv::createTrackbar("vmin1", "兑换框识别中的HSV阈值调整",vmin_1, 255,NULL);
+        cv::createTrackbar("vmax1", "兑换框识别中的HSV阈值调整",vmax_1, 255,NULL);
     }
 
     static inline cv::Point2f getTwoPointCenterPoint(cv::Point2f point1, cv::Point2f point2){
@@ -131,6 +151,21 @@ public:
         else {
             return point_0.x < point_1.x ? -(point_1.y - point_0.y)/(point_1.x - point_0.x) : (point_1.y - point_0.y)/(point_1.x - point_0.x);
         }
+    }
+
+    static inline double getVectorVar(const vector<double> &A)
+    {
+        double sum = accumulate(begin(A),end(A), 0.0);
+        double mean =  sum / A.size();
+
+        // 求方差与标准差
+        double variance  = 0.0;
+        for (uint16_t i = 0 ; i < A.size() ; i++)
+        {
+            variance = variance + pow(A[i]-mean,2);
+        }
+        variance = variance/A.size();
+        return variance;
     }
 
 private:

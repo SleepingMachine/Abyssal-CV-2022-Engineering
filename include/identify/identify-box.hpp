@@ -18,6 +18,20 @@
 
 class IdentifyBox{
 private:
+    static int hmin_0_;
+    static int hmax_0_;
+    static int smin_0_;
+    static int smax_0_;
+    static int vmin_0_;
+    static int vmax_0_;
+
+    static int hmin_1_;
+    static int hmax_1_;
+    static int smin_1_;
+    static int smax_1_;
+    static int vmin_1_;
+    static int vmax_1_;
+
     static int open_;
     static int close_;
     static int erode_;
@@ -25,8 +39,13 @@ private:
 
     static int _find_box_flag;
 
+    static int previous_box_freshness_value_;
+
     static cv::Mat src_color_;
     static cv::Mat src_depth_;
+    static cv::Mat src_hsv_;
+    static cv::Mat color_mask_0_;
+    static cv::Mat color_mask_1_;
     static cv::Mat src_gray_;
     static cv::Mat purple_src_;
     static cv::Mat separation_src_data_;
@@ -51,6 +70,7 @@ private:
     static void SearchBoxComponents();
     static void BoxPairing();
     static void AuxiliaryGraphicsDrawing();
+    static void BoxTracking();
     static void ResourceRelease();
 
 public:
@@ -62,8 +82,8 @@ public:
         cv::Point2i box_components_UR;
         cv::Point2i box_components_LR;
         cv::Point2i box_components_LL;
-
         cv::Point2i box_center;
+        int identify_status;
         //cv::RotatedRect box_rect;
         float box_pitch_angle;
         float box_yaw_angle;
@@ -73,7 +93,8 @@ public:
     IdentifyBox();
     ~IdentifyBox() {};
 private:
-    static BoxStruct target_box;
+    static BoxStruct target_box_;
+    static BoxStruct previous_box_;
 };
 
 #endif //ABYSSAL_CV_2022_ENGINEERING_IDENTIFY_BOX_HPP
