@@ -26,8 +26,8 @@ public:
     SerialPort();
     ~SerialPort();
 
-    static void GetHitPointData(int tempData);
-    static void SendData(int64* sentData);
+    static void GetHitPointData(int64 temp_data_ore, int64 temp_data_box);
+    static void SendData(int64* sent_data_ore, int64* sent_data_box);
 
 private:
     static std::string read_device_;

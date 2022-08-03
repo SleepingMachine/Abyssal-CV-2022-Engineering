@@ -4,7 +4,9 @@
 
 #include "../include/serial/serial-port.hpp"
 //extern std::mutex mutex2;
-extern std::mutex mutex_serial_port_data;
+extern std::mutex mutex_serial_port_data_ore;
+extern std::mutex mutex_serial_port_data_box;
+
 extern std::atomic_bool serial_port_start;
 
 extern std::atomic_bool configuration_file_read_complete;
@@ -21,20 +23,25 @@ char SerialPort::sent_data_[8];
 char SerialPort::read_data_[3];
 char SerialPort::cache_read_data_[6] = {};
 
-void SerialPort::SendData(int64* sentData) {
+void SerialPort::SendData(int64* sent_data_ore, int64* sent_data_box) {
     serial_port_start = true;
     while (true) {
         while(!configuration_file_read_complete){
             cv::waitKey(10);
         }
-        int temp_send_data;
+        int temp_send_data_ore;
+        int temp_send_data_box;
 
-        if (mutex_serial_port_data.try_lock()) {
-            temp_send_data = *sentData;
-            mutex_serial_port_data.unlock();
+        if (mutex_serial_port_data_ore.try_lock()) {
+            temp_send_data_ore = *sent_data_ore;
+            mutex_serial_port_data_ore.unlock();
         }
-        //std::cout << *sentData << std::endl;
-        SerialPort::GetHitPointData(temp_send_data);
+        if (mutex_serial_port_data_box.try_lock()) {
+            temp_send_data_box = *sent_data_box;
+            mutex_serial_port_data_box.unlock();
+        }
+        //std::cout << temp_send_data_ore << " " << temp_send_data_box << std::endl;
+        SerialPort::GetHitPointData(temp_send_data_ore, temp_send_data_box);
 
         int fd; /*File Descriptor*/
 /*
@@ -155,27 +162,28 @@ void SerialPort::SendData(int64* sentData) {
 
 }
 
-void SerialPort::GetHitPointData(int tempData) {
+void SerialPort::GetHitPointData(int64 temp_data_ore, int64 temp_data_box) {
 /*
     SerialPort::sent_data_[0] = hitPointData / 100;
     SerialPort::sent_data_[1] = (hitPointData - SerialPort::sent_data_[0]*100) /10;
     SerialPort::sent_data_[2] = hitPointData % 10;
 */
-    int fall_flag = tempData % 10;
-    int hitPointData_y = (tempData - fall_flag)/10 % 1000;
-    int hitPointData_x = ((tempData - fall_flag)/10 - hitPointData_y)/1000;
-    //std::cout << hitPointData_x << " " << hitPointData_y << " " << fall_flag << std::endl;
+    int ore_data_y = temp_data_ore % 1000;
+    int ore_data_x = (temp_data_ore - ore_data_y) /1000;
+
+    int box_data_y = temp_data_box % 1000;
+    int box_data_x = (temp_data_box - box_data_y) /1000;
+
+    //std::cout << ore_data_x << " " << ore_data_y << " " << box_data_x << " " << box_data_y << std::endl;
 
     sent_data_[0] = 's';
 
-    sent_data_[1] = (( hitPointData_x>> 8) & 0xFF);
-    sent_data_[2] = (( hitPointData_x>> 0) & 0xFF);
-    sent_data_[3] = (( hitPointData_y>> 8) & 0xFF);
-    sent_data_[4] = (( hitPointData_y>> 0) & 0xFF);
-    sent_data_[5] = (( fall_flag>> 8) & 0xFF);
-    sent_data_[6] = (( fall_flag>> 0) & 0xFF);
+    sent_data_[1] = (( ore_data_x>> 8) & 0xFF);
+    sent_data_[2] = (( ore_data_y>> 0) & 0xFF);
+    sent_data_[3] = (( box_data_x>> 8) & 0xFF);
+    sent_data_[4] = (( box_data_y>> 0) & 0xFF);
 
-    sent_data_[7] = 'e';
+    sent_data_[5] = 'e';
 
     //std::cout << hitPointData_x << std::endl;
     //std::cout << hitPointData_y << std::endl;

@@ -136,10 +136,12 @@ struct BoxPara {
     float max_slash_judgment_value                = 1.5;
     float min_slash_judgment_value                = 0.5;
 
-    int max_distance_variance                     = 600;
+    int max_distance_variance_full_point          = 600;
+    int max_distance_variance_three_point         = 1000;
 
     int full_points_freshness_value               = 100;
     int three_points_freshness_value              = 80;
+    int two_points_freshness_value                = 40;
 };
 
 class BoxParaFactory {

@@ -16,23 +16,23 @@ std::atomic_bool _far_thread_state_flag;
 IdentifyStream::IdentifyStream() {}
 
 int IdentifyStream::IdentifyDivert(cv::Mat *import_src_color_near, cv::Mat *import_src_color_far, cv::Mat *import_src_depth,
-                                   int64 *sent_data) {
+                                   int64 *sent_data_ore, int64 *sent_data_box) {
     while(!camera_start || !serial_port_start){
         cv::waitKey(10);
     }
-    std::thread identify_near_thread( IdentifyStream::IdentifyNearStream,import_src_color_near, import_src_depth);
-    std::thread identify_far_thread ( IdentifyStream::IdentifyFarStream ,import_src_color_far,  import_src_depth);
+    std::thread identify_near_thread( IdentifyStream::IdentifyNearStream,import_src_color_near, import_src_depth, sent_data_ore);
+    std::thread identify_far_thread ( IdentifyStream::IdentifyFarStream ,import_src_color_far,  import_src_depth, sent_data_box);
 
     identify_near_thread.join();
     identify_far_thread .join();
     return 0;
 }
 
-void IdentifyStream::IdentifyNearStream(cv::Mat *import_src_color_near, cv::Mat *import_src_depth) {
-    IdentifyOre::OreIdentifyStream(import_src_color_near, import_src_depth);
+void IdentifyStream::IdentifyNearStream(cv::Mat *import_src_color_near, cv::Mat *import_src_depth, int64 *sent_data) {
+    IdentifyOre::OreIdentifyStream(import_src_color_near, import_src_depth, sent_data);
 }
 
-void IdentifyStream::IdentifyFarStream(cv::Mat *import_src_color_far, cv::Mat *import_src_depth) {
-    IdentifyBox::BoxIdentifyStream(import_src_color_far, import_src_depth);
+void IdentifyStream::IdentifyFarStream(cv::Mat *import_src_color_far, cv::Mat *import_src_depth, int64 *sent_data) {
+    IdentifyBox::BoxIdentifyStream(import_src_color_far, import_src_depth, sent_data);
 }
 

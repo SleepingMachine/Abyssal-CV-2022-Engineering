@@ -6,6 +6,7 @@
 
 //extern std::mutex mutex_color;
 extern std::mutex mutex_depth;
+extern std::mutex mutex_serial_port_data_ore;
 //extern std::atomic_bool camera_is_open;
 
 extern std::atomic_bool _near_thread_state_flag;
@@ -13,6 +14,7 @@ extern std::atomic_bool _near_thread_state_flag;
 
 IdentifyOre::IdentifyOre() {}
 
+/*
 int IdentifyOre::hmin_0_ = 0;
 int IdentifyOre::hmax_0_ = 65;
 int IdentifyOre::smin_0_ = 137;
@@ -22,6 +24,21 @@ int IdentifyOre::vmax_0_ = 255;
 
 int IdentifyOre::hmin_1_ = 0;
 int IdentifyOre::hmax_1_ = 65;
+int IdentifyOre::smin_1_ = 125;
+int IdentifyOre::smax_1_ = 255;
+int IdentifyOre::vmin_1_ = 133;
+int IdentifyOre::vmax_1_ = 255;
+*/
+
+int IdentifyOre::hmin_0_ = 28;
+int IdentifyOre::hmax_0_ = 58;
+int IdentifyOre::smin_0_ = 139;
+int IdentifyOre::smax_0_ = 255;
+int IdentifyOre::vmin_0_ = 13;
+int IdentifyOre::vmax_0_ = 255;
+
+int IdentifyOre::hmin_1_ = 0;
+int IdentifyOre::hmax_1_ = 255;
 int IdentifyOre::smin_1_ = 125;
 int IdentifyOre::smax_1_ = 255;
 int IdentifyOre::vmin_1_ = 133;
@@ -56,7 +73,7 @@ cv::Mat IdentifyOre::dst_color_      (480, 640, CV_8UC3);
 
 static OrePara orePara = OreParaFactory::getOrePara();
 
-void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_src_depth) {
+void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_src_depth, int64 *sent_data) {
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
 
@@ -85,19 +102,23 @@ void IdentifyOre::OreIdentifyStream(cv::Mat *import_src_color, cv::Mat* import_s
             }
 
             if (target_ore_index_ >= 0){
-                int temp_target_x = ore_structs_[target_ore_index_].ore_rect.center.x;
-                int temp_target_y = ore_structs_[target_ore_index_].ore_rect.center.y;
-                int temp_ore_fall = 0;
-                if (_target_ore_fall_){
-                    temp_ore_fall = 1;
+                if (mutex_serial_port_data_ore.try_lock()){
+                    int temp_target_x = ore_structs_[target_ore_index_].ore_rect.center.x;
+                    int temp_target_y = ore_structs_[target_ore_index_].ore_rect.center.y;
+
+                    //*sent_data = temp_target_x * 10000 + temp_target_y * 10 + temp_ore_fall;
+                    *sent_data = temp_target_x * 1000 + temp_target_y;
+                    mutex_serial_port_data_ore.unlock();
                 }
-                //*sent_data = temp_target_x * 10000 + temp_target_y * 10 + temp_ore_fall;
             }
-            else{
-                //*sent_data = 0;
+            else if (mutex_serial_port_data_ore.try_lock()){
+                    *sent_data = 0;
+                    mutex_serial_port_data_ore.unlock();
             }
 
-            //AuxiliaryGraphicsDrawing();
+            if (SwitchControl::functionConfig_._enable_debug_mode){
+                AuxiliaryGraphicsDrawing();
+            }
             ResourceRelease();
         }
     }
@@ -112,7 +133,7 @@ void IdentifyOre::ImagePreprocess(const cv::Mat &src) {
                 cv::Scalar(hmax_1_, smax_1_, vmax_1_),
                 color_mask_1_);
 
-    cv::imshow("color", src_color_);
+    //cv::imshow("ore", src_color_);
     //cv::imshow("mask1", color_mask_1_);
 
     color_mask_0_ = color_mask_1_ | color_mask_0_;
@@ -159,9 +180,11 @@ void IdentifyOre::AuxiliaryGraphicsDrawing() {
     if (SwitchControl::functionConfig_._enable_debug_mode){
         if (target_ore_index_ >= 0){
             IdentifyTool::drawRotatedRect(src_color_, ore_structs_[target_ore_index_].ore_rect, cv::Scalar(15, 198, 150), 4, 16);
+            /*
             if (_target_ore_fall_ == true){
                 cv::circle(src_color_, current_target_ore_location_.target_ore_center, 15, cv::Scalar(0,0,255), 10);
-            }
+            }*/
+            cv::circle(src_color_, ore_structs_[target_ore_index_].ore_rect.center, 15, cv::Scalar(15, 198, 150), 10);
 
             /*
             std::cout << "找到[" << ore_structs_.size() << "]个矿石, 目标矿石中心点的平面坐标为["
@@ -174,8 +197,8 @@ void IdentifyOre::AuxiliaryGraphicsDrawing() {
 
 
 
-        //cv::imshow("Ore",   src_color_);
-        //cv::imshow("Mask",  dst_color_);
+        cv::imshow("Ore",   src_color_);
+        cv::imshow("Ore Mask",  dst_color_);
         //cv::imshow("Depth", src_depth_);
     }
 

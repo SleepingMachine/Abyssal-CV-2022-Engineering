@@ -4,6 +4,7 @@
 #include "identify/identify-box.hpp"
 
 extern std::mutex mutex_depth;
+extern std::mutex mutex_serial_port_data_box;
 
 extern std::atomic_bool _far_thread_state_flag;
 
@@ -59,10 +60,10 @@ IdentifyBox::BoxStruct IdentifyBox::previous_box_;
 std::vector<std::vector<cv::Point2i>> IdentifyBox::suspected_box_components_contours_;
 std::vector<cv::RotatedRect> IdentifyBox::suspected_box_components_rects_;
 
-void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_src_depth) {
+void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_src_depth, int64 *sent_data) {
     cv::Mat temp_src_color(480, 640, CV_8UC3);
     cv::Mat temp_src_depth(480, 640, CV_8UC3);
-    //IdentifyTool::CreatTrackbars(&open_,&close_,&erode_,&dilate_);
+    IdentifyTool::CreatTrackbars(&open_,&close_,&erode_,&dilate_);
     IdentifyTool::CreatTrackbars(&hmin_0_, &hmax_0_, &smin_0_, &smax_0_, &vmin_0_, &vmax_0_,
                                  &hmin_1_, &hmax_1_, &smin_1_, &smax_1_, &vmin_1_, &vmax_1_);
 
@@ -81,7 +82,24 @@ void IdentifyBox::BoxIdentifyStream(cv::Mat *import_src_color, cv::Mat *import_s
             SearchBoxComponents();
             BoxPairing();
             BoxTracking();
-            AuxiliaryGraphicsDrawing();
+            if (SwitchControl::functionConfig_._enable_debug_mode){
+                AuxiliaryGraphicsDrawing();
+            }
+
+            if (_find_box_flag){
+                if (mutex_serial_port_data_box.try_lock()){
+                    int temp_target_x = target_box_.box_center.x;
+                    int temp_target_y = target_box_.box_center.y;
+
+                    *sent_data = temp_target_x * 1000 + temp_target_y;
+                    mutex_serial_port_data_box.unlock();
+                }
+
+            }
+            else if (mutex_serial_port_data_box.try_lock()){
+                *sent_data = 0;
+                mutex_serial_port_data_box.unlock();
+            }
             ResourceRelease();
         }
     }
@@ -161,15 +179,6 @@ void IdentifyBox::SearchBoxComponents() {
 
             filter_index.push_back(i);
             filter_value.push_back(matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0));
-
-            /*
-            double dist = matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0);
-            if (dist < boxPara_.max_suspected_box_components_hu_value)
-            {
-                filter_index.push_back(i);
-                filter_value.push_back(matchShapes(hu_target, hu_src, CONTOURS_MATCH_I1, 0));
-                suspected_box_components_contours_.push_back(all_contours_[i]);
-            }*/
         }
     }
     for (int i = 0; i < filter_index.size(); ++i) {
@@ -211,11 +220,13 @@ void IdentifyBox::AuxiliaryGraphicsDrawing() {
     }
     else if(_find_box_flag == BoxIdentifyStatus::TWO_POINTS){
         cv::line(src_color_, target_box_.box_components_UL, target_box_.box_components_UR, cv::Scalar(106,106,255),2);
+        cv::line(src_color_, target_box_.box_components_UL, target_box_.box_center, cv::Scalar(106,106,255),2);
+        cv::line(src_color_, target_box_.box_components_UR, target_box_.box_center, cv::Scalar(106,106,255),2);
         cv::circle(src_color_, target_box_.box_center, 15, cv::Scalar(106,106,255), 10);
     }
 
-    cv::imshow("0", src_color_);
-    cv::imshow("1", dst_color_);
+    cv::imshow("Box", src_color_);
+    cv::imshow("Box Mask", dst_color_);
 }
 
 void IdentifyBox::ResourceRelease() {
@@ -265,7 +276,7 @@ void IdentifyBox::BoxPairing() {
         vector<double> temp_distance = {IdentifyTool::getTwoPointDistance(target_box_.box_components_UL, target_box_.box_components_UR), IdentifyTool::getTwoPointDistance(target_box_.box_components_LL, target_box_.box_components_UL),IdentifyTool::getTwoPointDistance(target_box_.box_components_UR, target_box_.box_components_LR),IdentifyTool::getTwoPointDistance(target_box_.box_components_LR, target_box_.box_components_LL)};
         double variance = IdentifyTool::getVectorVar(temp_distance);
         //std::cout << variance << std::endl;
-        if (target_box_.box_center.x > 0 && target_box_.box_center.x < 640 && target_box_.box_center.y > 0 && target_box_.box_center.y < 480 && variance <= boxPara_.max_distance_variance){
+        if (target_box_.box_center.x > 0 && target_box_.box_center.x < 640 && target_box_.box_center.y > 0 && target_box_.box_center.y < 480 && variance <= boxPara_.max_distance_variance_full_point){
             _find_box_flag = BoxIdentifyStatus::FULL_POINTS;
             target_box_.identify_status = BoxIdentifyStatus::FULL_POINTS;
         }
@@ -285,7 +296,7 @@ void IdentifyBox::BoxPairing() {
             vector<double> temp_distance = {IdentifyTool::getTwoPointDistance(target_box_.box_components_UL, target_box_.box_components_UR), IdentifyTool::getTwoPointDistance(target_box_.box_components_LL, target_box_.box_components_UL),IdentifyTool::getTwoPointDistance(target_box_.box_components_UR, target_box_.box_components_LR),IdentifyTool::getTwoPointDistance(target_box_.box_components_LR, target_box_.box_components_LL)};
             double variance = IdentifyTool::getVectorVar(temp_distance);
             //std::cout << variance << std::endl;
-            if (target_box_.box_center.x > 0 && target_box_.box_center.x < 640 && target_box_.box_center.y > 0 && target_box_.box_center.y < 480 && variance <= boxPara_.max_distance_variance && variance <= boxPara_.max_distance_variance){
+            if (target_box_.box_center.x > 0 && target_box_.box_center.x < 640 && target_box_.box_center.y > 0 && target_box_.box_center.y < 480 && variance <= boxPara_.max_distance_variance_full_point && variance <= boxPara_.max_distance_variance_full_point){
                 _find_box_flag = BoxIdentifyStatus::FULL_POINTS;
                 target_box_.identify_status = BoxIdentifyStatus::FULL_POINTS;
             }
@@ -311,7 +322,8 @@ void IdentifyBox::BoxPairing() {
         target_box_.box_components_LR = box_components_inside_corners_[2];
         vector<double> temp_distance = {IdentifyTool::getTwoPointDistance(target_box_.box_components_UL, target_box_.box_components_UR), IdentifyTool::getTwoPointDistance(target_box_.box_components_UR, target_box_.box_components_LR)};
         double variance = IdentifyTool::getVectorVar(temp_distance);
-        if (variance <= boxPara_.max_distance_variance){
+        //std::cout << variance << std::endl;
+        if (variance <= boxPara_.max_distance_variance_three_point){
             _find_box_flag = BoxIdentifyStatus::THREE_POINTS;
             target_box_.identify_status = BoxIdentifyStatus::THREE_POINTS;
         }
@@ -322,34 +334,57 @@ void IdentifyBox::BoxPairing() {
         if (abs(IdentifyTool::getLineSlope(target_box_.box_components_UL, target_box_.box_components_UR)) < boxPara_.max_slash_judgment_value &&
             abs(IdentifyTool::getLineSlope(target_box_.box_components_UL, target_box_.box_components_UR)) > boxPara_.min_slash_judgment_value){
             target_box_.box_center = IdentifyTool::getTwoPointCenterPoint(box_components_inside_corners_[0], box_components_inside_corners_[1]);
+            _find_box_flag = BoxIdentifyStatus::TWO_POINTS;
+            target_box_.identify_status = BoxIdentifyStatus::TWO_POINTS;
         }
-        else{
-
+        else if(previous_box_.identify_status){
+            std::vector<cv::Point> temp_points;
+            float temp_slope = 1 / IdentifyTool::getLineSlope(target_box_.box_components_UL, target_box_.box_components_UR);
+            for (int x = 0; x <= 640; x++) {
+                int y = IdentifyTool::getTwoPointCenterPoint(target_box_.box_components_UL, target_box_.box_components_UR).y + temp_slope * (x - IdentifyTool::getTwoPointCenterPoint(target_box_.box_components_UL, target_box_.box_components_UR).x);
+                if (x >= 0 && x<= 640 && y >= 0 && y <= 480 && (abs(IdentifyTool::getTwoPointDistance(cv::Point(x,y), IdentifyTool::getTwoPointCenterPoint(target_box_.box_components_UL, target_box_.box_components_UR)) - (IdentifyTool::getTwoPointDistance(target_box_.box_components_UL, target_box_.box_components_UR))/2) <= 1) && (abs(IdentifyTool::getTwoPointDistance(cv::Point(x,y), target_box_.box_components_UL) - IdentifyTool::getTwoPointDistance(cv::Point(x,y), target_box_.box_components_UR)) <= 1)){
+                    temp_points.push_back(cv::Point(x,y));
+                }
+            }
+            if(!temp_points.empty()){
+                int min_distance = 640;
+                int index = 0;
+                for (int i = 0; i < temp_points.size(); ++i) {
+                    if (IdentifyTool::getTwoPointDistance(previous_box_.box_center, temp_points[i]) < min_distance){
+                        min_distance = IdentifyTool::getTwoPointDistance(previous_box_.box_center, temp_points[i]);
+                        index = i;
+                    }
+                }
+                //std::cout << temp_points[index].x << " " << temp_points[index].y << std::endl;
+                target_box_.box_center = temp_points[index];
+                _find_box_flag = BoxIdentifyStatus::TWO_POINTS;
+                target_box_.identify_status = BoxIdentifyStatus::TWO_POINTS;
+            }
         }
-        _find_box_flag = BoxIdentifyStatus::TWO_POINTS;
-        target_box_.identify_status = BoxIdentifyStatus::TWO_POINTS;
     }
     //std::cout << box_components_inside_corners_.size() << std::endl;
 }
 
 void IdentifyBox::BoxTracking() {
-    if (_find_box_flag == BoxIdentifyStatus::FULL_POINTS || _find_box_flag == BoxIdentifyStatus::THREE_POINTS){
+    if (_find_box_flag){
         previous_box_ = target_box_;
         if (_find_box_flag == BoxIdentifyStatus::FULL_POINTS){
             previous_box_freshness_value_ = boxPara_.full_points_freshness_value;
         }
-        else {
+        else if(_find_box_flag == BoxIdentifyStatus::THREE_POINTS){
             previous_box_freshness_value_ = boxPara_.three_points_freshness_value;
+        }
+        else if(_find_box_flag == BoxIdentifyStatus::TWO_POINTS){
+            previous_box_freshness_value_ = boxPara_.two_points_freshness_value;
         }
     }
     else if (_find_box_flag == BoxIdentifyStatus::LOST && previous_box_.identify_status){
         target_box_ = previous_box_;
-        _find_box_flag = target_box_.identify_status
+        _find_box_flag = target_box_.identify_status;
     }
     if (previous_box_freshness_value_ <= 0){
         previous_box_ = IdentifyBox::BoxStruct();
     }
-
         previous_box_freshness_value_ --;
 }
 
